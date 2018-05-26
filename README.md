@@ -15,7 +15,7 @@
 - Cross Platform Base Library Dev for Mobile App
 - React Native
 - H5 Hybrid
-- Knew a little bit of machine learning
+- Know a little bit of machine learning
 
 ### Education
 - University of Science and Technology of China
