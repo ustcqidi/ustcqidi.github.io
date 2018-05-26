@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+## Qi Di's Resume
 
-You can use the [editor on GitHub](https://github.com/ustcqidi/ustcqidi.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+### Work Experiences
+- [iQIYI](http://www.iqiyi.com/)
+    - 2016.8-current
+    - Mobile App Architect
+- [Meili Inc.](http://www.meili-inc.com/)
+    - 2015.8-2016.8
+    - Mobile App Dev
+- [Cisco](https://www.cisco.com/)
+    - 2013.3-2015.8
+    - Software Engineer
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Technology Stack
+- Android NDK
+- iOS App Dev
+- Cross Platform Base Library Dev for Mobile App
+- React Native
+- H5 Hybrid
+- Knew a little bit of machine learning
 
-### Markdown
+### Education
+- University of Science and Technology of China
+    - 2010.9-2013.4
+    - Master in Computer Science
+- Anhui University of Science and Technology
+    - 2016.9-2010.7
+    - B.S. in Computer Science
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/ustcqidi/ustcqidi.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+### Contact
+- WeChat: 17730041284
+- Email: qidi@mail.ustc.edu.cn
