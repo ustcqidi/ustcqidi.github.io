@@ -1,5 +1,3 @@
-## Qi Di's Resume
-
 ### Work Experiences
 - [iQIYI](http://www.iqiyi.com/)
     - 2016.8-current
