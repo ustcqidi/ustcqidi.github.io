@@ -9,7 +9,7 @@
     - 2013.3-2015.8
     - Software Engineer
 
-### Technology Stack
+### Skills
 - Android NDK
 - iOS App Dev
 - Cross Platform Base Library Dev for Mobile App
