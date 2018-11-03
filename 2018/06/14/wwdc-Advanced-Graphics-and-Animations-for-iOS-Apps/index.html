@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="iOS,Performance,WWDC,Animation,Render," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文基于 Advanced Graphics and Animations for iOS Apps 整理，介绍了Core Animation和iOS GPU渲染管线的基础知识，以及如何profiling，定位和解决 UI 性能问题。  Creating a responsive UI requires an understanding of Core Animation and how mobi">
+<meta name="keywords" content="iOS,Performance,WWDC,Animation,Render">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WWDC-Advanced Graphics and Animations for iOS Apps">
+<meta property="og:url" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="本文基于 Advanced Graphics and Animations for iOS Apps 整理，介绍了Core Animation和iOS GPU渲染管线的基础知识，以及如何profiling，定位和解决 UI 性能问题。  Creating a responsive UI requires an understanding of Core Animation and how mobi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/framework.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/pipeline.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/stage.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/pass.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/fps.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/opengl.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/color.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/blend.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/misaligned.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/offscreen.png">
+<meta property="og:updated_time" content="2018-11-03T14:16:26.070Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WWDC-Advanced Graphics and Animations for iOS Apps">
+<meta name="twitter:description" content="本文基于 Advanced Graphics and Animations for iOS Apps 整理，介绍了Core Animation和iOS GPU渲染管线的基础知识，以及如何profiling，定位和解决 UI 性能问题。  Creating a responsive UI requires an understanding of Core Animation and how mobi">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/framework.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/"/>
+
+
+
+
+
+  <title>WWDC-Advanced Graphics and Animations for iOS Apps | 祁迪的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">祁迪的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="祁迪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/2238185?s=460&v=4">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">WWDC-Advanced Graphics and Animations for iOS Apps</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-14T11:31:42+08:00">
+                2018-06-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文基于 <a href="https://developer.apple.com/videos/play/wwdc2014/419/" target="_blank" rel="noopener">Advanced Graphics and Animations for iOS Apps</a> 整理，介绍了Core Animation和iOS GPU渲染管线的基础知识，以及如何profiling，定位和解决 UI 性能问题。</p>
+<blockquote>
+<p>Creating a responsive UI requires an understanding of Core Animation and how mobile GPUs work. Learn about the iOS rendering pipeline in Core Animation, the new UIVisualEffectView and how it utilizes the GPU. Find out about the available tools for profiling UI performance. See how to identify and fix performance issues on a variety of devices.</p>
+</blockquote>
+<a id="more"></a>
+<p>主要大纲如下：</p>
+<ul>
+<li>Core Animation pipeline</li>
+<li>Rendering concepts</li>
+<li>UIBlurEffect &amp;&amp; UIVibrancyEffect</li>
+<li>profiling tools</li>
+<li>case study</li>
+</ul>
+<h2 id="Technology-Framework"><a href="#Technology-Framework" class="headerlink" title="Technology Framework"></a>Technology Framework</h2><p>先看一下整体架构图</p>
+<p><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/framework.png" alt=""></p>
+<h2 id="Core-Animation-Pipeline"><a href="#Core-Animation-Pipeline" class="headerlink" title="Core Animation Pipeline"></a>Core Animation Pipeline</h2><ul>
+<li>应用程序的动效是通过UIKit使用Core Animation实现的</li>
+<li>Render Server实现具体的动画逻辑</li>
+<li>使用GPU加速渲染</li>
+<li>为了保证动画流程，每秒钟至少需要有60帧，因此每一帧的渲染时间只有16毫秒</li>
+</ul>
+<h3 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h3><ul>
+<li>Application 接收并处理事件，编码后发送给Render Server (Commit Transaction)</li>
+<li>Render Server接收到请求后，首先解码，然后调研GPU的渲染接口</li>
+<li>GPU开始渲染具体的动效，理想情况下，在下一个VSync信号来之前，当前帧能渲染完，这样就不会丢帧导致卡顿</li>
+<li>然后重复上述步骤</li>
+</ul>
+<p><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/pipeline.png" alt=""></p>
+<h3 id="Commit-Transaction-四个步骤"><a href="#Commit-Transaction-四个步骤" class="headerlink" title="Commit Transaction 四个步骤"></a>Commit Transaction 四个步骤</h3><ul>
+<li>layout (view初始化以及排版)<ul>
+<li>layoutSubviews</li>
+<li>addSubview</li>
+</ul>
+</li>
+<li>display (view渲染)<ul>
+<li>drawRect</li>
+</ul>
+</li>
+<li>prepare<ul>
+<li>image decoding</li>
+<li>image conversion</li>
+</ul>
+</li>
+<li>commit<ul>
+<li>layer 打包，打包发送到Render Server</li>
+</ul>
+</li>
+</ul>
+<h3 id="Animation-三个阶段"><a href="#Animation-三个阶段" class="headerlink" title="Animation 三个阶段"></a>Animation 三个阶段</h3><ul>
+<li>Create animation and update view hierarchy</li>
+<li>commit transaction</li>
+<li>render each frame</li>
+</ul>
+<p><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/stage.png" alt=""></p>
+<h2 id="Rendering-Concept"><a href="#Rendering-Concept" class="headerlink" title="Rendering Concept"></a>Rendering Concept</h2><h3 id="Tile-based-rendering"><a href="#Tile-based-rendering" class="headerlink" title="Tile based rendering"></a>Tile based rendering</h3><ul>
+<li>屏幕划分成N*N像素的tiles</li>
+<li>每个tile存放到SoC缓存中</li>
+</ul>
+<h3 id="Render-passes"><a href="#Render-passes" class="headerlink" title="Render passes"></a>Render passes</h3><p><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/pass.png" alt=""></p>
+<hr>
+<h2 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h2><h3 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h3><ul>
+<li>每秒钟60帧是优化目标</li>
+<li>CPU or GPU bound? 用的越少越省电</li>
+<li>Any unnecessary CPU rendering? 优先使用GPU，必要时也可以用CPU</li>
+<li>Too many offscreen passes? 越少越好</li>
+<li>Too much blending? 越少越好</li>
+<li>Any strange image formats or sizes? Avoid on-the-fly conversions or resizing</li>
+<li>Anything unexpected in hierarchy? Know the actual view hierarchy</li>
+</ul>
+<h3 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h3><ul>
+<li>Instruments<ul>
+<li>Core Animation instrument<br><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/fps.png" alt=""></li>
+<li>OpenGL ES Driver instrument<br><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/opengl.png" alt=""></li>
+</ul>
+</li>
+<li>模拟器<ul>
+<li>Color Debug options<br><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/color.png" alt=""></li>
+</ul>
+</li>
+<li>Xcode<ul>
+<li>view debugging</li>
+</ul>
+</li>
+</ul>
+<h2 id="case-study"><a href="#case-study" class="headerlink" title="case study"></a>case study</h2><h3 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h3><ul>
+<li>tableview</li>
+<li>每个cell包括图片和文字</li>
+<li>每个图片都包括阴影</li>
+</ul>
+<h3 id="性能测试及问题定位"><a href="#性能测试及问题定位" class="headerlink" title="性能测试及问题定位"></a>性能测试及问题定位</h3><ul>
+<li>先通过OpenGL Driver查看帧率</li>
+<li>通过view debugging查看View Hierarchy</li>
+<li>再通过Core Animation instrument查看offscreen-Rendered</li>
+</ul>
+<hr>
+<h2 id="扩展知识"><a href="#扩展知识" class="headerlink" title="扩展知识"></a>扩展知识</h2><p>视频中涉及很多知识点，有一些需要额外的扩展资料才能理解，查阅了一些资料，这里把关键点也列出来。</p>
+<h3 id="Core-Animation-性能分析选项"><a href="#Core-Animation-性能分析选项" class="headerlink" title="Core Animation 性能分析选项"></a>Core Animation 性能分析选项</h3><ul>
+<li>Color Blended layers <br> 标示混合的图层会为红色,不透明的图层为绿色，通常我们希望绿色的区域越多越好。</li>
+</ul>
+<p><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/blend.png" alt=""></p>
+<ul>
+<li><p>Color copied images <br> 标示那些被Core Animation拷贝的图片。这主要是因为该图片的色彩格式不能被GPU直接处理，需要在CPU这边做转换，假如在主线层做这个操作对性能会有一定的影响。</p>
+</li>
+<li><p>Color misaligned images <br> 被缩放的图片会被标记为黄色,像素不对齐则会标注为紫色。<br><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/misaligned.png" alt=""></p>
+</li>
+<li><p>Color offscreen-rendered yellow <br> 标示哪些layer需要做离屏渲染(offscreen-render)。<br><img src="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/offscreen.png" alt=""></p>
+</li>
+</ul>
+<p>通常发生图形性能问题的时候，比如列表滑动不顺畅、动画卡顿等，大部分都是由于Offscreen Rendering(离屏渲染)或者blending导致的。</p>
+<h3 id="Offscreen-Rendering"><a href="#Offscreen-Rendering" class="headerlink" title="Offscreen Rendering"></a>Offscreen Rendering</h3><p>Offscreen-render对性能到底有什么影响？通常大家说的离屏渲染指的是GPU这块(当然CPU这块也会有影响，也需要消耗一定的资源)，比如修改了layer的阴影或者圆角，GPU需要做额外的渲染操作。通常GPU在做渲染的时候是很快的，但是涉及到offscreen-render的时候情况就可能有些不同，因为需要额外开辟一个新的缓冲区进行渲染，然后绘制到当前屏幕的过程需要做onscreen跟offscreen上下文之间的切换，这个过程的消耗会比较昂贵，涉及到OpenGL的pipeline跟barrier，而且offscreen-render在每一帧都会涉及到，因此处理不当肯定会对性能产生一定的影响，所以可以的话尽量减少offscreen-render的图层。产生离屏渲染的操作有：</p>
+<ul>
+<li>阴影（UIView.layer.shadowOffset/shadowRadius/…）</li>
+<li>圆角（当 UIView.layer.cornerRadius 和 UIView.layer.maskToBounds 一起使用时）</li>
+<li>图层蒙板</li>
+<li>开启光栅化（shouldRasterize = true）</li>
+</ul>
+<h3 id="列表滚动卡顿的主要原因"><a href="#列表滚动卡顿的主要原因" class="headerlink" title="列表滚动卡顿的主要原因"></a>列表滚动卡顿的主要原因</h3><ul>
+<li><p>Cell创建</p>
+<ul>
+<li>Offscreen 创建 cell 时间过长: 简化 drawRect</li>
+<li>drawRect 过于复杂: 缓存并复用</li>
+<li>view层级过于复杂: 扁平化view层级</li>
+</ul>
+</li>
+<li><p>Cell滚动</p>
+<ul>
+<li>offscreen gets called in each cell: Use hybrid mode from above and cache the images.</li>
+<li>过多 blending 操作: Make views opaque and rasterize the layers.</li>
+</ul>
+</li>
+</ul>
+<h2 id="更多资料"><a href="#更多资料" class="headerlink" title="更多资料"></a>更多资料</h2><ol>
+<li><a href="https://www.jianshu.com/p/2a01e5e2141f" target="_blank" rel="noopener">iOS app性能优化的那些事(二)</a></li>
+<li><a href="http://iosinjordan.tumblr.com/post/56778173518/help-my-tables-dont-scroll-smoothly" target="_blank" rel="noopener">Help! My tables don’t scroll smoothly!</a></li>
+<li><a href="https://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/" target="_blank" rel="noopener">iOS 保持界面流畅的技巧</a></li>
+<li><a href="https://blog.csdn.net/u011342466/article/details/50918035" target="_blank" rel="noopener">iOS渲染机制与性能优化</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/Performance/" rel="tag"># Performance</a>
+          
+            <a href="/tags/WWDC/" rel="tag"># WWDC</a>
+          
+            <a href="/tags/Animation/" rel="tag"># Animation</a>
+          
+            <a href="/tags/Render/" rel="tag"># Render</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/" rel="next" title="WWDC 2018-Practical Approaches to Great App Performance">
+                <i class="fa fa-chevron-left"></i> WWDC 2018-Practical Approaches to Great App Performance
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/21/interview-ios/" rel="prev" title="Interview Notebook">
+                Interview Notebook <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars2.githubusercontent.com/u/2238185?s=460&v=4"
+                alt="祁迪" />
+            
+              <p class="site-author-name" itemprop="name">祁迪</p>
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ustcqidi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Technology-Framework"><span class="nav-number">1.</span> <span class="nav-text">Technology Framework</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-Animation-Pipeline"><span class="nav-number">2.</span> <span class="nav-text">Core Animation Pipeline</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本流程"><span class="nav-number">2.1.</span> <span class="nav-text">基本流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Commit-Transaction-四个步骤"><span class="nav-number">2.2.</span> <span class="nav-text">Commit Transaction 四个步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Animation-三个阶段"><span class="nav-number">2.3.</span> <span class="nav-text">Animation 三个阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rendering-Concept"><span class="nav-number">3.</span> <span class="nav-text">Rendering Concept</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Tile-based-rendering"><span class="nav-number">3.1.</span> <span class="nav-text">Tile based rendering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Render-passes"><span class="nav-number">3.2.</span> <span class="nav-text">Render passes</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能优化"><span class="nav-number">4.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#思路"><span class="nav-number">4.1.</span> <span class="nav-text">思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工具"><span class="nav-number">4.2.</span> <span class="nav-text">工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#case-study"><span class="nav-number">5.</span> <span class="nav-text">case study</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#问题背景"><span class="nav-number">5.1.</span> <span class="nav-text">问题背景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#性能测试及问题定位"><span class="nav-number">5.2.</span> <span class="nav-text">性能测试及问题定位</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展知识"><span class="nav-number">6.</span> <span class="nav-text">扩展知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Animation-性能分析选项"><span class="nav-number">6.1.</span> <span class="nav-text">Core Animation 性能分析选项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Offscreen-Rendering"><span class="nav-number">6.2.</span> <span class="nav-text">Offscreen Rendering</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表滚动卡顿的主要原因"><span class="nav-number">6.3.</span> <span class="nav-text">列表滚动卡顿的主要原因</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多资料"><span class="nav-number">7.</span> <span class="nav-text">更多资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">祁迪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

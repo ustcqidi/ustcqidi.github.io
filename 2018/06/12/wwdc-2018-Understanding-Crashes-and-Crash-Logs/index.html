@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="iOS,WWDC," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本文内容基于WWDC 2018中 Understanding Crashes and Crash Logs 整理的。这个Session主要介绍iOS Crash相关的知识：如何分析crash logs，怎么调试和修复crash问题，比如难以重现的内存问题和多线程问题。  Sudden app crashes are a source of bad user experience and a">
+<meta name="keywords" content="iOS,WWDC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WWDC 2018-Understanding Crashes and Crash Logs">
+<meta property="og:url" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="本文内容基于WWDC 2018中 Understanding Crashes and Crash Logs 整理的。这个Session主要介绍iOS Crash相关的知识：如何分析crash logs，怎么调试和修复crash问题，比如难以重现的内存问题和多线程问题。  Sudden app crashes are a source of bad user experience and a">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash2.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash3.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash4.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash5.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash6.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash7.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/tn2151_crash_flow.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash9.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash10.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash11.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash12.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash13.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash14.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash15.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash16.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash17.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash18.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash19.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash20.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash21.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash22.png">
+<meta property="og:updated_time" content="2018-11-03T14:16:26.036Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WWDC 2018-Understanding Crashes and Crash Logs">
+<meta name="twitter:description" content="本文内容基于WWDC 2018中 Understanding Crashes and Crash Logs 整理的。这个Session主要介绍iOS Crash相关的知识：如何分析crash logs，怎么调试和修复crash问题，比如难以重现的内存问题和多线程问题。  Sudden app crashes are a source of bad user experience and a">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash2.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/"/>
+
+
+
+
+
+  <title>WWDC 2018-Understanding Crashes and Crash Logs | 祁迪的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">祁迪的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="祁迪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars2.githubusercontent.com/u/2238185?s=460&v=4">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">WWDC 2018-Understanding Crashes and Crash Logs</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-12T12:58:51+08:00">
+                2018-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文内容基于WWDC 2018中 <a href="https://developer.apple.com/videos/play/wwdc2018/414/" target="_blank" rel="noopener">Understanding Crashes and Crash Logs</a> 整理的。这个Session主要介绍iOS Crash相关的知识：如何分析crash logs，怎么调试和修复crash问题，比如难以重现的内存问题和多线程问题。</p>
+<blockquote>
+<p>Sudden app crashes are a source of bad user experience and app review rejections. Learn how crash logs can be analyzed, what information they contain and how to diagnose the causes of crashes, including hard-to-reproduce memory corruptions and multithreading issues.</p>
+</blockquote>
+<a id="more"></a>
+<h2 id="Fundamentals"><a href="#Fundamentals" class="headerlink" title="Fundamentals"></a>Fundamentals</h2><h3 id="什么是Crash，为什么会产生crash？"><a href="#什么是Crash，为什么会产生crash？" class="headerlink" title="什么是Crash，为什么会产生crash？"></a>什么是Crash，为什么会产生crash？</h3><ul>
+<li>impossible for CPU to execute code</li>
+<li>Operating system is enforcing a policy，为了保证系统流畅性，操作系统会kill 掉内存占用过多的App</li>
+<li>Programming language is preventing failure, 比如assert </li>
+<li>Developer is preventing failure</li>
+</ul>
+<h3 id="Crash长啥样"><a href="#Crash长啥样" class="headerlink" title="Crash长啥样"></a>Crash长啥样</h3><p>当App发生crash时, attached的debugger会暂停App的运行，并定位的crash位置。</p>
+<p>详细看一下crash栈，这里是App启动入口</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash2.png" alt=""></p>
+<p>这里是crash的具体位置</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash3.png" alt=""></p>
+<p>发生crash时,debugger会收到signal，然后暂停App的运行,显示crash的调用栈</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash4.png" alt=""></p>
+<p>如果当前没有attached的debugger，系统会吧crash堆栈信息dump到一个log文件中</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash5.png" alt=""></p>
+<p>release版本的app发生crash时，log文件的调用栈只有地址信息</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash6.png" alt=""></p>
+<p>xcode符号化后的crash log</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash7.png" alt=""></p>
+<h2 id="Accessing-crash-logs"><a href="#Accessing-crash-logs" class="headerlink" title="Accessing crash logs"></a>Accessing crash logs</h2><p>线上APP发生崩溃时，系统会把log文件上传到云端，然后可以通过xcode的organizer获取并分析crash，整体流程如图：</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/tn2151_crash_flow.png" alt=""></p>
+<p>crash organizer中有TestFlight and App Store上App的crash数据。包括了最近crash的统计数据，受影响最大的devices信息，crash具体位置信息等</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash9.png" alt=""></p>
+<h3 id="使用Crash-Organizer"><a href="#使用Crash-Organizer" class="headerlink" title="使用Crash Organizer"></a>使用Crash Organizer</h3><ul>
+<li>App Store users opt in</li>
+<li>使用apple id登录Xcode</li>
+<li>上传带符号的App</li>
+<li>打开Crash Organizer</li>
+</ul>
+<h3 id="crash堆栈符号化最佳实践"><a href="#crash堆栈符号化最佳实践" class="headerlink" title="crash堆栈符号化最佳实践"></a>crash堆栈符号化最佳实践</h3><ul>
+<li>Upload app symbols for server-side symbolication</li>
+<li>Keep your app archive for local symbolication</li>
+<li>Download debug symbols for bitcode apps</li>
+</ul>
+<h2 id="Analyzing-crash-logs"><a href="#Analyzing-crash-logs" class="headerlink" title="Analyzing crash logs"></a>Analyzing crash logs</h2><p>log文件中包含crash的的基本信息，crash原因，崩溃栈，寄存器等。</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash10.png" alt=""></p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash11.png" alt=""></p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash12.png" alt=""></p>
+<p>有了这些信息后，怎么分析crash原因呢？首先看一下Exception Type，通过这个可以知道crash的原因，比如这个例子中EXC_BAD_INSTRUCTION的意思是CPU可能尝试执行不合法的指令。也可以看一下Crash Thread的调用栈。</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash13.png" alt=""></p>
+<h3 id="Assertions-and-Preconditions"><a href="#Assertions-and-Preconditions" class="headerlink" title="Assertions and Preconditions"></a>Assertions and Preconditions</h3><p>Deliberately halt the process when an error has occurred Examples:</p>
+<ul>
+<li>Forced unwrap of an Optional that stores nil </li>
+<li>Out-of-bounds Swift.Array access</li>
+<li>Swift arithmetic overflow</li>
+<li>Uncaught exception</li>
+<li>Custom assertion in your code</li>
+</ul>
+<h3 id="操作系统-Kill"><a href="#操作系统-Kill" class="headerlink" title="操作系统 Kill"></a>操作系统 Kill</h3><ul>
+<li>Watchdog 定时器超时</li>
+<li>设备过热</li>
+<li>内存耗尽</li>
+<li>无效签名</li>
+</ul>
+<p>一个具体的例子，下面这个crash信息可以看出，具体原因是看门狗定时器超时，一般是因为APP启动的时间过长或者响应系统事件事件超时导致；比如在主线程进行网络请求，主线程会一直卡住直到网络回调回来。</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash14.png" alt=""></p>
+<h3 id="Avoiding-Launch-Timeouts"><a href="#Avoiding-Launch-Timeouts" class="headerlink" title="Avoiding Launch Timeouts"></a>Avoiding Launch Timeouts</h3><ul>
+<li>Frequent crash reason in app review</li>
+<li>Disabled in Simulator and in the debugger</li>
+<li>Test your app without the debugger </li>
+<li>on a real device</li>
+<li>on older hardware</li>
+</ul>
+<h2 id="Memory-issues"><a href="#Memory-issues" class="headerlink" title="Memory issues"></a>Memory issues</h2><h3 id="内存问题分析"><a href="#内存问题分析" class="headerlink" title="内存问题分析"></a>内存问题分析</h3><ul>
+<li>over released</li>
+<li>buffer overflow</li>
+<li>used after free</li>
+</ul>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash15.png" alt=""></p>
+<p>通过crash地址可以得到更多信息，7fdd5e70700这个地址在MALLOC_TINY的地址空间范围内，下图描述了objc_release的正常过程。</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash16.png" alt=""></p>
+<p>但如果该对象已经被free了，objc_release会导致崩溃。</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash17.png" alt=""></p>
+<h3 id="找到具体的对象"><a href="#找到具体的对象" class="headerlink" title="找到具体的对象"></a>找到具体的对象</h3><p>有没有办法知道具体是哪个object被多次release导致的crash呢？日志里面虽然有调用栈信息，但是都是编译器生成的函数，没有跟crash相关的具体信息。下面通过一个具体的例子说明如何找到LoginViewController中被多次release的对象。</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash18.png" alt=""></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// LoginViewController.swift</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LoginViewController</span>: <span class="title">UIViewController</span> </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> userName: <span class="type">String</span></span><br><span class="line">    <span class="keyword">var</span> database: <span class="type">DatabaseProxy</span></span><br><span class="line">    <span class="keyword">var</span> views: [<span class="type">UIView</span>]</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在命令行或者xcode打开lldb</li>
+<li>command script import lldb.macosx.crashlog</li>
+<li>加载crash log文件</li>
+</ul>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash19.png" alt=""></p>
+<p>反汇编（disassemble），打印出crash位置的汇编代码，通过分析汇编代码可以知道哪里出了问题。</p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash20.png" alt=""></p>
+<h3 id="常见内存问题"><a href="#常见内存问题" class="headerlink" title="常见内存问题"></a>常见内存问题</h3><ul>
+<li>Crash in objc_msgSend or retain/release</li>
+<li>Unrecognized selector exception</li>
+<li>abort() inside malloc/free</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><ul>
+<li>找到crash的原因</li>
+<li>看一下crash线程的调用堆栈</li>
+<li>通过crash地址和反汇编的方式找到更多的线索</li>
+</ul>
+<h2 id="Multithread-issues"><a href="#Multithread-issues" class="headerlink" title="Multithread issues"></a>Multithread issues</h2><ul>
+<li>多线程问题比较难重现和排查</li>
+<li>多线程问题经常会导致内存问题</li>
+<li>同一个问题崩溃位置通常不一致</li>
+</ul>
+<h3 id="使用Thread-Sanitizer调试多线程问题"><a href="#使用Thread-Sanitizer调试多线程问题" class="headerlink" title="使用Thread Sanitizer调试多线程问题"></a>使用Thread Sanitizer调试多线程问题</h3><ul>
+<li>Reliably reproduces multithreaded </li>
+<li>bugs Works in Simulator</li>
+</ul>
+<h3 id="给每个线程加个名字，发生崩溃是容易定位问题"><a href="#给每个线程加个名字，发生崩溃是容易定位问题" class="headerlink" title="给每个线程加个名字，发生崩溃是容易定位问题"></a>给每个线程加个名字，发生崩溃是容易定位问题</h3><p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash21.png" alt=""></p>
+<p><img src="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/crash22.png" alt=""></p>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a>小结</h3><ul>
+<li>Use Organizer to access crash logs</li>
+<li>Analyze reproducible crashes</li>
+<li>Look for signs of memory corruption and threading issues </li>
+<li>Use bug-finding tools to help reproduce<ul>
+<li>Address Sanitizer for memory corruption bugs </li>
+<li>Thread Sanitizer for multithreading problems</li>
+</ul>
+</li>
+</ul>
+<h2 id="更多资料"><a href="#更多资料" class="headerlink" title="更多资料"></a>更多资料</h2><ol>
+<li><a href="https://developer.apple.com/library/archive/technotes/tn2151/_index.html#//apple_ref/doc/uid/DTS40008184-CH1-APPINFO" target="_blank" rel="noopener">Understanding and Analyzing Application Crash Reports</a></li>
+<li><a href="https://www.jianshu.com/p/ce071aa3ffa8" target="_blank" rel="noopener">iOS crash文件解析及常见的Exception类型</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/iOS/" rel="tag"># iOS</a>
+          
+            <a href="/tags/WWDC/" rel="tag"># WWDC</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/08/YYKit源码学习-YYModel/" rel="next" title="YYKit源码学习-YYModel">
+                <i class="fa fa-chevron-left"></i> YYKit源码学习-YYModel
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/" rel="prev" title="WWDC 2018-Practical Approaches to Great App Performance">
+                WWDC 2018-Practical Approaches to Great App Performance <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="https://avatars2.githubusercontent.com/u/2238185?s=460&v=4"
+                alt="祁迪" />
+            
+              <p class="site-author-name" itemprop="name">祁迪</p>
+              <p class="site-description motion-element" itemprop="description">不忘初心，方得始终</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/ustcqidi" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Fundamentals"><span class="nav-number">1.</span> <span class="nav-text">Fundamentals</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#什么是Crash，为什么会产生crash？"><span class="nav-number">1.1.</span> <span class="nav-text">什么是Crash，为什么会产生crash？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Crash长啥样"><span class="nav-number">1.2.</span> <span class="nav-text">Crash长啥样</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Accessing-crash-logs"><span class="nav-number">2.</span> <span class="nav-text">Accessing crash logs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Crash-Organizer"><span class="nav-number">2.1.</span> <span class="nav-text">使用Crash Organizer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#crash堆栈符号化最佳实践"><span class="nav-number">2.2.</span> <span class="nav-text">crash堆栈符号化最佳实践</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Analyzing-crash-logs"><span class="nav-number">3.</span> <span class="nav-text">Analyzing crash logs</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Assertions-and-Preconditions"><span class="nav-number">3.1.</span> <span class="nav-text">Assertions and Preconditions</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#操作系统-Kill"><span class="nav-number">3.2.</span> <span class="nav-text">操作系统 Kill</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Avoiding-Launch-Timeouts"><span class="nav-number">3.3.</span> <span class="nav-text">Avoiding Launch Timeouts</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Memory-issues"><span class="nav-number">4.</span> <span class="nav-text">Memory issues</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存问题分析"><span class="nav-number">4.1.</span> <span class="nav-text">内存问题分析</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#找到具体的对象"><span class="nav-number">4.2.</span> <span class="nav-text">找到具体的对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#常见内存问题"><span class="nav-number">4.3.</span> <span class="nav-text">常见内存问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结"><span class="nav-number">4.4.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Multithread-issues"><span class="nav-number">5.</span> <span class="nav-text">Multithread issues</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用Thread-Sanitizer调试多线程问题"><span class="nav-number">5.1.</span> <span class="nav-text">使用Thread Sanitizer调试多线程问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#给每个线程加个名字，发生崩溃是容易定位问题"><span class="nav-number">5.2.</span> <span class="nav-text">给每个线程加个名字，发生崩溃是容易定位问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小结-1"><span class="nav-number">5.3.</span> <span class="nav-text">小结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多资料"><span class="nav-number">6.</span> <span class="nav-text">更多资料</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">祁迪</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
