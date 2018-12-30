@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="iOS,Runtime," />
+  <meta name="keywords" content="Chromium,多线程,基础库," />
 
 
 
@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪">
-<meta name="keywords" content="iOS,Runtime">
+<meta name="description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
+<meta name="keywords" content="Chromium,多线程,基础库">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Objective-C Runtime">
-<meta property="og:url" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/index.html">
+<meta property="og:title" content="Chromium 跨平台基础库：多线程">
+<meta property="og:url" content="http://yoursite.com/2018/12/14/chromium-base-thread/index.html">
 <meta property="og:site_name" content="祁迪的博客">
-<meta property="og:description" content="背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪">
+<meta property="og:description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/overview.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/forward.png">
-<meta property="og:updated_time" content="2018-11-03T14:16:26.019Z">
+<meta property="og:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/code_overview.png">
+<meta property="og:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/thread_class.png">
+<meta property="og:updated_time" content="2018-12-30T02:24:05.655Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Objective-C Runtime">
-<meta name="twitter:description" content="背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪">
-<meta name="twitter:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/overview.png">
+<meta name="twitter:title" content="Chromium 跨平台基础库：多线程">
+<meta name="twitter:description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
+<meta name="twitter:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/code_overview.png">
 
 
 
@@ -123,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/12/14/chromium-base-thread/"/>
 
 
 
 
 
-  <title>Objective-C Runtime | 祁迪的博客</title>
+  <title>Chromium 跨平台基础库：多线程 | 祁迪的博客</title>
   
 
 
@@ -266,7 +266,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/14/chromium-base-thread/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="祁迪">
@@ -283,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Objective-C Runtime</h1>
+          <h1 class="post-title" itemprop="name headline">Chromium 跨平台基础库：多线程</h1>
         
 
         <div class="post-meta">
@@ -295,8 +295,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T11:02:00+08:00">
-                2018-06-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-14T22:29:02+08:00">
+                2018-12-14
               </time>
             
 
@@ -333,67 +333,24 @@
       
 
       
-        <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪些知识点。</p>
-<p><img src="/2018/06/25/oc-runtime-dynamic-invocation/overview.png" alt=""></p>
+        <p>多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。</p>
 <a id="more"></a>
-<h2 id="消息发送"><a href="#消息发送" class="headerlink" title="消息发送"></a>消息发送</h2><p>消息发送是OC作为动态类型语言的一个核心特性，OC方法调用并不是编译期间就确定的，而且是运行期间动态地决定调用哪个方法。看一个OC消息发送的例子：初始化了一个Person实例，然后直接调用Person类的eat方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person *p = [[Person alloc] init];</span><br><span class="line">[p eat];</span><br></pre></td></tr></table></figure>
-<p>再看一下对应的底层实现:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objc_msgSend(p, @selector(eat));</span><br></pre></td></tr></table></figure>
-<p>主要流程：</p>
+<h2 id="如何阅读-Chromium-源码"><a href="#如何阅读-Chromium-源码" class="headerlink" title="如何阅读 Chromium 源码"></a>如何阅读 Chromium 源码</h2><p>Chromium 是个庞大的开源项目，完整地下载一份代码需要不少时间。就算代码下载到本地了，在配置一般的机器使用IDE打开的话，会卡到你怀疑人生。根本没法跟踪代码，比如想看一下某个函数的定义、实现或者引用等。推荐在 <a href="https://cs.chromium.org/" target="_blank" rel="noopener">https://cs.chromium.org/</a> 这个网站(需要科学上网)上看代码，它支持模糊搜索, 类型的 declaration, definition, call hierarchy 和 history 等；只要你机器配置和网络还凑合，使用体验还是不错的。</p>
+<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><p>线程相关的代码在 base/threading 目录下，先大体看一下有哪些文件：</p>
+<p><img src="/2018/12/14/chromium-base-thread/code_overview.png" alt=""></p>
+<p>看上去代码量较大，先大体看一下每个文件大概是干啥的：</p>
 <ul>
-<li>查找selector的实现IMP</li>
-<li>消息发送 objc_msgSend</li>
+<li>thread.h/cc 抽象了 线程的 MessageLoop 概念，在 Chromium 中使用线程的 MessageLoop 驱动线程运行</li>
+<li>platform_thread 是对各个平台线程接口的抽象封装，platform_thread_$os 是针对平台的具体实现，比如 platform_thread_android。值得注意的是，不能直接使用 platform_thread</li>
+<li><p>simple_thread.h/cc 是对各原生平台线程接口的简单封装，没有引入 MessageLoop 可以直接使用:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Example:</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThreadRunner</span> :</span> <span class="keyword">public</span> DelegateSimpleThread::Delegate &#123; ... &#125;;</span><br><span class="line">MyThreadRunner runner;</span><br><span class="line"><span class="function">DelegateSimpleThread <span class="title">thread</span><span class="params">(&amp;runner, <span class="string">"good_name_here"</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start will return after the Thread has been successfully started and</span></span><br><span class="line"><span class="comment">// initialized.  The newly created thread will invoke runner-&gt;Run(), and</span></span><br><span class="line"><span class="comment">// run until it returns.</span></span><br><span class="line">thread.Start();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Wait until the thread has exited.  You *MUST* Join!</span></span><br><span class="line">thread.Join();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>thread_checker</p>
+</li>
 </ul>
-<p>本质上OC方法调用是通过objc_msgSend给target发送消息，如果这个消息没有对应的实现，就回进入消息转发流程。</p>
-<h2 id="消息转发"><a href="#消息转发" class="headerlink" title="消息转发"></a>消息转发</h2><p>在发消息的时候，如果 selector 有对应的 IMP ,则直接执行；如果没有，这时就要进入到消息转发流程。依次有 resolveInstanceMethod 、forwardingTargetForSelector、forwardInvocation，如果消息转发流程中3个步骤任然没有找到对应的selector的IMP，就会抛出 <em>**</em> unrecognized selector sent to instance 这样的异常，表明你曾向某个对象发送了一条无法解读的消息。整体流程如下图：</p>
-<p><img src="/2018/06/25/oc-runtime-dynamic-invocation/forward.png" alt=""></p>
-<h2 id="动态方法调用"><a href="#动态方法调用" class="headerlink" title="动态方法调用"></a>动态方法调用</h2><p>实际项目开发时，或多或少都会需要用到动态方法调用。我在项目开发中有两个场景使用了动态方法调用：</p>
-<ul>
-<li>想使用某个基础库的功能，但是改库并没有暴露头文件</li>
-<li>使用某个基础库，但是不希望在编译期间引入对这个库的依赖</li>
-</ul>
-<p>动态方法调用的适用场景还有更多，比如我们想要使用系统的私有方法，也可以通过动态方法调用的机制。不过这样有审核风险，所以一般不推荐使用。</p>
-<h3 id="实例方法调用流程"><a href="#实例方法调用流程" class="headerlink" title="实例方法调用流程"></a>实例方法调用流程</h3><p>代码片段:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Class Person =NSClassFromString(@&quot;Person&quot;);</span><br><span class="line">if (Person) &#123;    </span><br><span class="line">    id person = [[Person alloc] init];</span><br><span class="line">    if (person == nil) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;    </span><br><span class="line">    NSMethodSignature *eat = [person methodSignatureForSelector:NSSelectorFromString(@&quot;eat:&quot;)];</span><br><span class="line">    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:eat];</span><br><span class="line">    int cnt = 10;</span><br><span class="line">    [invocation setArgument:&amp;(cnt) atIndex:2];</span><br><span class="line">    invocation.selector = NSSelectorFromString(@&quot;eat:&quot;)</span><br><span class="line">    invocation.target = person;</span><br><span class="line">    [invocation invoke];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>流程总结:</p>
-<ul>
-<li>获取 Class 定义 (NSClassFromString)</li>
-<li>实例化 Class</li>
-<li>定义实例方法签名 (methodSignatureForSelector)</li>
-<li>创建 NSInvocation (invocationWithMethodSignature)</li>
-<li>设置 invocation 参数 (setArgument，index从2开始)</li>
-<li>获取待调用方法 selector (NSSelectorFromString)</li>
-<li>设置 invocation 的 selector</li>
-<li>设置 invocation 的 target (Class 实例)</li>
-</ul>
-<h2 id="修改历史"><a href="#修改历史" class="headerlink" title="修改历史"></a>修改历史</h2><table>
-<thead>
-<tr>
-<th>修改时间</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>2018-06-25</td>
-<td>创建文档</td>
-</tr>
-<tr>
-<td>2018-06-26</td>
-<td>增加思维导图</td>
-</tr>
-<tr>
-<td>2018-06-27</td>
-<td>增加消息转发部分</td>
-</tr>
-</tbody>
-</table>
-<h2 id="更多资料"><a href="#更多资料" class="headerlink" title="更多资料"></a>更多资料</h2><ul>
-<li><a href="http://blog.devtang.com/2013/10/15/objective-c-object-model/" target="_blank" rel="noopener">Objective-C对象模型及应用</a></li>
-<li><a href="http://wereadteam.github.io/2016/06/30/Aspects/" target="_blank" rel="noopener">面向切面编程之 Aspects 源码解析及应用</a></li>
-<li><a href="https://juejin.im/post/5a30c6fdf265da4319564272" target="_blank" rel="noopener">iOS 消息转发流程</a></li>
-<li><a href="https://www.tuicool.com/articles/Av63EfJ" target="_blank" rel="noopener">iOS开发教程之Objc Runtime笔记</a></li>
-<li><a href="https://lision.me/aspects/" target="_blank" rel="noopener">从 Aspects 源码中我学到了什么？</a></li>
+<p><img src="/2018/12/14/chromium-base-thread/thread_class.png" alt=""></p>
+<h2 id="一些启发"><a href="#一些启发" class="headerlink" title="一些启发"></a>一些启发</h2><ul>
+<li>基础库需要充分的单元测试，一方面保证代码质量，另一方面单元测试是很好的 code example，方便别人了解如何使用基础库</li>
 </ul>
 
       
@@ -412,9 +369,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/iOS/" rel="tag"># iOS</a>
+            <a href="/tags/Chromium/" rel="tag"># Chromium</a>
           
-            <a href="/tags/Runtime/" rel="tag"># Runtime</a>
+            <a href="/tags/多线程/" rel="tag"># 多线程</a>
+          
+            <a href="/tags/基础库/" rel="tag"># 基础库</a>
           
         </div>
       
@@ -427,8 +386,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/21/interview-ios/" rel="next" title="Interview Notebook">
-                <i class="fa fa-chevron-left"></i> Interview Notebook
+              <a href="/2018/06/25/oc-runtime-dynamic-invocation/" rel="next" title="Objective-C Runtime">
+                <i class="fa fa-chevron-left"></i> Objective-C Runtime
               </a>
             
           </div>
@@ -437,8 +396,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/12/14/chromium-base-thread/" rel="prev" title="Chromium 跨平台基础库：多线程">
-                Chromium 跨平台基础库：多线程 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/12/30/summary-2018/" rel="prev" title="2018 年度总结">
+                2018 年度总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -576,7 +535,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#背景"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息发送"><span class="nav-number">2.</span> <span class="nav-text">消息发送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息转发"><span class="nav-number">3.</span> <span class="nav-text">消息转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态方法调用"><span class="nav-number">4.</span> <span class="nav-text">动态方法调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实例方法调用流程"><span class="nav-number">4.1.</span> <span class="nav-text">实例方法调用流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改历史"><span class="nav-number">5.</span> <span class="nav-text">修改历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#更多资料"><span class="nav-number">6.</span> <span class="nav-text">更多资料</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何阅读-Chromium-源码"><span class="nav-number">1.</span> <span class="nav-text">如何阅读 Chromium 源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码结构"><span class="nav-number">2.</span> <span class="nav-text">代码结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些启发"><span class="nav-number">3.</span> <span class="nav-text">一些启发</span></a></li></ol></div>
             
 
           </div>
