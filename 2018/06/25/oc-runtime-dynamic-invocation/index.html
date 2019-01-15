@@ -87,13 +87,13 @@
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/overview.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/oc_runtime.png">
 <meta property="og:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/forward.png">
-<meta property="og:updated_time" content="2018-11-03T14:16:26.019Z">
+<meta property="og:updated_time" content="2019-01-15T14:17:42.368Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Objective-C Runtime">
 <meta name="twitter:description" content="背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪">
-<meta name="twitter:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/overview.png">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/oc_runtime.png">
 
 
 
@@ -334,7 +334,7 @@
 
       
         <h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪些知识点。</p>
-<p><img src="/2018/06/25/oc-runtime-dynamic-invocation/overview.png" alt=""></p>
+<p><img src="/2018/06/25/oc-runtime-dynamic-invocation/oc_runtime.png" alt=""></p>
 <a id="more"></a>
 <h2 id="消息发送"><a href="#消息发送" class="headerlink" title="消息发送"></a>消息发送</h2><p>消息发送是OC作为动态类型语言的一个核心特性，OC方法调用并不是编译期间就确定的，而且是运行期间动态地决定调用哪个方法。看一个OC消息发送的例子：初始化了一个Person实例，然后直接调用Person类的eat方法。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person *p = [[Person alloc] init];</span><br><span class="line">[p eat];</span><br></pre></td></tr></table></figure>
