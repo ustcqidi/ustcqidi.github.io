@@ -87,19 +87,18 @@
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="iOS性能优化 block什么时候在 block 里面用 self, 不需要使用 weak self我们知道, 在使用 block 的时候, 为了避免产生循环引用, 通常需要使用 weakSelf 与 strongSelf, 写下面这样的代码：1234567__weak typeof(self) weakSelf = self;[self doSomeBlockJob:^&amp;#123;    __s">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/iOS_perf.svg">
-<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/algo.svg">
+<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/iOS_perf.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/algo.png">
 <meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/cpp.svg">
-<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/design.svg">
-<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/network.svg">
+<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/network.png">
 <meta property="og:image" content="https://camo.githubusercontent.com/36cf7d4e1598683fe72a5e1c3e837b16840f4085/687474703a2f2f6f6f327239726e7a702e626b742e636c6f7564646e2e636f6d2f6a656c6c797468696e6b544350342e6a7067">
 <meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/tcp_cong.png">
-<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/os.svg">
-<meta property="og:updated_time" content="2019-01-06T06:03:29.855Z">
+<meta property="og:image" content="http://yoursite.com/2018/06/21/interview-ios/os.png">
+<meta property="og:updated_time" content="2019-01-15T14:06:27.091Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Interview Notebook">
 <meta name="twitter:description" content="iOS性能优化 block什么时候在 block 里面用 self, 不需要使用 weak self我们知道, 在使用 block 的时候, 为了避免产生循环引用, 通常需要使用 weakSelf 与 strongSelf, 写下面这样的代码：1234567__weak typeof(self) weakSelf = self;[self doSomeBlockJob:^&amp;#123;    __s">
-<meta name="twitter:image" content="http://yoursite.com/2018/06/21/interview-ios/iOS_perf.svg">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/21/interview-ios/iOS_perf.png">
 
 
 
@@ -339,7 +338,7 @@
       
 
       
-        <h1 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a>iOS</h1><h2 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h2><p><img src="/2018/06/21/interview-ios/iOS_perf.svg"></p>
+        <h1 id="iOS"><a href="#iOS" class="headerlink" title="iOS"></a>iOS</h1><h2 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h2><p><img src="/2018/06/21/interview-ios/iOS_perf.png"></p>
 <h2 id="block"><a href="#block" class="headerlink" title="block"></a>block</h2><h3 id="什么时候在-block-里面用-self-不需要使用-weak-self"><a href="#什么时候在-block-里面用-self-不需要使用-weak-self" class="headerlink" title="什么时候在 block 里面用 self, 不需要使用 weak self"></a>什么时候在 block 里面用 self, 不需要使用 weak self</h3><p>我们知道, 在使用 block 的时候, 为了避免产生循环引用, 通常需要使用 weakSelf 与 strongSelf, 写下面这样的代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">__weak typeof(self) weakSelf = self;</span><br><span class="line">[self doSomeBlockJob:^&#123;</span><br><span class="line">    __strong typeof(weakSelf) strongSelf = weakSelf;</span><br><span class="line">    if (strongSelf) &#123;</span><br><span class="line">        ...</span><br><span class="line">    &#125;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure></p>
 <p>那么请问: 什么时候在 block 里面用 self, 不需要使用 weak self ?</p>
 <a id="more"></a>
@@ -356,7 +355,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">__weak __typeof(self)weakSelf = self;</span><br><span class="line">AFNetworkReachabilityStatusBlock callback = ^(AFNetworkReachabilityStatus status) &#123;</span><br><span class="line">    __strong __typeof(weakSelf)strongSelf = weakSelf;</span><br><span class="line"></span><br><span class="line">    strongSelf.networkReachabilityStatus = status;</span><br><span class="line">    if (strongSelf.networkReachabilityStatusBlock) &#123;</span><br><span class="line">        strongSelf.networkReachabilityStatusBlock(status);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>如果没有 strongSelf 的那行代码, 那么后面的每一行代码执行时, self 都可能被释放掉了, 这样很可能造成逻辑异常.</p>
 <p>特别是当我们正在执行 strongSelf.networkReachabilityStatusBlock(status); 这个 block 闭包时, 如果这个 block 执行到一半时 self 释放, 那么多半情况下会 Crash.</p>
-<h1 id="数据结构与算法"><a href="#数据结构与算法" class="headerlink" title="数据结构与算法"></a>数据结构与算法</h1><p><br><img src="/2018/06/21/interview-ios/algo.svg"></p>
+<h1 id="数据结构与算法"><a href="#数据结构与算法" class="headerlink" title="数据结构与算法"></a>数据结构与算法</h1><p><br><img src="/2018/06/21/interview-ios/algo.png"></p>
 <h2 id="排序"><a href="#排序" class="headerlink" title="排序"></a>排序</h2><p>C++ 手写冒泡、选择、插入、希尔、归并、堆、快排， 参考资料: <a href="http://yansu.org/2015/09/07/sort-algorithms.html" target="_blank" rel="noopener">七种常见经典排序算法总结（C++实现）</a></p>
 <h2 id="二分搜索"><a href="#二分搜索" class="headerlink" title="二分搜索"></a>二分搜索</h2><p>C++ 手写二分搜索，参考资料: <a href="https://zh.wikipedia.org/wiki/%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">二分搜索算法</a></p>
 <h2 id="海量数据"><a href="#海量数据" class="headerlink" title="海量数据"></a>海量数据</h2><p>经典思路:</p>
@@ -470,13 +469,12 @@
 <li>调用端代码无需额外的同步或其他协调动作</li>
 </ul>
 <p>依据这个定义，C++ 标准库里的大多数类都不是线程安全的，无论 std::string 还是 std::vector 或 std::map，因为这些类通常需要在外部加锁。</p>
-<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><p><br><img src="/2018/06/21/interview-ios/design.svg"></p>
-<h2 id="单例"><a href="#单例" class="headerlink" title="单例"></a>单例</h2><p>C++ 手写单例, 参考资料: <a href="https://blog.csdn.net/jx232515/article/details/75635300" target="_blank" rel="noopener">C++单例模式(线程安全，没有内存泄漏)</a></p>
+<h1 id="设计模式"><a href="#设计模式" class="headerlink" title="设计模式"></a>设计模式</h1><h2 id="单例"><a href="#单例" class="headerlink" title="单例"></a>单例</h2><p>C++ 手写单例, 参考资料: <a href="https://blog.csdn.net/jx232515/article/details/75635300" target="_blank" rel="noopener">C++单例模式(线程安全，没有内存泄漏)</a></p>
 <h2 id="观察者"><a href="#观察者" class="headerlink" title="观察者"></a>观察者</h2><p>举个博客订阅的例子，当博主发表新文章的时候，即博主状态发生了改变，那些订阅的读者就会收到通知，然后进行相应的动作，比如去看文章，或者收藏起来。博主与读者之间存在种一对多的依赖关系。</p>
 <p>参考资料:<a href="https://blog.csdn.net/wuzhekai1985/article/details/6674984" target="_blank" rel="noopener">设计模式C++实现（15）——观察者模式</a></p>
 <h2 id="适配器"><a href="#适配器" class="headerlink" title="适配器"></a>适配器</h2><p>在STL中就用到了适配器模式。STL实现了一种数据结构，称为双端队列（deque），支持前后两段的插入与删除。STL实现栈和队列时，没有从头开始定义它们，而是直接使用双端队列实现的。这里双端队列就扮演了适配器的角色。队列用到了它的后端插入，前端删除。而栈用到了它的后端插入，后端删除。假设栈和队列都是一种顺序容器，有两种操作：压入和弹出。</p>
 <p>参考资料:<a href="https://blog.csdn.net/wuzhekai1985/article/details/6665542" target="_blank" rel="noopener">设计模式C++实现（3）——适配器模式</a></p>
-<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><p><br><img src="/2018/06/21/interview-ios/network.svg"></p>
+<h1 id="网络"><a href="#网络" class="headerlink" title="网络"></a>网络</h1><p><br><img src="/2018/06/21/interview-ios/network.png"></p>
 <h2 id="TCP-建立连接与断开连接"><a href="#TCP-建立连接与断开连接" class="headerlink" title="TCP 建立连接与断开连接"></a>TCP 建立连接与断开连接</h2><ul>
 <li>三次握手：过程，为什么需要三次握手</li>
 <li>四次握手：过程，为什么需要四次握手</li>
@@ -500,7 +498,7 @@
 <li>超时重传：当超时时间到达时，发送方还未收到对端的ACK确认，就重传该数据包</li>
 <li>快速重传：当后面的序号先到达，如接收方接收到了1、 3、 4，而2没有收到，就会立即向发送方重复发送三次ACK=2的确认请求重传。如果发送方连续收到3个相同序号的ACK，就重传该数据包。而不用等待超时 </li>
 </ul>
-<h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><p><br><img src="/2018/06/21/interview-ios/os.svg"></p>
+<h1 id="操作系统"><a href="#操作系统" class="headerlink" title="操作系统"></a>操作系统</h1><p><br><img src="/2018/06/21/interview-ios/os.png"></p>
 <h2 id="死锁产生的必要条件"><a href="#死锁产生的必要条件" class="headerlink" title="死锁产生的必要条件"></a>死锁产生的必要条件</h2><ul>
 <li>互斥：一次只有一个进程可以使用一个资源。其他进程不能访问已分配给其他进程的资源</li>
 <li>请求和保持条件：进程获得一定的资源之后，又对其他资源发出请求，但是该资源可能被其他进程占有，此事请求阻塞，但又对自己获得的资源保持不放</li>
@@ -659,7 +657,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">10</span>
+                  <span class="site-state-item-count">11</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -672,7 +670,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
