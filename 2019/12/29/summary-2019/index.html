@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Chromium,多线程,基础库," />
+  <meta name="keywords" content="年度总结," />
 
 
 
@@ -79,21 +79,18 @@
 
 
 
-<meta name="description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
-<meta name="keywords" content="Chromium,多线程,基础库">
+<meta name="description" content="总结 (负面)平淡、稳定，有点颓的一年, 去年立下的 flag 基本没有完成：  早起 起床比较随性，经常导致儿子上学迟到   坚持写文章 仅写了 2-3 篇文章，质量还非常粗糙   深度思考 除了需要解决项目问题时，其余时间基本没有思考   步行或跑步 比较懒，跑步计划基本没有完成，只跑了一个半马   多读书 仅读了几本猎奇类的书   学会情绪管理 经常对儿子吼    总结 (正面) 调试能力+">
+<meta name="keywords" content="年度总结">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Chromium 跨平台基础库：多线程">
-<meta property="og:url" content="http://yoursite.com/2018/12/14/chromium-base-thread/index.html">
+<meta property="og:title" content="2019 年度总结">
+<meta property="og:url" content="http://yoursite.com/2019/12/29/summary-2019/index.html">
 <meta property="og:site_name" content="祁迪的博客">
-<meta property="og:description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
+<meta property="og:description" content="总结 (负面)平淡、稳定，有点颓的一年, 去年立下的 flag 基本没有完成：  早起 起床比较随性，经常导致儿子上学迟到   坚持写文章 仅写了 2-3 篇文章，质量还非常粗糙   深度思考 除了需要解决项目问题时，其余时间基本没有思考   步行或跑步 比较懒，跑步计划基本没有完成，只跑了一个半马   多读书 仅读了几本猎奇类的书   学会情绪管理 经常对儿子吼    总结 (正面) 调试能力+">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/code_overview.png">
-<meta property="og:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/thread_class.png">
-<meta property="og:updated_time" content="2019-01-01T01:18:05.150Z">
+<meta property="og:updated_time" content="2019-12-29T07:09:54.279Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chromium 跨平台基础库：多线程">
-<meta name="twitter:description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
-<meta name="twitter:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/code_overview.png">
+<meta name="twitter:title" content="2019 年度总结">
+<meta name="twitter:description" content="总结 (负面)平淡、稳定，有点颓的一年, 去年立下的 flag 基本没有完成：  早起 起床比较随性，经常导致儿子上学迟到   坚持写文章 仅写了 2-3 篇文章，质量还非常粗糙   深度思考 除了需要解决项目问题时，其余时间基本没有思考   步行或跑步 比较懒，跑步计划基本没有完成，只跑了一个半马   多读书 仅读了几本猎奇类的书   学会情绪管理 经常对儿子吼    总结 (正面) 调试能力+">
 
 
 
@@ -123,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/12/14/chromium-base-thread/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/12/29/summary-2019/"/>
 
 
 
 
 
-  <title>Chromium 跨平台基础库：多线程 | 祁迪的博客</title>
+  <title>2019 年度总结 | 祁迪的博客</title>
   
 
 
@@ -266,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/14/chromium-base-thread/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/29/summary-2019/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="祁迪">
@@ -283,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Chromium 跨平台基础库：多线程</h1>
+          <h1 class="post-title" itemprop="name headline">2019 年度总结</h1>
         
 
         <div class="post-meta">
@@ -295,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-14T22:29:02+08:00">
-                2018-12-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-29T14:35:27+08:00">
+                2019-12-29
               </time>
             
 
@@ -333,37 +330,50 @@
       
 
       
-        <p>多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。</p>
-<a id="more"></a>
-<h2 id="如何阅读-Chromium-源码"><a href="#如何阅读-Chromium-源码" class="headerlink" title="如何阅读 Chromium 源码"></a>如何阅读 Chromium 源码</h2><p>Chromium 是个庞大的开源项目，完整地下载一份代码需要不少时间。就算代码下载到本地了，在配置一般的机器使用IDE打开的话，会卡到你怀疑人生。根本没法跟踪代码，比如想看一下某个函数的定义、实现或者引用等。推荐在 <a href="https://cs.chromium.org/" target="_blank" rel="noopener">https://cs.chromium.org/</a> 这个网站(需要科学上网)上看代码，它支持模糊搜索, 类型的 declaration, definition, call hierarchy 和 history 等；只要你机器配置和网络还凑合，使用体验还是不错的。</p>
-<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><p>线程相关的代码在 base/threading 目录下，先大体看一下有哪些文件：</p>
-<p><img src="/2018/12/14/chromium-base-thread/code_overview.png" alt=""></p>
-<p>看上去代码量较大，先大体看一下每个文件大概是干啥的：</p>
+        <h3 id="总结-负面"><a href="#总结-负面" class="headerlink" title="总结 (负面)"></a>总结 (负面)</h3><p>平淡、稳定，有点颓的一年, 去年立下的 flag 基本没有完成：</p>
 <ul>
-<li>platform_thread 是对各个平台线程接口的抽象封装，platform_thread_$os 是针对平台的具体实现，比如 platform_thread_android。值得注意的是，不能直接使用 platform_thread</li>
-<li>thread.h/cc 是核心实现，抽象了线程的 MessageLoop 概念，thread 启动时会同时启动一个 Runloop，MessageLoop 实现 Runloop 的 Delegate 方法；具体的执行任务封装成 Task 放入 MessageLoop 中执行</li>
-<li>MessageLoop, Task 等代码分别在 base/message_loop 和 base/task 下面</li>
-<li>线程同步/锁 相关代码在 base/synchronized 下面</li>
-<li>simple_thread.h/cc 是对各原生平台线程接口的简单封装，没有引入 MessageLoop 可以直接使用，伪代码如下：<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Example:</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThreadRunner</span> :</span> <span class="keyword">public</span> DelegateSimpleThread::Delegate &#123; ... &#125;;</span><br><span class="line">MyThreadRunner runner;</span><br><span class="line"><span class="function">DelegateSimpleThread <span class="title">thread</span><span class="params">(&amp;runner, <span class="string">"good_name_here"</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Start will return after the Thread has been successfully started and</span></span><br><span class="line"><span class="comment">// initialized.  The newly created thread will invoke runner-&gt;Run(), and</span></span><br><span class="line"><span class="comment">// run until it returns.</span></span><br><span class="line">thread.Start();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Wait until the thread has exited.  You *MUST* Join!</span></span><br><span class="line">thread.Join();</span><br></pre></td></tr></table></figure>
+<li>早起<ul>
+<li>起床比较随性，经常导致儿子上学迟到</li>
+</ul>
+</li>
+<li>坚持写文章<ul>
+<li>仅写了 2-3 篇文章，质量还非常粗糙</li>
+</ul>
+</li>
+<li>深度思考<ul>
+<li>除了需要解决项目问题时，其余时间基本没有思考</li>
+</ul>
+</li>
+<li>步行或跑步<ul>
+<li>比较懒，跑步计划基本没有完成，只跑了一个半马</li>
+</ul>
+</li>
+<li>多读书<ul>
+<li>仅读了几本猎奇类的书</li>
+</ul>
+</li>
+<li>学会情绪管理<ul>
+<li>经常对儿子吼</li>
+</ul>
 </li>
 </ul>
-<p>Chromium thread 的主要类以及他们之间的关系如下图：</p>
-<p><img src="/2018/12/14/chromium-base-thread/thread_class.png" alt=""></p>
-<p>剩下的都时一些辅助的工具类和类型定义：</p>
-<ul>
-<li>thread_checker 用来检查是否在同一个线程调用</li>
-<li>scoped_blocking_call 描述任何阻塞线程的调用，比如同步文件I/O等</li>
-<li>sequence_bound </li>
-<li>thread_id_name_manager 线程 id 和 名字 的映射关系</li>
-<li>thread_collision_warner 定了了一些用于线程安全检测的宏</li>
-<li>watch_dog 创建了一个辅助线程，检测一段时间内某个行为是否没有响应，比如可以检测线程是不是挂起了</li>
-<li>thread_restrictions 禁止或允许某些耗时的操作</li>
-<li>thread_local / sequence_local_storage_slot 存取</li>
+<h3 id="总结-正面"><a href="#总结-正面" class="headerlink" title="总结 (正面)"></a>总结 (正面)</h3><ul>
+<li>调试能力++</li>
+<li>关注理财投资</li>
 </ul>
-<h2 id="一些启发"><a href="#一些启发" class="headerlink" title="一些启发"></a>一些启发</h2><ul>
-<li>基础库需要充分的单元测试，一方面保证代码质量，另一方面单元测试是很好的 code example，方便别人了解如何使用基础库</li>
-<li>诊断线程被挂起的方法</li>
+<h3 id="亟需养成的习惯"><a href="#亟需养成的习惯" class="headerlink" title="亟需养成的习惯"></a>亟需养成的习惯</h3><ul>
+<li>每晚在书桌前坐至少半小时</li>
 </ul>
+<a id="more"></a>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>学会了调试几板斧，大部分 Crash 能自己搞定了</p>
+<h3 id="压力"><a href="#压力" class="headerlink" title="压力"></a>压力</h3><p>9-10 月份应该是工作压力最大的时间段，zoom 在中国被封，紧急被赶鸭子上架解决这个问题，期间压力大到睡不着觉</p>
+<h3 id="给自己挖坑"><a href="#给自己挖坑" class="headerlink" title="给自己挖坑"></a>给自己挖坑</h3><p>发版前提交代码没有仔细测试 &amp;&amp; review，影响了各个平台的主要功能。发版当天还请假出去玩了，release 群里很多人都在找，甚至惊动到 site manager</p>
+<h3 id="红楼梦"><a href="#红楼梦" class="headerlink" title="红楼梦"></a>红楼梦</h3><p>开车上下班的路上基本都在听红楼梦，主题曲也循环听了很多很多遍</p>
+<h3 id="孩子入园"><a href="#孩子入园" class="headerlink" title="孩子入园"></a>孩子入园</h3><p>儿子到了入园年纪，8月份开始提前上暑期适应班。每次把儿子送教室他都哭哭啼啼不愿意让我走。老婆也开始去上班了，家里的生活节奏跟以前完全不一样了。</p>
+<h3 id="严重违章"><a href="#严重违章" class="headerlink" title="严重违章"></a>严重违章</h3><p>严重超速违章两次被扣了两个 12 分，体验了一把满分学习</p>
+<h3 id="游泳"><a href="#游泳" class="headerlink" title="游泳"></a>游泳</h3><p>学会了蛙泳，虽然水平很菜，但是对于旱鸭子的我已经算是一个突破</p>
+<h3 id="基金定投"><a href="#基金定投" class="headerlink" title="基金定投"></a>基金定投</h3><p>开始接触基金定投，投资理财意识开始萌芽，以后每年会定投沪深300</p>
+<h3 id="股票兑现"><a href="#股票兑现" class="headerlink" title="股票兑现"></a>股票兑现</h3><p>公司上市，行权了 25% 的期权，价值大概 45万左右吧，但是因为流程原因还迟迟未到账</p>
 
       
     </div>
@@ -381,11 +391,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Chromium/" rel="tag"># Chromium</a>
-          
-            <a href="/tags/多线程/" rel="tag"># 多线程</a>
-          
-            <a href="/tags/基础库/" rel="tag"># 基础库</a>
+            <a href="/tags/年度总结/" rel="tag"># 年度总结</a>
           
         </div>
       
@@ -398,8 +404,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/06/25/oc-runtime-dynamic-invocation/" rel="next" title="Objective-C Runtime">
-                <i class="fa fa-chevron-left"></i> Objective-C Runtime
+              <a href="/2019/04/17/go-log-decrypt/" rel="next" title="用 Golang 写一个日志处理服务">
+                <i class="fa fa-chevron-left"></i> 用 Golang 写一个日志处理服务
               </a>
             
           </div>
@@ -407,10 +413,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/12/30/summary-2018/" rel="prev" title="2018 年度总结">
-                2018 年度总结 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -547,7 +549,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何阅读-Chromium-源码"><span class="nav-number">1.</span> <span class="nav-text">如何阅读 Chromium 源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码结构"><span class="nav-number">2.</span> <span class="nav-text">代码结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些启发"><span class="nav-number">3.</span> <span class="nav-text">一些启发</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-负面"><span class="nav-number">1.</span> <span class="nav-text">总结 (负面)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结-正面"><span class="nav-number">2.</span> <span class="nav-text">总结 (正面)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#亟需养成的习惯"><span class="nav-number">3.</span> <span class="nav-text">亟需养成的习惯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试"><span class="nav-number">4.</span> <span class="nav-text">调试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#压力"><span class="nav-number">5.</span> <span class="nav-text">压力</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#给自己挖坑"><span class="nav-number">6.</span> <span class="nav-text">给自己挖坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#红楼梦"><span class="nav-number">7.</span> <span class="nav-text">红楼梦</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#孩子入园"><span class="nav-number">8.</span> <span class="nav-text">孩子入园</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#严重违章"><span class="nav-number">9.</span> <span class="nav-text">严重违章</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#游泳"><span class="nav-number">10.</span> <span class="nav-text">游泳</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基金定投"><span class="nav-number">11.</span> <span class="nav-text">基金定投</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#股票兑现"><span class="nav-number">12.</span> <span class="nav-text">股票兑现</span></a></li></ol></div>
             
 
           </div>
