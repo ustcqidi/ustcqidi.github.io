@@ -263,6 +263,132 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/03/chromium-base-allocator/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="祁迪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars3.githubusercontent.com/u/2238185?s=400&u=52233db04cfe7bfd9f82c0f5739cbc7bbb485805&v=4">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/01/03/chromium-base-allocator/" itemprop="url">Chromium 跨平台基础库：allocator</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-01-03T21:38:05+08:00">
+                2020-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。</p>
+<p>Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录结构：</p>
+<p><img src="/2020/01/03/chromium-base-allocator/code_overview.png" alt=""></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/01/03/chromium-base-allocator/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/29/summary-2019/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1400,133 +1526,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="祁迪">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://avatars3.githubusercontent.com/u/2238185?s=400&u=52233db04cfe7bfd9f82c0f5739cbc7bbb485805&v=4">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="祁迪的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/" itemprop="url">WWDC-Advanced Graphics and Animations for iOS Apps</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-14T11:31:42+08:00">
-                2018-06-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>本文基于 <a href="https://developer.apple.com/videos/play/wwdc2014/419/" target="_blank" rel="noopener">Advanced Graphics and Animations for iOS Apps</a> 整理，介绍了Core Animation和iOS GPU渲染管线的基础知识，以及如何profiling，定位和解决 UI 性能问题。</p>
-<blockquote>
-<p>Creating a responsive UI requires an understanding of Core Animation and how mobile GPUs work. Learn about the iOS rendering pipeline in Core Animation, the new UIVisualEffectView and how it utilizes the GPU. Find out about the available tools for profiling UI performance. See how to identify and fix performance issues on a variety of devices.</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1581,7 +1580,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-count">15</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1594,7 +1593,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
