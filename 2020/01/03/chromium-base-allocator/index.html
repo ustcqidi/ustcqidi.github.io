@@ -89,7 +89,11 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/code_overview.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/memoryinfra.png">
-<meta property="og:updated_time" content="2020-01-03T14:15:24.146Z">
+<meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/PartitionSuperPageExtentEntry.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/PartitionRootBase.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/PartitionBucket.png">
+<meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/partition_alloc.png">
+<meta property="og:updated_time" content="2020-01-04T16:37:43.974Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chromium 跨平台基础库：allocator">
 <meta name="twitter:description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。 Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录">
@@ -344,6 +348,43 @@
 <h3 id="PartitionAlloc"><a href="#PartitionAlloc" class="headerlink" title="PartitionAlloc"></a>PartitionAlloc</h3><p>allocator_shim 仅仅是对系统 allocator 的封装，而 PartitionAlloc 是基于 Partitions 和 Buckets 模型实现了一个 allocator。</p>
 <p>Partition 是一个堆，它包含特定的对象类型、特定大小的对象或特定生命周期的对象（如调用方所愿）。调用方可以根据需要创建任意多个分区。每个 Partition 包含多个Buckets。bucket 是 Partition 中包含相似大小对象的区域。</p>
 <p>PartitionAlloc 在 Security 方面做的更好，保证每个 Partition 都是独立的，并且受到保护，不受任何其他 Partition 的影响。这样一来可以避免 buffer overflow 破坏其他 Partition 的数据。</p>
+<h4 id="PartitionAlloc-的主要接口"><a href="#PartitionAlloc-的主要接口" class="headerlink" title="PartitionAlloc 的主要接口"></a>PartitionAlloc 的主要接口</h4><ul>
+<li>PartitionRoot::Alloc() / PartitionRoot::Free()<ul>
+<li>Partition 操作非线程安全</li>
+<li>编译时决定需分配的内存大小(不能超过某个最大值)</li>
+<li>分配对象大小必须是系统指针大小的整数倍</li>
+</ul>
+</li>
+<li>PartitionRootGeneric::Alloc() / PartitionRootGeneric::Free()<ul>
+<li>Partition 线程安全</li>
+<li>可以分配任意大小的内存 (不能超过 INT_MAX)</li>
+<li>Bucket 大小由待分配内存决定，自动填充为系统指针 size 整数倍, 比如申请分配大小为 4000， bucket 大小则为 4096</li>
+</ul>
+</li>
+</ul>
+<p>PartitionRoot / PartitionRootGeneric 实现的功能类似于 malloc 和 free。不同的是，该对象表示一个 “堆分区”， 每个分区在一个独立的地址空间内，互不干扰。 </p>
+<ul>
+<li>SizeSpecificPartitionAllocator / PartitionAllocatorGeneric</li>
+</ul>
+<h4 id="PartitionAlloc-的数据结构"><a href="#PartitionAlloc-的数据结构" class="headerlink" title="PartitionAlloc 的数据结构"></a>PartitionAlloc 的数据结构</h4><ol>
+<li>PartitionSuperPageExtentEntry</li>
+</ol>
+<p><img src="/2020/01/03/chromium-base-allocator/PartitionSuperPageExtentEntry.png" alt=""></p>
+<ol start="2">
+<li>PartitionRootBase</li>
+</ol>
+<p><img src="/2020/01/03/chromium-base-allocator/PartitionRootBase.png" alt=""></p>
+<ol start="3">
+<li>PartitionBucket 与 PartitionPage</li>
+</ol>
+<p><img src="/2020/01/03/chromium-base-allocator/PartitionBucket.png" alt=""></p>
+<h4 id="PartitionAlloc-的代码结构"><a href="#PartitionAlloc-的代码结构" class="headerlink" title="PartitionAlloc 的代码结构"></a>PartitionAlloc 的代码结构</h4><p><img src="/2020/01/03/chromium-base-allocator/partition_alloc.png" alt=""></p>
+<h2 id="学习到的一些知识点"><a href="#学习到的一些知识点" class="headerlink" title="学习到的一些知识点"></a>学习到的一些知识点</h2><ul>
+<li>spin lock 的用法</li>
+<li>constexpr 关键字</li>
+<li>volatile 关键字</li>
+<li>unittest 与 perftest 的思路</li>
+</ul>
 <h2 id="修改历史"><a href="#修改历史" class="headerlink" title="修改历史"></a>修改历史</h2><table>
 <thead>
 <tr>
@@ -355,6 +396,10 @@
 <tr>
 <td>2020-01-03</td>
 <td>创建文档+初稿</td>
+</tr>
+<tr>
+<td>2020-01-04</td>
+<td>增加 PartitionAlloc 部分</td>
 </tr>
 </tbody>
 </table>
@@ -537,7 +582,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chromium-中的-allocator"><span class="nav-number">1.</span> <span class="nav-text">Chromium 中的 allocator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#allocator-shim"><span class="nav-number">1.1.</span> <span class="nav-text">allocator_shim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PartitionAlloc"><span class="nav-number">1.2.</span> <span class="nav-text">PartitionAlloc</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改历史"><span class="nav-number">2.</span> <span class="nav-text">修改历史</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chromium-中的-allocator"><span class="nav-number">1.</span> <span class="nav-text">Chromium 中的 allocator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#allocator-shim"><span class="nav-number">1.1.</span> <span class="nav-text">allocator_shim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PartitionAlloc"><span class="nav-number">1.2.</span> <span class="nav-text">PartitionAlloc</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的主要接口"><span class="nav-number">1.2.1.</span> <span class="nav-text">PartitionAlloc 的主要接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的数据结构"><span class="nav-number">1.2.2.</span> <span class="nav-text">PartitionAlloc 的数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的代码结构"><span class="nav-number">1.2.3.</span> <span class="nav-text">PartitionAlloc 的代码结构</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习到的一些知识点"><span class="nav-number">2.</span> <span class="nav-text">学习到的一些知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改历史"><span class="nav-number">3.</span> <span class="nav-text">修改历史</span></a></li></ol></div>
             
 
           </div>
