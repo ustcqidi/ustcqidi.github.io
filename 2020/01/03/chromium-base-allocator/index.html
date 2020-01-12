@@ -93,7 +93,7 @@
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/PartitionRootBase.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/PartitionBucket.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/partition_alloc.png">
-<meta property="og:updated_time" content="2020-01-04T16:37:43.974Z">
+<meta property="og:updated_time" content="2020-01-12T02:40:56.773Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chromium 跨平台基础库：allocator">
 <meta name="twitter:description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。 Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录">
@@ -385,6 +385,9 @@
 <li>volatile 关键字</li>
 <li>unittest 与 perftest 的思路</li>
 </ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a href="https://www.geeksforgeeks.org/understanding-volatile-qualifier-in-c" target="_blank" rel="noopener">Understanding “volatile” qualifier in C | Set 2 (Examples)</a></li>
+</ol>
 <h2 id="修改历史"><a href="#修改历史" class="headerlink" title="修改历史"></a>修改历史</h2><table>
 <thead>
 <tr>
@@ -582,7 +585,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chromium-中的-allocator"><span class="nav-number">1.</span> <span class="nav-text">Chromium 中的 allocator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#allocator-shim"><span class="nav-number">1.1.</span> <span class="nav-text">allocator_shim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PartitionAlloc"><span class="nav-number">1.2.</span> <span class="nav-text">PartitionAlloc</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的主要接口"><span class="nav-number">1.2.1.</span> <span class="nav-text">PartitionAlloc 的主要接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的数据结构"><span class="nav-number">1.2.2.</span> <span class="nav-text">PartitionAlloc 的数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的代码结构"><span class="nav-number">1.2.3.</span> <span class="nav-text">PartitionAlloc 的代码结构</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习到的一些知识点"><span class="nav-number">2.</span> <span class="nav-text">学习到的一些知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改历史"><span class="nav-number">3.</span> <span class="nav-text">修改历史</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Chromium-中的-allocator"><span class="nav-number">1.</span> <span class="nav-text">Chromium 中的 allocator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#allocator-shim"><span class="nav-number">1.1.</span> <span class="nav-text">allocator_shim</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PartitionAlloc"><span class="nav-number">1.2.</span> <span class="nav-text">PartitionAlloc</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的主要接口"><span class="nav-number">1.2.1.</span> <span class="nav-text">PartitionAlloc 的主要接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的数据结构"><span class="nav-number">1.2.2.</span> <span class="nav-text">PartitionAlloc 的数据结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PartitionAlloc-的代码结构"><span class="nav-number">1.2.3.</span> <span class="nav-text">PartitionAlloc 的代码结构</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#学习到的一些知识点"><span class="nav-number">2.</span> <span class="nav-text">学习到的一些知识点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">3.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改历史"><span class="nav-number">4.</span> <span class="nav-text">修改历史</span></a></li></ol></div>
             
 
           </div>
