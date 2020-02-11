@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。 Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录">
+<meta name="description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。">
 <meta name="keywords" content="Chromium,allocator,基础库">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chromium 跨平台基础库：allocator">
 <meta property="og:url" content="http://yoursite.com/2020/01/03/chromium-base-allocator/index.html">
 <meta property="og:site_name" content="祁迪的博客">
-<meta property="og:description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。 Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录">
+<meta property="og:description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/code_overview.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/memoryinfra.png">
@@ -93,10 +93,10 @@
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/PartitionRootBase.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/PartitionBucket.png">
 <meta property="og:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/partition_alloc.png">
-<meta property="og:updated_time" content="2020-01-12T02:40:56.773Z">
+<meta property="og:updated_time" content="2020-02-11T09:29:38.846Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chromium 跨平台基础库：allocator">
-<meta name="twitter:description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。 Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录">
+<meta name="twitter:description" content="allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。">
 <meta name="twitter:image" content="http://yoursite.com/2020/01/03/chromium-base-allocator/code_overview.png">
 
 
@@ -338,9 +338,9 @@
 
       
         <p>allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。</p>
+<a id="more"></a>
 <p>Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录结构：</p>
 <p><img src="/2020/01/03/chromium-base-allocator/code_overview.png" alt=""></p>
-<a id="more"></a>
 <h2 id="Chromium-中的-allocator"><a href="#Chromium-中的-allocator" class="headerlink" title="Chromium 中的 allocator"></a>Chromium 中的 allocator</h2><p>Chromium code base 中用到了多个 allocator，比如 allocator_shim, PartitionAlloc，还有 Blink 中用到的 Olipan。这篇文章主要关注 allocator_shim 和 PartitionAlloc。</p>
 <h3 id="allocator-shim"><a href="#allocator-shim" class="headerlink" title="allocator_shim"></a>allocator_shim</h3><p>allocator_shim 就是对各个平台 allocator 的封装，比如 malloc / new, 为什么要增加这一层封装呢？ 主要基于两点考虑，其一是在封装层增加很多 Security 检测逻辑，避免一些常见的安全漏洞，比如缓冲区溢出等。第二，可以 dump 更多 memery 相关的信息，方便排查内存以及性能问题等。</p>
 <p>Chromium 有完整的 MemoryInfra 体系，包括采集 measuring data(chrome://tracing), memory dump, benchmarks (Telemetry) 和 chromeperf dashboard。这套体系的数据采集离不开自定义 allocator 的支持。</p>
