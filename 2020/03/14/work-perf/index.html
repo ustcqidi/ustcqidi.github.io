@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="用脚本把所有繁杂、重复的工作自动化，是提升工作效率和身心愉悦感的很棒的方法。还能大幅度地降低人为操作的失误。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-14T13:23:23.036Z">
+<meta property="og:updated_time" content="2020-03-27T14:48:25.444Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="用脚本把所有繁杂、重复的工作自动化">
 <meta name="twitter:description" content="用脚本把所有繁杂、重复的工作自动化，是提升工作效率和身心愉悦感的很棒的方法。还能大幅度地降低人为操作的失误。">
@@ -337,6 +337,7 @@
 <p>大体分析了一下需求以后，我写了一个简单的脚本，可以从 FTP 上获取最新或者指定版本的 build/bianry/symbols 文件，顺便写了个自动更新代码的脚本，两个脚本一搭配效率迅速提升。再也不用蛋疼地打开 FileZilla 眯着眼找 build 了。</p>
 <h2 id="批量删除-git-仓库本地分支"><a href="#批量删除-git-仓库本地分支" class="headerlink" title="批量删除 git 仓库本地分支"></a>批量删除 git 仓库本地分支</h2><h3 id="删除所有包含-trunk的本地分支"><a href="#删除所有包含-trunk的本地分支" class="headerlink" title="删除所有包含_trunk的本地分支"></a>删除所有包含_trunk的本地分支</h3><p>git branch | grep “_trunk” | xargs git branch -D</p>
 <h3 id="删除所有不包含trunk的本地分支"><a href="#删除所有不包含trunk的本地分支" class="headerlink" title="删除所有不包含trunk的本地分支"></a>删除所有不包含trunk的本地分支</h3><p>git branch | grep -v “trunk” | xargs git branch -D</p>
+<h2 id="日志清理脚本"><a href="#日志清理脚本" class="headerlink" title="日志清理脚本"></a>日志清理脚本</h2><p>一键清理垃圾日志文件，释放磁盘空间</p>
 
       
     </div>
@@ -380,6 +381,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/03/27/work-perf-tools/" rel="prev" title="提高效率的工具集">
+                提高效率的工具集 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -460,7 +465,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -473,7 +478,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">27</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -516,7 +521,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JNIGenerator"><span class="nav-number">1.</span> <span class="nav-text">JNIGenerator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZMBuildDownloader"><span class="nav-number">2.</span> <span class="nav-text">ZMBuildDownloader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#批量删除-git-仓库本地分支"><span class="nav-number">3.</span> <span class="nav-text">批量删除 git 仓库本地分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除所有包含-trunk的本地分支"><span class="nav-number">3.1.</span> <span class="nav-text">删除所有包含_trunk的本地分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除所有不包含trunk的本地分支"><span class="nav-number">3.2.</span> <span class="nav-text">删除所有不包含trunk的本地分支</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JNIGenerator"><span class="nav-number">1.</span> <span class="nav-text">JNIGenerator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ZMBuildDownloader"><span class="nav-number">2.</span> <span class="nav-text">ZMBuildDownloader</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#批量删除-git-仓库本地分支"><span class="nav-number">3.</span> <span class="nav-text">批量删除 git 仓库本地分支</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#删除所有包含-trunk的本地分支"><span class="nav-number">3.1.</span> <span class="nav-text">删除所有包含_trunk的本地分支</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#删除所有不包含trunk的本地分支"><span class="nav-number">3.2.</span> <span class="nav-text">删除所有不包含trunk的本地分支</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#日志清理脚本"><span class="nav-number">4.</span> <span class="nav-text">日志清理脚本</span></a></li></ol></div>
             
 
           </div>
