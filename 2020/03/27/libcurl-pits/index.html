@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="记录项目使用 libcurl 时遇到的一些坑，持续更新！">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-27T15:26:48.614Z">
+<meta property="og:updated_time" content="2020-03-27T15:35:49.208Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="libcurl 陷阱">
 <meta name="twitter:description" content="记录项目使用 libcurl 时遇到的一些坑，持续更新！">
@@ -340,7 +340,7 @@
 <blockquote>
 <p>curl_global_cleanup does not block waiting for any libcurl-created threads to terminate (such as threads used for name resolving). If a module containing libcurl is dynamically unloaded while libcurl-created threads are still running then your program may crash or other corruption may occur. We recommend you do not run libcurl from any module that may be unloaded dynamically. This behavior may be addressed in the future.</p>
 </blockquote>
-<h2 id="Connection-Cache-复用问题"><a href="#Connection-Cache-复用问题" class="headerlink" title="Connection Cache 复用问题"></a>Connection Cache 复用问题</h2><p>网络切换/中断、App前后台切换，可能会导致 Connect Cache 的 socket 连接实例失效，但是 libcurl 没有针对这种情况做 Connection Cache 的及时清理，到时连接复用时可能会出现连接失败。这个问题在 iOS, Mac 平台上很容易出现。</p>
+<h2 id="Connection-Cache-复用问题"><a href="#Connection-Cache-复用问题" class="headerlink" title="Connection Cache 复用问题"></a>Connection Cache 复用问题</h2><p>网络切换/中断、App前后台切换，可能会导致 Connection Cache 的 socket 连接实例失效，但是 libcurl 没有针对这种情况做 Connection Cache 的及时清理，导致连接复用时可能会出现连接失败。这个问题在 iOS, Mac 平台上很容易出现。</p>
 <ul>
 <li><a href="https://curl.haxx.se/mail/lib-2016-07/0032.html" target="_blank" rel="noopener">相关讨论</a></li>
 </ul>
