@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="安全," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="不忘初心，方得始终">
-<meta name="keywords" content="iOS">
-<meta property="og:type" content="website">
-<meta property="og:title" content="祁迪的博客">
-<meta property="og:url" content="http://yoursite.com/archives/2020/05/index.html">
+<meta name="description" content="最近整个公司是谈 “Security” 色变，每周一个 Release 也折腾的我们够呛。这个期间我们修复了无数个安全漏洞，这里简单总结一下，细节就不描述了。">
+<meta name="keywords" content="安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Security">
+<meta property="og:url" content="http://yoursite.com/2020/06/03/security/index.html">
 <meta property="og:site_name" content="祁迪的博客">
-<meta property="og:description" content="不忘初心，方得始终">
+<meta property="og:description" content="最近整个公司是谈 “Security” 色变，每周一个 Release 也折腾的我们够呛。这个期间我们修复了无数个安全漏洞，这里简单总结一下，细节就不描述了。">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-06-03T14:28:04.053Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="祁迪的博客">
-<meta name="twitter:description" content="不忘初心，方得始终">
+<meta name="twitter:title" content="Security">
+<meta name="twitter:description" content="最近整个公司是谈 “Security” 色变，每周一个 Release 也折腾的我们够呛。这个期间我们修复了无数个安全漏洞，这里简单总结一下，细节就不描述了。">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/archives/2020/05/"/>
+  <link rel="canonical" href="http://yoursite.com/2020/06/03/security/"/>
 
 
 
 
 
-  <title>归档 | 祁迪的博客</title>
+  <title>Security | 祁迪的博客</title>
   
 
 
@@ -144,7 +145,7 @@
     
   
 
-  <div class="container sidebar-position-left page-archive">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -248,74 +249,148 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
-
-      <span class="archive-page-counter">
-        
-        
-        
-          
-        
-        嗯..! 目前共计 22 篇日志。 继续努力。
-      </span>
-
-      
-
-        
-        
-        
-
-        
-          
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2020">2020</h1>
-          </div>
-        
-        
-
-        
 
   <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/06/03/security/">
 
-      <h2 class="post-title">
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="祁迪">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="https://avatars3.githubusercontent.com/u/2238185?s=400&u=52233db04cfe7bfd9f82c0f5739cbc7bbb485805&v=4">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+    </span>
+
+    
+      <header class="post-header">
+
         
-            <a class="post-title-link" href="/2020/05/01/basic-func-test/" itemprop="url">
-              
-                <span itemprop="name">开发基础库需要注意什么</span>
-              
-            </a>
         
-      </h2>
+          <h1 class="post-title" itemprop="name headline">Security</h1>
+        
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2020-05-01T20:21:56+08:00"
-              content="2020-05-01" >
-          05-01
-        </time>
-      </div>
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-06-03T22:05:11+08:00">
+                2020-06-03
+              </time>
+            
 
-    </header>
-  </article>
+            
 
+            
+          </span>
 
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
+      
 
+      
+        <p>最近整个公司是谈 “Security” 色变，每周一个 Release 也折腾的我们够呛。这个期间我们修复了无数个安全漏洞，这里简单总结一下，细节就不描述了。</p>
+<a id="more"></a>
+<h3 id="缓冲区溢出"><a href="#缓冲区溢出" class="headerlink" title="缓冲区溢出"></a>缓冲区溢出</h3><h3 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h3><h3 id="敏感信息泄漏-（PII-Cookie-Token）"><a href="#敏感信息泄漏-（PII-Cookie-Token）" class="headerlink" title="敏感信息泄漏 （PII/Cookie/Token）"></a>敏感信息泄漏 （PII/Cookie/Token）</h3><h3 id="Remote-Code-Execution"><a href="#Remote-Code-Execution" class="headerlink" title="Remote Code Execution"></a>Remote Code Execution</h3><h3 id="各种第三方库升级"><a href="#各种第三方库升级" class="headerlink" title="各种第三方库升级"></a>各种第三方库升级</h3><h3 id="加密-哈希算法升级"><a href="#加密-哈希算法升级" class="headerlink" title="加密/哈希算法升级"></a>加密/哈希算法升级</h3><h3 id="第三方开源库-License-审核"><a href="#第三方开源库-License-审核" class="headerlink" title="第三方开源库 License 审核"></a>第三方开源库 License 审核</h3><h3 id="政策法规方面"><a href="#政策法规方面" class="headerlink" title="政策法规方面"></a>政策法规方面</h3>
+      
     </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安全/" rel="tag"># 安全</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/05/01/basic-func-test/" rel="next" title="开发基础库需要注意什么">
+                <i class="fa fa-chevron-left"></i> 开发基础库需要注意什么
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
+  </article>
 
-  
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -323,6 +398,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -343,8 +422,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -409,6 +497,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓冲区溢出"><span class="nav-number">1.</span> <span class="nav-text">缓冲区溢出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL-注入"><span class="nav-number">2.</span> <span class="nav-text">SQL 注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#敏感信息泄漏-（PII-Cookie-Token）"><span class="nav-number">3.</span> <span class="nav-text">敏感信息泄漏 （PII/Cookie/Token）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remote-Code-Execution"><span class="nav-number">4.</span> <span class="nav-text">Remote Code Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各种第三方库升级"><span class="nav-number">5.</span> <span class="nav-text">各种第三方库升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加密-哈希算法升级"><span class="nav-number">6.</span> <span class="nav-text">加密/哈希算法升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方开源库-License-审核"><span class="nav-number">7.</span> <span class="nav-text">第三方开源库 License 审核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#政策法规方面"><span class="nav-number">8.</span> <span class="nav-text">政策法规方面</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -549,6 +653,10 @@
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
