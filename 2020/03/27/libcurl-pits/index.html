@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="记录项目使用 libcurl 时遇到的一些坑，持续更新！">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-03-27T15:35:49.208Z">
+<meta property="og:updated_time" content="2020-07-11T04:49:20.914Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="libcurl 陷阱">
 <meta name="twitter:description" content="记录项目使用 libcurl 时遇到的一些坑，持续更新！">
@@ -347,6 +347,12 @@
 <blockquote>
 <p>I’ve got a situation where connection cache is kept through internet connection change (Wifi -&gt; 3G for example). After network change cURL will try to reuse the connection from cache and will fail and open a new connection. The problem is that it takes ~20 seconds to understand that the connection was dead.</p>
 </blockquote>
+<h2 id="WebSocket-支持"><a href="#WebSocket-支持" class="headerlink" title="WebSocket 支持"></a>WebSocket 支持</h2><p>主要思路是使用 libcurl 作 https 通信，具体的 websocket 协议解析与封装需要自己实现。但是有个问题，libcurl 官方是不支持 websocket，因此 websocket 请求实例拿到 response 以后。这个实例可能会被 re-use。当然，民间也有一些基于 libcurl 支持 websocket 的讨论。</p>
+<ul>
+<li><a href="https://curl.haxx.se/video/curlup-2017/2017-03-19_05_Michael_Kaufmann_Websocket_support_for_curl.mp4" target="_blank" rel="noopener">https://curl.haxx.se/video/curlup-2017/2017-03-19_05_Michael_Kaufmann_Websocket_support_for_curl.mp4</a></li>
+<li><a href="https://github.com/bagder/curl/pull/86" target="_blank" rel="noopener">https://github.com/bagder/curl/pull/86</a></li>
+<li><a href="https://gist.github.com/mkauf/5ce3574ce821b2cf02986d4d701bfa86" target="_blank" rel="noopener">https://gist.github.com/mkauf/5ce3574ce821b2cf02986d4d701bfa86</a></li>
+</ul>
 
       
     </div>
@@ -528,7 +534,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#动态库卸载-Crash"><span class="nav-number">1.</span> <span class="nav-text">动态库卸载 Crash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Connection-Cache-复用问题"><span class="nav-number">2.</span> <span class="nav-text">Connection Cache 复用问题</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#动态库卸载-Crash"><span class="nav-number">1.</span> <span class="nav-text">动态库卸载 Crash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Connection-Cache-复用问题"><span class="nav-number">2.</span> <span class="nav-text">Connection Cache 复用问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket-支持"><span class="nav-number">3.</span> <span class="nav-text">WebSocket 支持</span></a></li></ol></div>
             
 
           </div>
