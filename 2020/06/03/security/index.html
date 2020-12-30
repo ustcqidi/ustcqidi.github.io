@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="最近整个公司是谈 “Security” 色变，每周一个 Release 也折腾的我们够呛。这个期间我们修复了无数个安全漏洞，这里简单总结一下，细节就不描述了。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-06-03T14:28:04.053Z">
+<meta property="og:updated_time" content="2020-12-28T13:14:05.341Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Security">
 <meta name="twitter:description" content="最近整个公司是谈 “Security” 色变，每周一个 Release 也折腾的我们够呛。这个期间我们修复了无数个安全漏洞，这里简单总结一下，细节就不描述了。">
@@ -332,7 +332,7 @@
       
         <p>最近整个公司是谈 “Security” 色变，每周一个 Release 也折腾的我们够呛。这个期间我们修复了无数个安全漏洞，这里简单总结一下，细节就不描述了。</p>
 <a id="more"></a>
-<h3 id="缓冲区溢出"><a href="#缓冲区溢出" class="headerlink" title="缓冲区溢出"></a>缓冲区溢出</h3><h3 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h3><h3 id="敏感信息泄漏-（PII-Cookie-Token）"><a href="#敏感信息泄漏-（PII-Cookie-Token）" class="headerlink" title="敏感信息泄漏 （PII/Cookie/Token）"></a>敏感信息泄漏 （PII/Cookie/Token）</h3><h3 id="Remote-Code-Execution"><a href="#Remote-Code-Execution" class="headerlink" title="Remote Code Execution"></a>Remote Code Execution</h3><h3 id="各种第三方库升级"><a href="#各种第三方库升级" class="headerlink" title="各种第三方库升级"></a>各种第三方库升级</h3><h3 id="加密-哈希算法升级"><a href="#加密-哈希算法升级" class="headerlink" title="加密/哈希算法升级"></a>加密/哈希算法升级</h3><h3 id="第三方开源库-License-审核"><a href="#第三方开源库-License-审核" class="headerlink" title="第三方开源库 License 审核"></a>第三方开源库 License 审核</h3><h3 id="政策法规方面"><a href="#政策法规方面" class="headerlink" title="政策法规方面"></a>政策法规方面</h3>
+<h3 id="缓冲区溢出"><a href="#缓冲区溢出" class="headerlink" title="缓冲区溢出"></a>缓冲区溢出</h3><h3 id="SQL-注入"><a href="#SQL-注入" class="headerlink" title="SQL 注入"></a>SQL 注入</h3><h3 id="敏感信息泄漏-（PII-Cookie-Token）"><a href="#敏感信息泄漏-（PII-Cookie-Token）" class="headerlink" title="敏感信息泄漏 （PII/Cookie/Token）"></a>敏感信息泄漏 （PII/Cookie/Token）</h3><h3 id="Remote-Code-Execution"><a href="#Remote-Code-Execution" class="headerlink" title="Remote Code Execution"></a>Remote Code Execution</h3><h3 id="各种第三方库升级"><a href="#各种第三方库升级" class="headerlink" title="各种第三方库升级"></a>各种第三方库升级</h3><h3 id="加密-哈希算法升级"><a href="#加密-哈希算法升级" class="headerlink" title="加密/哈希算法升级"></a>加密/哈希算法升级</h3><h3 id="第三方开源库-License-审核"><a href="#第三方开源库-License-审核" class="headerlink" title="第三方开源库 License 审核"></a>第三方开源库 License 审核</h3><h3 id="政策法规方面"><a href="#政策法规方面" class="headerlink" title="政策法规方面"></a>政策法规方面</h3><h3 id="代码缺陷"><a href="#代码缺陷" class="headerlink" title="代码缺陷"></a>代码缺陷</h3><h4 id="Buffer-Overflow"><a href="#Buffer-Overflow" class="headerlink" title="Buffer Overflow"></a>Buffer Overflow</h4><h4 id="User-after-free"><a href="#User-after-free" class="headerlink" title="User after free"></a>User after free</h4><h4 id="Double-free"><a href="#Double-free" class="headerlink" title="Double free"></a>Double free</h4>
       
     </div>
     
@@ -455,7 +455,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -511,7 +511,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓冲区溢出"><span class="nav-number">1.</span> <span class="nav-text">缓冲区溢出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL-注入"><span class="nav-number">2.</span> <span class="nav-text">SQL 注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#敏感信息泄漏-（PII-Cookie-Token）"><span class="nav-number">3.</span> <span class="nav-text">敏感信息泄漏 （PII/Cookie/Token）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remote-Code-Execution"><span class="nav-number">4.</span> <span class="nav-text">Remote Code Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各种第三方库升级"><span class="nav-number">5.</span> <span class="nav-text">各种第三方库升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加密-哈希算法升级"><span class="nav-number">6.</span> <span class="nav-text">加密/哈希算法升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方开源库-License-审核"><span class="nav-number">7.</span> <span class="nav-text">第三方开源库 License 审核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#政策法规方面"><span class="nav-number">8.</span> <span class="nav-text">政策法规方面</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓冲区溢出"><span class="nav-number">1.</span> <span class="nav-text">缓冲区溢出</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL-注入"><span class="nav-number">2.</span> <span class="nav-text">SQL 注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#敏感信息泄漏-（PII-Cookie-Token）"><span class="nav-number">3.</span> <span class="nav-text">敏感信息泄漏 （PII/Cookie/Token）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Remote-Code-Execution"><span class="nav-number">4.</span> <span class="nav-text">Remote Code Execution</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#各种第三方库升级"><span class="nav-number">5.</span> <span class="nav-text">各种第三方库升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#加密-哈希算法升级"><span class="nav-number">6.</span> <span class="nav-text">加密/哈希算法升级</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三方开源库-License-审核"><span class="nav-number">7.</span> <span class="nav-text">第三方开源库 License 审核</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#政策法规方面"><span class="nav-number">8.</span> <span class="nav-text">政策法规方面</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码缺陷"><span class="nav-number">9.</span> <span class="nav-text">代码缺陷</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Buffer-Overflow"><span class="nav-number">9.1.</span> <span class="nav-text">Buffer Overflow</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#User-after-free"><span class="nav-number">9.2.</span> <span class="nav-text">User after free</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Double-free"><span class="nav-number">9.3.</span> <span class="nav-text">Double free</span></a></li></ol></li></ol></div>
             
 
           </div>
