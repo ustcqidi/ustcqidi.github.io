@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="基础库,单元测试,性能测试,Fuzzing 测试," />
+  <meta name="keywords" content="网络," />
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。">
-<meta name="keywords" content="基础库,单元测试,性能测试,Fuzzing 测试">
+<meta name="description" content="最近在看 “Let’s Code Your own TCP/IP Stack” 系列文章，有点类似 “自己动手写 TCP/IP” 协议栈之类的。乍一看貌似一个不可能完成的任务，但是作者通过 5 篇文章逐步讲解，我居然看懂了。">
+<meta name="keywords" content="网络">
 <meta property="og:type" content="article">
-<meta property="og:title" content="开发基础库需要注意什么">
-<meta property="og:url" content="http://yoursite.com/2020/05/01/basic-func-test/index.html">
+<meta property="og:title" content="TUN &amp; TAP">
+<meta property="og:url" content="http://yoursite.com/2021/05/24/tun-tap/index.html">
 <meta property="og:site_name" content="祁迪的博客">
-<meta property="og:description" content="最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。">
+<meta property="og:description" content="最近在看 “Let’s Code Your own TCP/IP Stack” 系列文章，有点类似 “自己动手写 TCP/IP” 协议栈之类的。乍一看貌似一个不可能完成的任务，但是作者通过 5 篇文章逐步讲解，我居然看懂了。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-05-01T12:59:25.817Z">
+<meta property="og:image" content="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/418ae0e8-cf80-4cbc-8c5f-df72fe6f2ef2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210524%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210524T151315Z&X-Amz-Expires=86400&X-Amz-Signature=951d7993e5024d3c045da9b1c3b6ed6fa891cdcadd7acff1efbf76d7444c610c&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22">
+<meta property="og:updated_time" content="2021-05-24T15:13:26.323Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="开发基础库需要注意什么">
-<meta name="twitter:description" content="最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。">
+<meta name="twitter:title" content="TUN &amp; TAP">
+<meta name="twitter:description" content="最近在看 “Let’s Code Your own TCP/IP Stack” 系列文章，有点类似 “自己动手写 TCP/IP” 协议栈之类的。乍一看貌似一个不可能完成的任务，但是作者通过 5 篇文章逐步讲解，我居然看懂了。">
+<meta name="twitter:image" content="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/418ae0e8-cf80-4cbc-8c5f-df72fe6f2ef2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210524%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20210524T151315Z&X-Amz-Expires=86400&X-Amz-Signature=951d7993e5024d3c045da9b1c3b6ed6fa891cdcadd7acff1efbf76d7444c610c&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2020/05/01/basic-func-test/"/>
+  <link rel="canonical" href="http://yoursite.com/2021/05/24/tun-tap/"/>
 
 
 
 
 
-  <title>开发基础库需要注意什么 | 祁迪的博客</title>
+  <title>TUN & TAP | 祁迪的博客</title>
   
 
 
@@ -263,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/01/basic-func-test/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2021/05/24/tun-tap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="祁迪">
@@ -280,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">开发基础库需要注意什么</h1>
+          <h1 class="post-title" itemprop="name headline">TUN & TAP</h1>
         
 
         <div class="post-meta">
@@ -292,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-05-01T20:21:56+08:00">
-                2020-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-05-24T23:04:02+08:00">
+                2021-05-24
               </time>
             
 
@@ -330,15 +332,34 @@
       
 
       
-        <p>最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。</p>
+        <p>最近在看 “Let’s Code Your own TCP/IP Stack” 系列文章，有点类似 “自己动手写 TCP/IP” 协议栈之类的。乍一看貌似一个不可能完成的任务，但是作者通过 5 篇文章逐步讲解，我居然看懂了。</p>
 <a id="more"></a>
-<p>实现这个基础方法，其实需要考虑的 case 还是挺多的，比如是否有多余的内存拷贝，针对无效输入做 buffer 越界保护，大小端以及各种异常情况下是否有内存泄漏等等。</p>
-<p>这个基础方法并不复杂，但是考虑到所有产品线，所有客户端，甚至服务端都会调用这个接口做加解密，所以我们还是做了很多测试，以保证万无一失。</p>
-<h3 id="文档文档文档"><a href="#文档文档文档" class="headerlink" title="文档文档文档"></a>文档文档文档</h3><p>文档非常非常重要，否则你每次都需要跟你的用户（基础库使用方）解释细节，直至暴走，怀疑人生。</p>
-<h3 id="代码-Review"><a href="#代码-Review" class="headerlink" title="代码 Review"></a>代码 Review</h3><p>代码 Review 常常能发现一些低级手抖错误，我实现这个方法时没有仔细考虑内存拷贝的开销，Review 代码时同事指出来了，后来想了一下，大量数据加解密调用时，频繁地内存拷贝可能会导致内存碎片，影响性能。</p>
-<h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p>单元测试简直是 Common SDK 开发者的保命法宝。我在 <a href="https://ustcqidi.github.io/2019/01/14/chromium-testing/" target="_blank" rel="noopener">Chromium 工程源码是如何测试的</a> 中提到过，Chromium 中所有基础库的代码都有大量的单元测试和性能测试。实现这个加解密方法时我写了大量的测试用例，测试了几波以后基本胸有成竹了。另外，如果产品源码编译时间很久的话，使用单元测试工程来开发会极大地提高效率。 </p>
-<p>Daniel Stenberg 大哥有一个 <a href="https://www.youtube.com/watch?v=U572Hq8LiWw" target="_blank" rel="noopener">curl development with Daniel</a> 系列，直播撸 curl 的 feature。围观了后，发现大哥也是写完代码后，用 testing 工程验证。</p>
-<h3 id="Fuzzing-测试"><a href="#Fuzzing-测试" class="headerlink" title="Fuzzing 测试"></a>Fuzzing 测试</h3><p>Fuzzing 测试就是传入各种无效、随机、操蛋的参数，测试方法是否有异常，比如 Crash, 内存泄漏等等。通常需要写一些脚本随机生成脏数据，然后频繁地调用目标方法。</p>
+<p>这其中大多数都是介绍网络协议的实现细节，比如 ARP 的 Header 格式、解析，TCP 的三次握手细节，重传算法，拥塞控制机制的实现等。我个人比较感兴趣的是，应用层如何拿到原始的网络数据包？</p>
+<p>作者开篇就介绍了，使用 TUN &amp; TAP 即可。晚上查阅了一些资料，真是打开了一扇门的感觉。原来我们平时使用的 VPN, 虚拟化技术之类的都得依赖 TUN &amp; TAP。</p>
+<p>这篇文章零散记录了 TAP 和 TUN 的一些资料。</p>
+<h2 id="什么是-TUN-TAP"><a href="#什么是-TUN-TAP" class="headerlink" title="什么是 TUN/TAP"></a>什么是 TUN/TAP</h2><blockquote>
+<p>TUN/TAP provides packet reception and transmission for user space programs.</p>
+</blockquote>
+<p>TUN 和 TAP Linux 内核的虚拟网络设备 </p>
+<ul>
+<li>TUN 是 network tunnel driver 的缩写</li>
+<li>TAP 是 <strong><em>Test Anything Protocol</em></strong> 的缩写</li>
+</ul>
+<p>TUN 和 TAP 在网络栈中的关系如图：</p>
+<p><img src="https://s3.us-west-2.amazonaws.com/secure.notion-static.com/418ae0e8-cf80-4cbc-8c5f-df72fe6f2ef2/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=AKIAT73L2G45O3KS52Y5%2F20210524%2Fus-west-2%2Fs3%2Faws4_request&amp;X-Amz-Date=20210524T151315Z&amp;X-Amz-Expires=86400&amp;X-Amz-Signature=951d7993e5024d3c045da9b1c3b6ed6fa891cdcadd7acff1efbf76d7444c610c&amp;X-Amz-SignedHeaders=host&amp;response-content-disposition=filename%20%3D%22Untitled.png%22" alt=""></p>
+<h2 id="TUN-和-TAP-的应用场景"><a href="#TUN-和-TAP-的应用场景" class="headerlink" title="TUN 和 TAP 的应用场景"></a>TUN 和 TAP 的应用场景</h2><ul>
+<li>The first one is <strong>VPN</strong> software (such as OpenVPN). In this scenario, the kernel sends its network packets to the tun or tap devices. The VPN software will then encrypt and forward them to the other side of the VPN tunnel where they get decrypted and delivered to their destination.</li>
+<li>The second area in which tun and tap devices are popular are system virtualization/emulation packages.</li>
+<li>NAT</li>
+</ul>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><ul>
+<li>OpenVPN 创建 tun</li>
+<li>代码读取 tun 数据</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ul>
+<li><a href="https://backreference.org/2010/03/26/tuntap-interface-tutorial/" target="_blank" rel="noopener">tuntap-interface-tutorial</a></li>
+<li>虚拟化技术：libvirt &amp; QEMU &amp; KVM</li>
+</ul>
 
       
     </div>
@@ -356,13 +377,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/基础库/" rel="tag"># 基础库</a>
-          
-            <a href="/tags/单元测试/" rel="tag"># 单元测试</a>
-          
-            <a href="/tags/性能测试/" rel="tag"># 性能测试</a>
-          
-            <a href="/tags/Fuzzing-测试/" rel="tag"># Fuzzing 测试</a>
+            <a href="/tags/网络/" rel="tag"># 网络</a>
           
         </div>
       
@@ -375,8 +390,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/03/27/libcurl-pits/" rel="next" title="libcurl 陷阱">
-                <i class="fa fa-chevron-left"></i> libcurl 陷阱
+              <a href="/2021/03/28/2021-habit/" rel="next" title="几个好习惯">
+                <i class="fa fa-chevron-left"></i> 几个好习惯
               </a>
             
           </div>
@@ -384,10 +399,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/06/03/security/" rel="prev" title="Security">
-                Security <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -524,7 +535,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#文档文档文档"><span class="nav-number">1.</span> <span class="nav-text">文档文档文档</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码-Review"><span class="nav-number">2.</span> <span class="nav-text">代码 Review</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单元测试"><span class="nav-number">3.</span> <span class="nav-text">单元测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Fuzzing-测试"><span class="nav-number">4.</span> <span class="nav-text">Fuzzing 测试</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是-TUN-TAP"><span class="nav-number">1.</span> <span class="nav-text">什么是 TUN/TAP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TUN-和-TAP-的应用场景"><span class="nav-number">2.</span> <span class="nav-text">TUN 和 TAP 的应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实验"><span class="nav-number">3.</span> <span class="nav-text">实验</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
             
 
           </div>
