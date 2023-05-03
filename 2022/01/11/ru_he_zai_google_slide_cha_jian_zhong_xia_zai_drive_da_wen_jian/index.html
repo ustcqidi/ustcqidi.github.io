@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      如何在 Google Slide 插件中下载 Drive 大文件
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2022-01-11T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2022-01-11</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/杂项/" class="post-meta-link">杂项</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>1.5k words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/AppScript/" class="post-meta-link">AppScript</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/add-ons/" class="post-meta-link">add-ons</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>我们开发了一个  Google Slide 的插件，有个功能是从 Google Drive 中选择某个文件，插入到 PPT 的中。如果选择的文件过大，就会出现 <code>exceeds the maximum file size</code> 报错。根本原因是 Google 限制了 DriveApp 下载文件的大小 (如下图)，具体参考<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/guides/services/quotas#current_limitations">这里</a>。<br><span id="more"></span></p>
+<p><img src="https://file.notion.so/f/s/52d1e0db-01b6-4cd6-b2c9-baf6364ce1f5/Untitled.png?id=d881c7a1-ec94-478b-be8b-feb0affd2df5&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234192831&amp;signature=N0aQqeXO4428PNMYqdmIhmVl_bTKryFbruzMAULYnWY" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/52d1e0db-01b6-4cd6-b2c9-baf6364ce1f5/Untitled.png?id=d881c7a1-ec94-478b-be8b-feb0affd2df5&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234192831&amp;signature=N0aQqeXO4428PNMYqdmIhmVl_bTKryFbruzMAULYnWY" class="lozad post-image"></p>
+<p>当前的代码：</p>
+<pre class="highlight"><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertDriveImageById</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> fileItem = DriveApp.getFileById(id);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> item = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">  item.bytes = fileItem.getBlob().getBytes();</span><br><span class="line">  item.type = fileItem.getMimeType();</span><br><span class="line">  item.name = fileItem.getName();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> item;</span><br><span class="line">&#125;</span><br></pre>
+<p>文件大小超限以后的报错：</p>
+<pre class="highlight"><span class="line">Exception: File <span class="number">1.</span>STEAM活动集锦（<span class="number">2018</span>）.mp4 exceeds the maximum file size.</span><br></pre>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><h3 id="思路一"><a href="#思路一" class="headerlink" title="思路一"></a>思路一</h3><p>获取到目标文件的下载链接，然后直接使用 UrlFetchApp 下载。<br>测试代码：</p>
+<pre class="highlight"><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">insertDriveImageById</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> fileItem = DriveApp.getFileById(id);</span><br><span class="line">  <span class="keyword">var</span> accessToken = ScriptApp.getOAuthToken();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> params = &#123;</span><br><span class="line">    <span class="attr">method</span>: <span class="string">&quot;get&quot;</span>,</span><br><span class="line">    <span class="attr">headers</span>: &#123;<span class="attr">Authorization</span>: <span class="string">&quot;Bearer &quot;</span> + accessToken&#125;,</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">var</span> response = UrlFetchApp.fetch(fileItem.getDownloadUrl(), params);</span><br><span class="line">  <span class="keyword">var</span> rc = response.getResponseCode();</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (rc == <span class="number">200</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> fileBlob = response.getBlob()</span><br><span class="line">    <span class="built_in">console</span>.log(fileBlob.getContentType());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre>
+<p>目标下载连接是 <a target="_blank" rel="noopener" href="https://drive.google.com/uc?id=1sC7_2aLYoN0nSGcBTNT4fQh7uWvmNcUG&amp;export=download"><code>https://drive.google.com/uc?id=1sC7_2aLYoN0nSGcBTNT4fQh7uWvmNcUG&amp;export=download</code></a> , 用 chrome 可以正常下载。</p>
+<p>但是用这段测试代码下载到的 ContentType 是 <code>text/html</code> ，实际上是没有成功下载的。分析了一下有两个原因：</p>
+<ul>
+<li>没有 drive 的访问权限。可以用浏览器其他账户访问上面的链接证实这个猜想。</li>
+</ul>
+<p><img src="https://file.notion.so/f/s/22a667cf-7ec6-4abd-8ed0-bc6fdf9085a4/Untitled.png?id=8faa4b78-cfa6-45b5-9697-3afc2be3e31c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234193048&amp;signature=w0IWNb_94GBzPHcp3rkEOS4OHI0LUfKPdu_dUyJzP8E" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/22a667cf-7ec6-4abd-8ed0-bc6fdf9085a4/Untitled.png?id=8faa4b78-cfa6-45b5-9697-3afc2be3e31c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234193048&amp;signature=w0IWNb_94GBzPHcp3rkEOS4OHI0LUfKPdu_dUyJzP8E" class="lozad post-image"></p>
+<p>因此，使用链接下载文件涉及身份验证流程；分析了一下网络请求，中间有几次重定向请求：</p>
+<p><img src="https://file.notion.so/f/s/0034e678-49ca-446b-abd3-ef85eb0adc32/Untitled.png?id=0a79680b-9e11-4f9b-a405-dbe89d24014e&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234193272&amp;signature=GvHUMmI_sM8V9m_LXqlQun0PcqqvMbwlG0Bat0xK6hI" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/0034e678-49ca-446b-abd3-ef85eb0adc32/Untitled.png?id=0a79680b-9e11-4f9b-a405-dbe89d24014e&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234193272&amp;signature=GvHUMmI_sM8V9m_LXqlQun0PcqqvMbwlG0Bat0xK6hI" class="lozad post-image"></p>
+<ul>
+<li>UrlFetchApp 也受限于单次 URL Fetch response size 最大 50MB 的限制，详细参考：<a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/guides/services/quotas#current_limitations">Quotas for Google Services</a></li>
+</ul>
+<p>因此，<code>思路一</code> 这种方案不可行。</p>
+<h3 id="思路二"><a href="#思路二" class="headerlink" title="思路二"></a>思路二</h3><p><del>切割目标文件，分块下载。</del><br>分块下载，合并 chunks<br><strong>具体流程</strong></p>
+<ul>
+<li><del>把目标大文件切割成指定 chunk size 的小文件，存储在临时文件夹下</del></li>
+<li><del>逐个下载小文件</del>，<a target="_blank" rel="noopener" href="https://developers.google.com/drive/api/v3/manage-downloads#partial_download">Partial download</a>, 然后合并成一个 blob 或者 byte 数组中</li>
+</ul>
+<p><strong>TODO</strong></p>
+<ul>
+<li>获取文件大小</li>
+<li>Partial download</li>
+<li>blob &amp; bytes 合并</li>
+</ul>
+<p><strong>Code</strong></p>
+<pre class="highlight"><span class="line"><span class="function">function <span class="title">concatChunks</span><span class="params">(chunksArray)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// sum of individual chunk lengths</span></span><br><span class="line">  let totalLength = chunksArray.<span class="built_in">reduce</span>((acc, value) =&gt; acc + value.length, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (!chunksArray.length) <span class="keyword">return</span> null;</span><br><span class="line"></span><br><span class="line">   let result = <span class="keyword">new</span> <span class="built_in">Uint8Array</span>(totalLength);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// for each chunk - copy it over result</span></span><br><span class="line">      <span class="comment">// next chunk is copied right after the previous one</span></span><br><span class="line">      let length = <span class="number">0</span>;</span><br><span class="line">      <span class="keyword">for</span>(let chunk of chunksArray) &#123;</span><br><span class="line">            result.<span class="built_in">set</span>(chunk, length);</span><br><span class="line">            length += chunk.length;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function">function <span class="title">partialDownload</span><span class="params">(params)</span> </span>&#123;</span><br><span class="line">  var accessToken = ScriptApp.<span class="built_in">getOAuthToken</span>();</span><br><span class="line">  var baseUrl = <span class="string">&quot;https://www.googleapis.com/drive/v3/files/&quot;</span>;</span><br><span class="line"></span><br><span class="line">  var fileSize = params.fileSize;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// partial download by chunk size (bytes).</span></span><br><span class="line">  var downloadUrl = baseUrl + params.fileId + <span class="string">&quot;?alt=media&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// calculate the number of chunks</span></span><br><span class="line">  var chunkNumber = fileSize / params.chunkSize;</span><br><span class="line"></span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">&quot;fileSize is &quot;</span> + fileSize + <span class="string">&quot;, chunkSize is &quot;</span> + params.chunkSize + <span class="string">&quot;, chunkNumber is &quot;</span> + chunkNumber)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// get the ceil value of chunkNumber</span></span><br><span class="line">  chunkNumber = Math.<span class="built_in">ceil</span>(chunkNumber)</span><br><span class="line"></span><br><span class="line">  <span class="comment">// download first chunk</span></span><br><span class="line">  var chunkStartIdx = <span class="number">0</span>;</span><br><span class="line">  var chunkEndIdx = params.chunkSize;</span><br><span class="line"></span><br><span class="line">  var downloadedChunks = [];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">for</span> (let idx = <span class="number">0</span>; idx &lt; chunkNumber; idx++) &#123;</span><br><span class="line">    var partialParams = &#123;</span><br><span class="line">        method: <span class="string">&quot;get&quot;</span>,</span><br><span class="line">        headers: &#123;</span><br><span class="line">          Authorization: <span class="string">&quot;Bearer &quot;</span> + accessToken,</span><br><span class="line">          Range: <span class="string">&quot;bytes=&quot;</span> + chunkStartIdx + <span class="string">&quot;-&quot;</span> + chunkEndIdx,</span><br><span class="line">        &#125;,</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    console.<span class="built_in">log</span>(<span class="string">&quot;start to download chunk &quot;</span> + idx + <span class="string">&quot; , start index is &quot;</span> + chunkStartIdx + <span class="string">&quot; , end index is &quot;</span> + chunkEndIdx)</span><br><span class="line"></span><br><span class="line">    var res = UrlFetchApp.<span class="built_in">fetch</span>(downloadUrl, partialParams).<span class="built_in">getBlob</span>();</span><br><span class="line">    var chunkBytes = res.<span class="built_in">getBytes</span>();</span><br><span class="line"></span><br><span class="line">    console.<span class="built_in">log</span>(<span class="string">&quot;successfully download chunk &quot;</span> + idx + <span class="string">&quot;, ContentType is &quot;</span> + res.<span class="built_in">getContentType</span>() + <span class="string">&quot;, chunk size is &quot;</span> + chunkBytes.length);</span><br><span class="line"></span><br><span class="line">    downloadedChunks.<span class="built_in">push</span>(chunkBytes);</span><br><span class="line"></span><br><span class="line">    console.<span class="built_in">log</span>(<span class="string">&quot;concat downloaded chunks, total chunk number is &quot;</span> + downloadedChunks.length)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// update chunk index</span></span><br><span class="line">    chunkStartIdx = chunkEndIdx+<span class="number">1</span></span><br><span class="line">    chunkEndIdx = chunkEndIdx + params.chunkSize</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(chunkEndIdx &gt; fileSize)</span><br><span class="line">      chunkEndIdx = fileSize;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  var fullBytes = <span class="built_in">concatChunks</span>(downloadedChunks)</span><br><span class="line"></span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">&quot;successfully merge all chunks to one, full bytes is &quot;</span> + fullBytes.length)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> fullBytes</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function <span class="built_in">insertDriveImageById</span>(id) &#123;</span><br><span class="line">  var fileItem = DriveApp.<span class="built_in">getFileById</span>(id);</span><br><span class="line"></span><br><span class="line">  var fileSize = fileItem.<span class="built_in">getSize</span>()</span><br><span class="line">  var mimeType = fileItem.<span class="built_in">getMimeType</span>()</span><br><span class="line">  var fileName = fileItem.<span class="built_in">getName</span>()</span><br><span class="line"></span><br><span class="line">  console.<span class="built_in">log</span>(fileSize, mimeType, fileName);</span><br><span class="line"></span><br><span class="line">  var item = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">  item.type = mimeType;</span><br><span class="line">  item.name = fileName;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (fileSize &lt; <span class="number">52528162</span> <span class="comment">/* magic number for the maximum downoad size of UrlFetchApp*/</span>) &#123;</span><br><span class="line">    <span class="comment">// get blob directly</span></span><br><span class="line">    item.bytes = fileItem.<span class="built_in">getBlob</span>().<span class="built_in">getBytes</span>();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// partial download</span></span><br><span class="line">    var params = &#123;</span><br><span class="line">      fileId: id, <span class="comment">// File ID of the large file.</span></span><br><span class="line">      chunkSize: <span class="number">10485760</span>, <span class="comment">// 10MB</span></span><br><span class="line">      fileSize: fileSize</span><br><span class="line">    &#125;;</span><br><span class="line">    item.bytes = <span class="built_in">partialDownload</span>(params);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  console.<span class="built_in">log</span>(<span class="string">&quot;insertDriveImageById, return bytes &quot;</span> + item.bytes.length)</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> item;</span><br><span class="line">&#125;</span><br></pre>
+<h3 id="思路三"><a href="#思路三" class="headerlink" title="思路三"></a>思路三</h3><p>方案二已经解决了大文件下载的问题，但是实测下载 100 M 文件居然需要好几分钟 ！<br>有两个可能性：</p>
+<ol>
+<li><p>下载速率受限</p>
+<ol>
+<li>先排除第一个可能性，我用 curl 命令行下载同一个文件，一分钟内就可以完成。</li>
+</ol>
+</li>
+<li><p>blob &amp; bytes 合并时内存拷贝的损耗</p>
+</li>
+</ol>
+<p>如何避免 blob 合并和内存拷贝呢？ 因为UrlFetchApp 下载文件有大小限制，必须分片下载，能否直接用 js 的 fetch API 下载呢？<br>Slide 插件是运行在的沙盒环境，虽然也支持常规的 html,css 和 js，但是有一定的区别和限制：</p>
+<ul>
+<li>根据我们以往的经验，我们通常是把业务逻辑的代码放在一个单独的 js 文件中，在 Slide 插件工程中这个文件后缀是 .gs </li>
+<li>htlm 中不能直接调用 .gs 里面的 fuction ，需要通过 <code>google.script.run</code>  接口，它是 html 和 gs 的桥梁。官方文档对这个接口解释的比较清楚</li>
+</ul>
+<blockquote>
+<p><code>google.script.run</code>&gt;  is an asynchronous client-side JavaScript API available in <a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/guides/html">HTML-service pages</a>&gt;  that can call server-side Apps Script functions.</p>
+</blockquote>
+<p>也就是说，Slide 插件项目中，js 代码存在的方式可以是传统的 <code>&lt;script&gt;</code> 标签形式，也可以单独放到 .gs 文件中。放到 .gs 文件的 js 方法必须是用 <code>google.script.run</code> 调用。那么何时用 <code>&lt;script&gt;</code> 形式，何时需要放到单独的 .gs 文件呢 ?</p>
+<p>通过代码测试，最终结论是：Slide 相关 API 比如获取 Active Page，插入元素到制定 Page 等等，需要通过 <code>google.sciprt.run</code> 方式，其他的都可以用 <code>&lt;script&gt;</code> 标签。通过以上分析，我把下载 Drive 文件的接口替换成 fetch API 实现，这样规避了 UrlFetchApp  对下载文件大小的限制，不用处理分片和合并逻辑了。</p>
+<p>经测试，通一个文件下载时间从原来的8分钟左右缩短到 30秒。</p>
+<p>最终代码如下：</p>
+<pre class="highlight"><span class="line"><span class="function"><span class="title">jsDownloadVideoFromGD</span>(<span class="params">param</span>)</span> &#123;</span><br><span class="line">	<span class="keyword">let</span> _this = <span class="built_in">this</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> url = <span class="string">&#x27;https://www.googleapis.com/drive/v3/files/&#x27;</span> + param.id + <span class="string">&#x27;?alt=media&#x27;</span></span><br><span class="line">	<span class="comment">//&#x27;https://www.googleapis.com/drive/v3/files/fileid?alt=media&#x27;</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">var</span> token = <span class="string">&#x27;Bearer &#x27;</span> + param.accessToken;</span><br><span class="line">	fetch(url, &#123;</span><br><span class="line">		<span class="attr">headers</span>: &#123;</span><br><span class="line">				<span class="string">&#x27;Authorization&#x27;</span>: token</span><br><span class="line">			&#125;</span><br><span class="line">	&#125;)</span><br><span class="line">		.then(<span class="function"><span class="params">response</span> =&gt;</span> response.blob())</span><br><span class="line">		.then(<span class="function"><span class="keyword">function</span> (<span class="params">myBlob</span>) </span>&#123;</span><br><span class="line">				<span class="built_in">console</span>.log(<span class="string">&quot;download &quot;</span> + item.name + <span class="string">&quot; success...&quot;</span>);</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">		&#125;).catch(<span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">				<span class="built_in">console</span>.log(error.message);</span><br><span class="line">				<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;);</span><br><span class="line">&#125;</span><br></pre>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ul>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/guides/services/quotas#current_limitations">https://developers.google.com/apps-script/guides/services/quotas#current_limitations</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/tanaikech/DownloadLargeFilesByUrl#references">https://github.com/tanaikech/DownloadLargeFilesByUrl#references</a></li>
+<li><a target="_blank" rel="noopener" href="https://tanaikech.github.io/2018/05/17/resumable-upload-for-web-apps-using-google-apps-script/">https://tanaikech.github.io/2018/05/17/resumable-upload-for-web-apps-using-google-apps-script/</a></li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/tanaikech/3e44c779f05374d19333444c9a4dd5ba">https://gist.github.com/tanaikech/3e44c779f05374d19333444c9a4dd5ba</a></li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/tanaikech/c0f383034045ab63c19604139ecb0728">https://gist.github.com/tanaikech/c0f383034045ab63c19604139ecb0728</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/tanaikech/Resumable_Upload_For_WebApps">https://github.com/tanaikech/Resumable_Upload_For_WebApps</a></li>
+<li><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/60181888/google-apps-script-get-range-of-bytes-from-binary-file">https://stackoverflow.com/questions/60181888/google-apps-script-get-range-of-bytes-from-binary-file</a></li>
+<li><a target="_blank" rel="noopener" href="https://developers.google.com/apps-script/guides/html/reference/run">https://developers.google.com/apps-script/guides/html/reference/run</a></li>
+</ul>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = 如何在 Google Slide 插件中下载 Drive 大文件
+Date = 2022-01-11
+Published = true
+Category = 杂项
+Tag = ['AppScript', 'add-ons']
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2023/01/02/2022_nian_du_zong_jie/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">2022 年度总结 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2021/12/27/2021_nian_du_zong_jie/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">2021 年度总结 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%80"><span class="toc-text">思路一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%BA%8C"><span class="toc-text">思路二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%89"><span class="toc-text">思路三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-text">References</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%80"><span class="toc-text">思路一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%BA%8C"><span class="toc-text">思路二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%89"><span class="toc-text">思路三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-text">References</span></a></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%80"><span class="toc-text">思路一</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%BA%8C"><span class="toc-text">思路二</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%E4%B8%89"><span class="toc-text">思路三</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-text">References</span></a></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

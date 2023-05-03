@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2020/02/11/guan_yu_gong_zuo_bi_ji/">
+      <h1 class="post-title">
+        关于工作笔记
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      我一直有记笔记的习惯，但是回头看来大多数情况下我的笔记质量很一般。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2020-02-11T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2020-02-11</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/生产力/" class="post-meta-link">生产力</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>567 words</span>
+        
+      </div>
+      <a href="/2020/02/11/guan_yu_gong_zuo_bi_ji/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2020/01/03/chromium_kua_ping_tai_ji_chu_ku_allocator/">
+      <h1 class="post-title">
+        Chromium 跨平台基础库：allocator
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2020-01-03T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2020-01-03</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/Chromium/" class="post-meta-link">Chromium</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>704 words</span>
+        
+      </div>
+      <a href="/2020/01/03/chromium_kua_ping_tai_ji_chu_ku_allocator/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2019/12/29/2019_nian_du_zong_jie/">
+      <h1 class="post-title">
+        2019 年度总结
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      总结 (负面)平淡、稳定，有点颓的一年, 去年立下的 flag 基本没有完成：
+
+早起
+起床比较随性，经常导致儿子上学迟到
+
+
+坚持写文章
+仅写了 2-3 篇文章，质量还非常粗糙
+
+
+深度思考
+除了需要解决项目问题时，其余时间基本没有思考
+
+
+步行或跑步
+比较懒，跑步计划基本没有完成，只跑了一个半马
+
+
+多读书
+仅读了几本猎奇类的书
+
+
+学会情绪管理
+经常对儿子吼
+
+
+
+总结 (正面)
+调试能力++，学会使用 windbg 和 IDA 基本用法，能解决大部分 Crash 问题
+开始关注理财投资
+
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2019-12-29T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2019-12-29</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/年度总结/" class="post-meta-link">年度总结</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>844 words</span>
+        
+      </div>
+      <a href="/2019/12/29/2019_nian_du_zong_jie/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2019/04/17/wo_de_shi_jian_he_jing_li_guan_li/">
+      <h1 class="post-title">
+        我的时间和精力管理
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      早上跑步时在思考一个问题：如何合理地分配时间和精力，才能高效地完成工作、平衡家庭生活、个人娱乐、健身以及学习。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2019-04-17T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2019-04-17</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/杂项/" class="post-meta-link">杂项</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>522 words</span>
+        
+      </div>
+      <a href="/2019/04/17/wo_de_shi_jian_he_jing_li_guan_li/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2019/04/17/yong_golang_xie_yi_ge_ri_zhi_chu_li_fu_wu/">
+      <h1 class="post-title">
+        用 Golang 写一个日志处理服务
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      背景公司产品的日志都是加密过的，需要写一个Web服务：公司的同事可以上传加密过的日志文件，后台解密后再下载。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2019-04-17T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2019-04-17</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/Go/" class="post-meta-link">Go</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>152 words</span>
+        
+      </div>
+      <a href="/2019/04/17/yong_golang_xie_yi_ge_ri_zhi_chu_li_fu_wu/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2019/01/17/libcurl_yu_ming_jie_xi_fen_xi/">
+      <h1 class="post-title">
+        libcurl 域名解析分析
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      背景我们公司的产品使用 libcurl 作为基础网络库，线上环境中经常会有域名解析失败导致的问题。libcurl 的域名解析默认情况下是调用系统 API 完成的，并且用户的网络环境可能比较复杂，比如：是否连接了代理服务器，是否开启防火墙，域名解析过程是不是被运营商劫持等等。所以对于此类问题，通常是只能在特定的机器和网络环境下复现，非常难确定具体原因。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2019-01-17T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2019-01-17</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/cURL/" class="post-meta-link">cURL</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>1.1k words</span>
+        
+      </div>
+      <a href="/2019/01/17/libcurl_yu_ming_jie_xi_fen_xi/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2019/01/14/chromium_gong_cheng_yuan_ma_shi_ru_he_ce_shi_de/">
+      <h1 class="post-title">
+        Chromium 工程源码是如何测试的
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      Chromium 这样庞大的工程，涉及超多的模块依赖，如何保证代码质量？源码中随处可见 xxx_unittest.cc 和 xxx_fuzzer.cc 这样的文件，它们是如何组织的呢？项目的每一个 Commit 需要执行哪些测试，流程是什么？Chromium 做了哪些基础的工作支持繁琐又重要的测试工作，我们是否可以借鉴用到自己的项目中？
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2019-01-14T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2019-01-14</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/Chromium/" class="post-meta-link">Chromium</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>1.1k words</span>
+        
+      </div>
+      <a href="/2019/01/14/chromium_gong_cheng_yuan_ma_shi_ru_he_ce_shi_de/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2019/01/06/zen_yang_yue_du_yuan_dai_ma/">
+      <h1 class="post-title">
+        怎样阅读源代码
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      阅读源代码是程序员最重要的基本功之一，研读高质量的开源项目源码是进阶的必要手段。那么面对一个新项目时，如何高效快速地熟悉整个源码呢？
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2019-01-06T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2019-01-06</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/杂项/" class="post-meta-link">杂项</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>1.2k words</span>
+        
+      </div>
+      <a href="/2019/01/06/zen_yang_yue_du_yuan_dai_ma/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2018/12/30/2018_nian_du_zong_jie/">
+      <h1 class="post-title">
+        2018 年度总结
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      买了公寓买了一套公寓给父母住，总算是了却了心中一桩事
+做了手术左侧肩膀有个皮下肿物，每次洗澡都会关注是不是又长大，今年做了一个手术切掉了。病理分析结果是黑素纤维瘤，有恶变可能，幸亏及时割掉了。平时得多注意身体，发现有异常情况要及时去医院
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2018-12-30T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2018-12-30</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/年度总结/" class="post-meta-link">年度总结</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>758 words</span>
+        
+      </div>
+      <a href="/2018/12/30/2018_nian_du_zong_jie/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2018/12/14/chromium_kua_ping_tai_ji_chu_ku_duo_xian_cheng/">
+      <h1 class="post-title">
+        Chromium 跨平台基础库：多线程
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2018-12-14T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2018-12-14</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/Chromium/" class="post-meta-link">Chromium</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>727 words</span>
+        
+      </div>
+      <a href="/2018/12/14/chromium_kua_ping_tai_ji_chu_ku_duo_xian_cheng/">Read More </a>
+    </div>
+  </article>
+</div>
+
+
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/page/2/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/page/4/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+</main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+  <article class="card card-content widescreen-archive">
+    <div class="archive-card">
+  <div class="archive-card-header"><i class="iconfont icon-wodebaobiao" style="padding-right: 2px;"></i>Archive</div>
+  <div class="archive-card-list">
+    
+    
+    
+      
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2023" class="archive-card-list-item">
+              2023
+              <span class="archive-card-list-item-badge">2</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+          <a href="/archives/2022" class="archive-card-list-item">
+              2022
+              <span class="archive-card-list-item-badge">1</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2021" class="archive-card-list-item">
+              2021
+              <span class="archive-card-list-item-badge">8</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2020" class="archive-card-list-item">
+              2020
+              <span class="archive-card-list-item-badge">11</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2019" class="archive-card-list-item">
+              2019
+              <span class="archive-card-list-item-badge">6</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+    
+      <a href="/archives/2018" class="archive-card-list-item">
+          2018
+          <span class="archive-card-list-item-badge">7</span>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="archive-card">
+  <div class="archive-card-header"><i class="iconfont icon-wodebaobiao" style="padding-right: 2px;"></i>Archive</div>
+  <div class="archive-card-list">
+    
+    
+    
+      
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2023" class="archive-card-list-item">
+              2023
+              <span class="archive-card-list-item-badge">2</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+          <a href="/archives/2022" class="archive-card-list-item">
+              2022
+              <span class="archive-card-list-item-badge">1</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2021" class="archive-card-list-item">
+              2021
+              <span class="archive-card-list-item-badge">8</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2020" class="archive-card-list-item">
+              2020
+              <span class="archive-card-list-item-badge">11</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2019" class="archive-card-list-item">
+              2019
+              <span class="archive-card-list-item-badge">6</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+    
+      <a href="/archives/2018" class="archive-card-list-item">
+          2018
+          <span class="archive-card-list-item-badge">7</span>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

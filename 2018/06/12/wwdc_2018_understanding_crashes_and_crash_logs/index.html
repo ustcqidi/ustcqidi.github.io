@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      WWDC 2018-Understanding Crashes and Crash Logs
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-06-12T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2018-06-12</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/iOS/" class="post-meta-link">iOS</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>1.1k words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/WWDC/" class="post-meta-link">WWDC</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/Crash/" class="post-meta-link">Crash</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <p>本文内容基于WWDC 2018中 <a target="_blank" rel="noopener" href="https://developer.apple.com/videos/play/wwdc2018/414/">Understanding Crashes and Crash Logs</a> 整理的。这个Session主要介绍iOS Crash相关的知识：如何分析crash logs，怎么调试和修复crash问题，比如难以重现的内存问题和多线程问题。</p>
+<blockquote>
+<p>Sudden app crashes are a source of bad user experience and app review rejections. Learn how crash logs can be analyzed, what information they contain and how to diagnose the causes of crashes, including hard-to-reproduce memory corruptions and multithreading issues.</p>
+</blockquote>
+<h2 id="Fundamentals"><a href="#Fundamentals" class="headerlink" title="Fundamentals"></a><strong>Fundamentals</strong></h2><h3 id="什么是Crash，为什么会产生crash？"><a href="#什么是Crash，为什么会产生crash？" class="headerlink" title="什么是Crash，为什么会产生crash？"></a><strong>什么是Crash，为什么会产生crash？</strong></h3><ul>
+<li>impossible for CPU to execute code</li>
+<li>Operating system is enforcing a policy，为了保证系统流畅性，操作系统会kill 掉内存占用过多的App</li>
+<li>Programming language is preventing failure, 比如assert</li>
+<li>Developer is preventing failure</li>
+</ul>
+<h3 id="Crash长啥样"><a href="#Crash长啥样" class="headerlink" title="Crash长啥样"></a><strong>Crash长啥样</strong></h3><p>当App发生crash时, attached的debugger会暂停App的运行，并定位的crash位置。<br>详细看一下crash栈，这里是App启动入口</p>
+<p><img src="https://file.notion.so/f/s/6646b0c8-3e95-4e7f-a8e7-8c034ea676cb/Untitled.png?id=57f1e10a-37d5-47de-89b7-58172223cf4b&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234200838&amp;signature=gxDWC97HaP6Bo8rWj19JhxcT6uL30TXfCGBhB1xpZr4" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/6646b0c8-3e95-4e7f-a8e7-8c034ea676cb/Untitled.png?id=57f1e10a-37d5-47de-89b7-58172223cf4b&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234200838&amp;signature=gxDWC97HaP6Bo8rWj19JhxcT6uL30TXfCGBhB1xpZr4" class="lozad post-image"></p>
+<p>这里是crash的具体位置</p>
+<p><img src="https://file.notion.so/f/s/0302ad85-dcc6-44ff-aa8c-a8762ef93afe/Untitled.png?id=d765b8e4-a450-4771-b08b-25bbb0a8067a&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201015&amp;signature=zhVY_vIvEO-tCVAnMRT3ybwtTECtW-F4bSxQc9nS84c" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/0302ad85-dcc6-44ff-aa8c-a8762ef93afe/Untitled.png?id=d765b8e4-a450-4771-b08b-25bbb0a8067a&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201015&amp;signature=zhVY_vIvEO-tCVAnMRT3ybwtTECtW-F4bSxQc9nS84c" class="lozad post-image"></p>
+<p>发生crash时,debugger会收到signal，然后暂停App的运行,显示crash的调用栈</p>
+<p><img src="https://file.notion.so/f/s/bb673913-4535-428e-88c6-ba90f9a909c8/Untitled.png?id=6068e01c-d2b9-4e91-a8ce-12362ea4a98b&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201183&amp;signature=zmODj4pB-3aXg_mPlYnsQ9qpixbNmdJYT3Z4zTbN0hg" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/bb673913-4535-428e-88c6-ba90f9a909c8/Untitled.png?id=6068e01c-d2b9-4e91-a8ce-12362ea4a98b&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201183&amp;signature=zmODj4pB-3aXg_mPlYnsQ9qpixbNmdJYT3Z4zTbN0hg" class="lozad post-image"></p>
+<p>如果当前没有attached的debugger，系统会吧crash堆栈信息dump到一个log文件中</p>
+<p><img src="https://file.notion.so/f/s/0d34bc9b-8ca9-4f7b-a42c-a2a08489fe0d/Untitled.png?id=53f17970-3023-4e28-9e6f-9f22451d616d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201685&amp;signature=_f9o9NC3Zh8zvZlGejWUquPoc2wGiESywIihNPFktSo" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/0d34bc9b-8ca9-4f7b-a42c-a2a08489fe0d/Untitled.png?id=53f17970-3023-4e28-9e6f-9f22451d616d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201685&amp;signature=_f9o9NC3Zh8zvZlGejWUquPoc2wGiESywIihNPFktSo" class="lozad post-image"></p>
+<p>release版本的app发生crash时，log文件的调用栈只有地址信息</p>
+<p><img src="https://file.notion.so/f/s/eb9ff4e3-ad7f-4331-b45e-8093a521e9b4/Untitled.png?id=30b11f45-973d-4eea-b7e0-97a01ed4c0db&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201857&amp;signature=_d87eeR51BgAXZZVx1CmYhitjnMO7TGeWrGkHVFgrX0" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/eb9ff4e3-ad7f-4331-b45e-8093a521e9b4/Untitled.png?id=30b11f45-973d-4eea-b7e0-97a01ed4c0db&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234201857&amp;signature=_d87eeR51BgAXZZVx1CmYhitjnMO7TGeWrGkHVFgrX0" class="lozad post-image"></p>
+<p>xcode符号化后的crash log</p>
+<p><img src="https://file.notion.so/f/s/20a676c6-6fe1-4aa0-9326-fe4c863a8ffa/Untitled.png?id=a0797912-25ae-4e77-b41c-36cd8b30248a&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234202074&amp;signature=Ik-gDTpjeAX49ESilnB_nDXFw1VFUwd-L3ewQeL1Atw" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/20a676c6-6fe1-4aa0-9326-fe4c863a8ffa/Untitled.png?id=a0797912-25ae-4e77-b41c-36cd8b30248a&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234202074&amp;signature=Ik-gDTpjeAX49ESilnB_nDXFw1VFUwd-L3ewQeL1Atw" class="lozad post-image"></p>
+<h2 id="Accessing-crash-logs"><a href="#Accessing-crash-logs" class="headerlink" title="Accessing crash logs"></a><strong>Accessing crash logs</strong></h2><p>线上APP发生崩溃时，系统会把log文件上传到云端，然后可以通过xcode的organizer获取并分析crash，整体流程如图：</p>
+<p><img src="https://file.notion.so/f/s/438fef9b-51b0-432b-8134-1984dc9689cf/Untitled.png?id=94c48a0c-bbbd-457f-b0d8-4715c5658e67&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234202287&amp;signature=QzEQqcwRi9xcNDt9tllECFdL7sbUv5nn0xcAznqO3rE" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/438fef9b-51b0-432b-8134-1984dc9689cf/Untitled.png?id=94c48a0c-bbbd-457f-b0d8-4715c5658e67&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234202287&amp;signature=QzEQqcwRi9xcNDt9tllECFdL7sbUv5nn0xcAznqO3rE" class="lozad post-image"></p>
+<p>crash organizer中有TestFlight and App Store上App的crash数据。包括了最近crash的统计数据，受影响最大的devices信息，crash具体位置信息等</p>
+<p><img src="https://file.notion.so/f/s/568a5cf7-cfb1-4fc7-ae36-7c75a1f83dde/Untitled.png?id=94df8c3a-d643-426b-863b-5996847aa951&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204039&amp;signature=xO0ho0o6OYEDityyKUtMEuqx9qcP9AFt4NKpfapzBGU" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/568a5cf7-cfb1-4fc7-ae36-7c75a1f83dde/Untitled.png?id=94df8c3a-d643-426b-863b-5996847aa951&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204039&amp;signature=xO0ho0o6OYEDityyKUtMEuqx9qcP9AFt4NKpfapzBGU" class="lozad post-image"></p>
+<h3 id="使用Crash-Organizer"><a href="#使用Crash-Organizer" class="headerlink" title="使用Crash Organizer"></a><strong>使用Crash Organizer</strong></h3><ul>
+<li>App Store users opt in</li>
+<li>使用apple id登录Xcode</li>
+<li>上传带符号的App</li>
+<li>打开Crash Organizer</li>
+</ul>
+<h3 id="crash堆栈符号化最佳实践"><a href="#crash堆栈符号化最佳实践" class="headerlink" title="crash堆栈符号化最佳实践"></a><strong>crash堆栈符号化最佳实践</strong></h3><ul>
+<li>Upload app symbols for server-side symbolication</li>
+<li>Keep your app archive for local symbolication</li>
+<li>Download debug symbols for bitcode apps</li>
+</ul>
+<h2 id="Analyzing-crash-logs"><a href="#Analyzing-crash-logs" class="headerlink" title="Analyzing crash logs"></a><strong>Analyzing crash logs</strong></h2><p>log文件中包含crash的的基本信息，crash原因，崩溃栈，寄存器等。</p>
+<p><img src="https://file.notion.so/f/s/7693463b-7125-468f-b073-d55924756721/Untitled.png?id=3c161e98-6ad0-470d-a266-e4a237e5c10e&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204254&amp;signature=Zb7xqk9S6P29IBZwE89BKPcB6Qn95-K4t-oCostkVI4" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/7693463b-7125-468f-b073-d55924756721/Untitled.png?id=3c161e98-6ad0-470d-a266-e4a237e5c10e&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204254&amp;signature=Zb7xqk9S6P29IBZwE89BKPcB6Qn95-K4t-oCostkVI4" class="lozad post-image"></p>
+<p><img src="https://file.notion.so/f/s/235ac924-037a-478b-82e3-b55271b7bddc/Untitled.png?id=94663cf7-ed71-4269-9454-0c0874e5517d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204453&amp;signature=a_SlGKafCB03vZeOEr-NnzosHY7S8baokqTMt0s-pqU" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/235ac924-037a-478b-82e3-b55271b7bddc/Untitled.png?id=94663cf7-ed71-4269-9454-0c0874e5517d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204453&amp;signature=a_SlGKafCB03vZeOEr-NnzosHY7S8baokqTMt0s-pqU" class="lozad post-image"></p>
+<p><img src="https://file.notion.so/f/s/b5211316-295d-4cf2-bfb5-6f848d848dbf/Untitled.png?id=314946ba-9098-425b-9a73-b419829a1f7c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204650&amp;signature=51uf7lScBSkp4E3jSIMnmGgwmpwwBuZYjMbBTFCXxNc" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/b5211316-295d-4cf2-bfb5-6f848d848dbf/Untitled.png?id=314946ba-9098-425b-9a73-b419829a1f7c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204650&amp;signature=51uf7lScBSkp4E3jSIMnmGgwmpwwBuZYjMbBTFCXxNc" class="lozad post-image"></p>
+<p>有了这些信息后，怎么分析crash原因呢？首先看一下Exception Type，通过这个可以知道crash的原因，比如这个例子中EXC_BAD_INSTRUCTION的意思是CPU可能尝试执行不合法的指令。也可以看一下Crash Thread的调用栈。</p>
+<p><img src="https://file.notion.so/f/s/604307eb-ba0b-47c5-a2b5-3c6b0c0af40a/Untitled.png?id=8a20fe68-a2a1-4e73-a847-89bf5b38f209&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204864&amp;signature=DMkeyRd5IWEhxBZz98xIv8PxlA9tOk1YCQcWZR4vQGk" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/604307eb-ba0b-47c5-a2b5-3c6b0c0af40a/Untitled.png?id=8a20fe68-a2a1-4e73-a847-89bf5b38f209&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234204864&amp;signature=DMkeyRd5IWEhxBZz98xIv8PxlA9tOk1YCQcWZR4vQGk" class="lozad post-image"></p>
+<h3 id="Assertions-and-Preconditions"><a href="#Assertions-and-Preconditions" class="headerlink" title="Assertions and Preconditions"></a><strong>Assertions and Preconditions</strong></h3><p>Deliberately halt the process when an error has occurred Examples:</p>
+<ul>
+<li>Forced unwrap of an Optional that stores nil</li>
+<li>Out-of-bounds Swift.Array access</li>
+<li>Swift arithmetic overflow</li>
+<li>Uncaught exception</li>
+<li>Custom assertion in your code</li>
+</ul>
+<h3 id="操作系统-Kill"><a href="#操作系统-Kill" class="headerlink" title="操作系统 Kill"></a><strong>操作系统 Kill</strong></h3><ul>
+<li>Watchdog 定时器超时</li>
+<li>设备过热</li>
+<li>内存耗尽</li>
+<li>无效签名</li>
+</ul>
+<p>一个具体的例子，下面这个crash信息可以看出，具体原因是看门狗定时器超时，一般是因为APP启动的时间过长或者响应系统事件事件超时导致；比如在主线程进行网络请求，主线程会一直卡住直到网络回调回来。</p>
+<p><img src="https://file.notion.so/f/s/9d0e80cb-302a-45e2-85e3-1f79af2afd3f/Untitled.png?id=6762ade0-578b-4709-9cee-8a0bd82c4ac4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234205024&amp;signature=GIA4K--fU_Ftih2DwHsjoqw_sTaoyStkl9Ml3LhTNF8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/9d0e80cb-302a-45e2-85e3-1f79af2afd3f/Untitled.png?id=6762ade0-578b-4709-9cee-8a0bd82c4ac4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234205024&amp;signature=GIA4K--fU_Ftih2DwHsjoqw_sTaoyStkl9Ml3LhTNF8" class="lozad post-image"></p>
+<h3 id="Avoiding-Launch-Timeouts"><a href="#Avoiding-Launch-Timeouts" class="headerlink" title="Avoiding Launch Timeouts"></a><strong>Avoiding Launch Timeouts</strong></h3><ul>
+<li>Frequent crash reason in app review</li>
+<li>Disabled in Simulator and in the debugger</li>
+<li>Test your app without the debugger</li>
+<li>on a real device</li>
+<li>on older hardware</li>
+</ul>
+<h2 id="Memory-issues"><a href="#Memory-issues" class="headerlink" title="Memory issues"></a><strong>Memory issues</strong></h2><h3 id="内存问题分析"><a href="#内存问题分析" class="headerlink" title="内存问题分析"></a><strong>内存问题分析</strong></h3><ul>
+<li>over released</li>
+<li>buffer overflow</li>
+<li>used after free</li>
+</ul>
+<p><img src="https://file.notion.so/f/s/e348b5b6-9143-4996-9b3e-8b92af3e4e1f/Untitled.png?id=ef144fed-623e-43c3-8926-7e2661783c7f&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234205238&amp;signature=y_hFj3zRaxxyZznDvQ_lECPoYBSoa0nIvnRzFJS-sfY" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/e348b5b6-9143-4996-9b3e-8b92af3e4e1f/Untitled.png?id=ef144fed-623e-43c3-8926-7e2661783c7f&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234205238&amp;signature=y_hFj3zRaxxyZznDvQ_lECPoYBSoa0nIvnRzFJS-sfY" class="lozad post-image"></p>
+<p>通过crash地址可以得到更多信息，7fdd5e70700这个地址在MALLOC_TINY的地址空间范围内，下图描述了objc_release的正常过程。</p>
+<p><img src="https://file.notion.so/f/s/f4b141b8-1284-4ccb-bf23-a2ae7f755de0/Untitled.png?id=9d0d843b-7235-4725-b537-3cc20f0125c8&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234205423&amp;signature=i7N4zGUvw0Sq27MB8WdnpounQT6PhksV9e46K57gznA" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/f4b141b8-1284-4ccb-bf23-a2ae7f755de0/Untitled.png?id=9d0d843b-7235-4725-b537-3cc20f0125c8&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234205423&amp;signature=i7N4zGUvw0Sq27MB8WdnpounQT6PhksV9e46K57gznA" class="lozad post-image"></p>
+<p>但如果该对象已经被free了，objc_release会导致崩溃。</p>
+<p><img src="https://file.notion.so/f/s/0fe8a157-d26b-47a8-ad06-c85a1413bd8c/Untitled.png?id=33566b4c-17dc-45fd-a1a8-e54984fa588c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206093&amp;signature=Y_JnfvlYs-v8GSeEz_rnWOQscNJqx0-w84WmK9TOn0U" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/0fe8a157-d26b-47a8-ad06-c85a1413bd8c/Untitled.png?id=33566b4c-17dc-45fd-a1a8-e54984fa588c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206093&amp;signature=Y_JnfvlYs-v8GSeEz_rnWOQscNJqx0-w84WmK9TOn0U" class="lozad post-image"></p>
+<h3 id="找到具体的对象"><a href="#找到具体的对象" class="headerlink" title="找到具体的对象"></a><strong>找到具体的对象</strong></h3><p>有没有办法知道具体是哪个object被多次release导致的crash呢？日志里面虽然有调用栈信息，但是都是编译器生成的函数，没有跟crash相关的具体信息。下面通过一个具体的例子说明如何找到LoginViewController中被多次release的对象。</p>
+<p><img src="https://file.notion.so/f/s/0ba2d321-b920-4d9d-be8f-22d9caaae840/Untitled.png?id=d5c5f9d5-1f88-413a-a29c-12930d20c671&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206267&amp;signature=O2irktlSHpqL3l_r73litvKucYB07TzByHj3p6P6dc0" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/0ba2d321-b920-4d9d-be8f-22d9caaae840/Untitled.png?id=d5c5f9d5-1f88-413a-a29c-12930d20c671&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206267&amp;signature=O2irktlSHpqL3l_r73litvKucYB07TzByHj3p6P6dc0" class="lozad post-image"></p>
+<pre class="highlight"><span class="line">// LoginViewController.swift</span><br><span class="line">class LoginViewController: UIViewController &#123;</span><br><span class="line">    var userName: String</span><br><span class="line">    var database: DatabaseProxy</span><br><span class="line">    var views: [UIView]</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre>
+<ul>
+<li>在命令行或者xcode打开lldb</li>
+<li>command script import lldb.macosx.crashlog</li>
+<li>加载crash log文件</li>
+</ul>
+<p><img src="https://file.notion.so/f/s/ed448e07-f6d3-4204-83bc-4fffc7b19f44/Untitled.png?id=120b63f0-ee50-44af-9df4-cb9b9d1f3088&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206434&amp;signature=vhmtsY7z_YbbODdK9doDEjITpSIm0XJNefqVeGS_SOw" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/ed448e07-f6d3-4204-83bc-4fffc7b19f44/Untitled.png?id=120b63f0-ee50-44af-9df4-cb9b9d1f3088&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206434&amp;signature=vhmtsY7z_YbbODdK9doDEjITpSIm0XJNefqVeGS_SOw" class="lozad post-image"></p>
+<p>反汇编（disassemble），打印出crash位置的汇编代码，通过分析汇编代码可以知道哪里出了问题。</p>
+<p><img src="https://file.notion.so/f/s/22750845-509c-4d5c-8b46-d33998154242/Untitled.png?id=b821b6e1-b831-45d6-b5e0-d017cb21230c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206611&amp;signature=WI1t_6VZDTLrXEWRc0zkhjsJQ4h_mgxwcUuRfEYxBRc" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/22750845-509c-4d5c-8b46-d33998154242/Untitled.png?id=b821b6e1-b831-45d6-b5e0-d017cb21230c&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206611&amp;signature=WI1t_6VZDTLrXEWRc0zkhjsJQ4h_mgxwcUuRfEYxBRc" class="lozad post-image"></p>
+<h3 id="常见内存问题"><a href="#常见内存问题" class="headerlink" title="常见内存问题"></a><strong>常见内存问题</strong></h3><ul>
+<li>Crash in objc_msgSend or retain/release</li>
+<li>Unrecognized selector exception</li>
+<li>abort() inside malloc/free</li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a><strong>小结</strong></h3><ul>
+<li>找到crash的原因</li>
+<li>看一下crash线程的调用堆栈</li>
+<li>通过crash地址和反汇编的方式找到更多的线索</li>
+</ul>
+<h2 id="Multithread-issues"><a href="#Multithread-issues" class="headerlink" title="Multithread issues"></a><strong>Multithread issues</strong></h2><ul>
+<li>多线程问题比较难重现和排查</li>
+<li>多线程问题经常会导致内存问题</li>
+<li>同一个问题崩溃位置通常不一致</li>
+</ul>
+<h3 id="使用Thread-Sanitizer调试多线程问题"><a href="#使用Thread-Sanitizer调试多线程问题" class="headerlink" title="使用Thread Sanitizer调试多线程问题"></a><strong>使用Thread Sanitizer调试多线程问题</strong></h3><ul>
+<li>Reliably reproduces multithreaded</li>
+<li>bugs Works in Simulator</li>
+</ul>
+<h3 id="给每个线程加个名字，发生崩溃是容易定位问题"><a href="#给每个线程加个名字，发生崩溃是容易定位问题" class="headerlink" title="给每个线程加个名字，发生崩溃是容易定位问题"></a><strong>给每个线程加个名字，发生崩溃是容易定位问题</strong></h3><p><img src="https://file.notion.so/f/s/47e69dc0-70d7-48e1-95bb-8a189dfb3afc/Untitled.png?id=4a32898c-ffb7-4362-86e4-8ce53fccb989&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206828&amp;signature=756rQhMizuyfpKdCXFJxiw3OLq0fLK8_DfNQkUBiNV8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/47e69dc0-70d7-48e1-95bb-8a189dfb3afc/Untitled.png?id=4a32898c-ffb7-4362-86e4-8ce53fccb989&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234206828&amp;signature=756rQhMizuyfpKdCXFJxiw3OLq0fLK8_DfNQkUBiNV8" class="lozad post-image"></p>
+<p><img src="https://file.notion.so/f/s/b735e0aa-8e95-4f8e-a71d-28892c3f7d11/Untitled.png?id=dc73cb34-bd65-4649-ac3e-01f6e4a583dd&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234207013&amp;signature=DDTJqtIqtiaA1yYpqAMWbxYrZubVIKLWGMPX6HbI1g8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/b735e0aa-8e95-4f8e-a71d-28892c3f7d11/Untitled.png?id=dc73cb34-bd65-4649-ac3e-01f6e4a583dd&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234207013&amp;signature=DDTJqtIqtiaA1yYpqAMWbxYrZubVIKLWGMPX6HbI1g8" class="lozad post-image"></p>
+<h3 id="小结-1"><a href="#小结-1" class="headerlink" title="小结"></a><strong>小结</strong></h3><ul>
+<li>Use Organizer to access crash logs</li>
+<li>Analyze reproducible crashes</li>
+<li>Look for signs of memory corruption and threading issues</li>
+<li>Use bug-finding tools to help reproduce<ul>
+<li>Address Sanitizer for memory corruption bugs</li>
+<li>Thread Sanitizer for multithreading problems</li>
+</ul>
+</li>
+</ul>
+<h2 id="更多资料"><a href="#更多资料" class="headerlink" title="更多资料"></a><strong>更多资料</strong></h2><ol>
+<li><a target="_blank" rel="noopener" href="https://developer.apple.com/library/archive/technotes/tn2151/_index.html#//apple_ref/doc/uid/DTS40008184-CH1-APPINFO">Understanding and Analyzing Application Crash Reports</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/ce071aa3ffa8">iOS crash文件解析及常见的Exception类型</a></li>
+</ol>
+<span id="more"></span>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = WWDC 2018-Understanding Crashes and Crash Logs
+Date = 2018-06-12
+Published = true
+Category = iOS
+Tag = ['Crash', 'WWDC']
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2018/06/13/wwdc_2018_practical_approaches_to_great_app_performance/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">WWDC 2018-Practical Approaches to Great App Performance </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2018/06/08/yykityuan_ma_xue_xi_yymodel/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">YYKit源码学习-YYModel </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fundamentals"><span class="toc-text">Fundamentals</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCrash%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%A7%E7%94%9Fcrash%EF%BC%9F"><span class="toc-text">什么是Crash，为什么会产生crash？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash%E9%95%BF%E5%95%A5%E6%A0%B7"><span class="toc-text">Crash长啥样</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Accessing-crash-logs"><span class="toc-text">Accessing crash logs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Crash-Organizer"><span class="toc-text">使用Crash Organizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crash%E5%A0%86%E6%A0%88%E7%AC%A6%E5%8F%B7%E5%8C%96%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-text">crash堆栈符号化最佳实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analyzing-crash-logs"><span class="toc-text">Analyzing crash logs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Assertions-and-Preconditions"><span class="toc-text">Assertions and Preconditions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-Kill"><span class="toc-text">操作系统 Kill</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Avoiding-Launch-Timeouts"><span class="toc-text">Avoiding Launch Timeouts</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Memory-issues"><span class="toc-text">Memory issues</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-text">内存问题分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%BE%E5%88%B0%E5%85%B7%E4%BD%93%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-text">找到具体的对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98"><span class="toc-text">常见内存问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multithread-issues"><span class="toc-text">Multithread issues</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Thread-Sanitizer%E8%B0%83%E8%AF%95%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98"><span class="toc-text">使用Thread Sanitizer调试多线程问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%99%E6%AF%8F%E4%B8%AA%E7%BA%BF%E7%A8%8B%E5%8A%A0%E4%B8%AA%E5%90%8D%E5%AD%97%EF%BC%8C%E5%8F%91%E7%94%9F%E5%B4%A9%E6%BA%83%E6%98%AF%E5%AE%B9%E6%98%93%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98"><span class="toc-text">给每个线程加个名字，发生崩溃是容易定位问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E8%B5%84%E6%96%99"><span class="toc-text">更多资料</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fundamentals"><span class="toc-text">Fundamentals</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCrash%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%A7%E7%94%9Fcrash%EF%BC%9F"><span class="toc-text">什么是Crash，为什么会产生crash？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash%E9%95%BF%E5%95%A5%E6%A0%B7"><span class="toc-text">Crash长啥样</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Accessing-crash-logs"><span class="toc-text">Accessing crash logs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Crash-Organizer"><span class="toc-text">使用Crash Organizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crash%E5%A0%86%E6%A0%88%E7%AC%A6%E5%8F%B7%E5%8C%96%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-text">crash堆栈符号化最佳实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analyzing-crash-logs"><span class="toc-text">Analyzing crash logs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Assertions-and-Preconditions"><span class="toc-text">Assertions and Preconditions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-Kill"><span class="toc-text">操作系统 Kill</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Avoiding-Launch-Timeouts"><span class="toc-text">Avoiding Launch Timeouts</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Memory-issues"><span class="toc-text">Memory issues</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-text">内存问题分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%BE%E5%88%B0%E5%85%B7%E4%BD%93%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-text">找到具体的对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98"><span class="toc-text">常见内存问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multithread-issues"><span class="toc-text">Multithread issues</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Thread-Sanitizer%E8%B0%83%E8%AF%95%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98"><span class="toc-text">使用Thread Sanitizer调试多线程问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%99%E6%AF%8F%E4%B8%AA%E7%BA%BF%E7%A8%8B%E5%8A%A0%E4%B8%AA%E5%90%8D%E5%AD%97%EF%BC%8C%E5%8F%91%E7%94%9F%E5%B4%A9%E6%BA%83%E6%98%AF%E5%AE%B9%E6%98%93%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98"><span class="toc-text">给每个线程加个名字，发生崩溃是容易定位问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E8%B5%84%E6%96%99"><span class="toc-text">更多资料</span></a></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fundamentals"><span class="toc-text">Fundamentals</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFCrash%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E4%BA%A7%E7%94%9Fcrash%EF%BC%9F"><span class="toc-text">什么是Crash，为什么会产生crash？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash%E9%95%BF%E5%95%A5%E6%A0%B7"><span class="toc-text">Crash长啥样</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Accessing-crash-logs"><span class="toc-text">Accessing crash logs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Crash-Organizer"><span class="toc-text">使用Crash Organizer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#crash%E5%A0%86%E6%A0%88%E7%AC%A6%E5%8F%B7%E5%8C%96%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-text">crash堆栈符号化最佳实践</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analyzing-crash-logs"><span class="toc-text">Analyzing crash logs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Assertions-and-Preconditions"><span class="toc-text">Assertions and Preconditions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F-Kill"><span class="toc-text">操作系统 Kill</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Avoiding-Launch-Timeouts"><span class="toc-text">Avoiding Launch Timeouts</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Memory-issues"><span class="toc-text">Memory issues</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98%E5%88%86%E6%9E%90"><span class="toc-text">内存问题分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%BE%E5%88%B0%E5%85%B7%E4%BD%93%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-text">找到具体的对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%86%85%E5%AD%98%E9%97%AE%E9%A2%98"><span class="toc-text">常见内存问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Multithread-issues"><span class="toc-text">Multithread issues</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Thread-Sanitizer%E8%B0%83%E8%AF%95%E5%A4%9A%E7%BA%BF%E7%A8%8B%E9%97%AE%E9%A2%98"><span class="toc-text">使用Thread Sanitizer调试多线程问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%99%E6%AF%8F%E4%B8%AA%E7%BA%BF%E7%A8%8B%E5%8A%A0%E4%B8%AA%E5%90%8D%E5%AD%97%EF%BC%8C%E5%8F%91%E7%94%9F%E5%B4%A9%E6%BA%83%E6%98%AF%E5%AE%B9%E6%98%93%E5%AE%9A%E4%BD%8D%E9%97%AE%E9%A2%98"><span class="toc-text">给每个线程加个名字，发生崩溃是容易定位问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93-1"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E8%B5%84%E6%96%99"><span class="toc-text">更多资料</span></a></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

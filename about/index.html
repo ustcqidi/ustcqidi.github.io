@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      关于我
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-06-08T17:36:59.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2018-06-08</span>
+    </time>
+    
+    
+    <span class="dot"></span>
+    <span>1.1k words</span>
+    
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <h2 id="个人信息"><a href="#个人信息" class="headerlink" title="个人信息"></a>个人信息</h2><ul>
+<li>祁迪/男/1988</li>
+<li>硕士/中国科技大学计算机系 </li>
+<li>工作年限：5年以上</li>
+</ul>
+<h2 id="联系方式"><a href="#联系方式" class="headerlink" title="联系方式"></a>联系方式</h2><ul>
+<li>手机/微信：177 3004 1284</li>
+<li>Email：<a href="mailto:qidi@mail.ustc.edu.cn">qidi@mail.ustc.edu.cn</a></li>
+</ul>
+<h2 id="教育背景"><a href="#教育背景" class="headerlink" title="教育背景"></a>教育背景</h2><h3 id="中国科学技术大学"><a href="#中国科学技术大学" class="headerlink" title="中国科学技术大学"></a>中国科学技术大学</h3><p>2010.9-2013.4 | 计算机应用技术专业硕士</p>
+<h3 id="安徽科技学院"><a href="#安徽科技学院" class="headerlink" title="安徽科技学院"></a>安徽科技学院</h3><p>2006.9-2010.7 | 计算机科学技术学士</p>
+<span id="more"></span>
+<h2 id="技能清单"><a href="#技能清单" class="headerlink" title="技能清单"></a>技能清单</h2><ul>
+<li>熟悉 C/C++ 跨平台基础库的开发、优化、维护</li>
+<li>具备1亿级别日活 App 基础架构经验，熟悉 App 架构及基础设施的演进、落地与推广</li>
+<li>熟悉 Android JNI/NDK 底层开发</li>
+<li>熟悉 iOS 应用开发</li>
+<li>熟悉 React Native / H5 Hybrid 混合开发</li>
+<li>有扎实的计算机理论基础，良好的算法与数据结构基础，了解计算机基本原理与机制</li>
+<li>善于与人沟通，良好的团队合作精神和高度的责任感，具备项目管理能力</li>
+<li>了解流媒体应用开发及 ffmpeg , webrtc 等开源项目</li>
+<li>对深度学习及其应用比较有兴趣</li>
+</ul>
+<h2 id="工作经验"><a href="#工作经验" class="headerlink" title="工作经验"></a>工作经验</h2><h3 id="爱奇艺"><a href="#爱奇艺" class="headerlink" title="爱奇艺"></a><a target="_blank" rel="noopener" href="http://www.iqiyi.com/">爱奇艺</a></h3><p>2016.8-至今 | 移动架构师<br>负责移动端基础框架研发相关工作，主要关注App开发框架、性能、崩溃率、开发效率和新技术调研</p>
+<h3 id="美丽联合集团"><a href="#美丽联合集团" class="headerlink" title="美丽联合集团"></a><a target="_blank" rel="noopener" href="http://www.meili-inc.com/">美丽联合集团</a></h3><p>2015.8-2016.8 | 资深工程师<br>负责移动端跨平台组件的设计、开发与维护，支持蘑菇街集团内App的业务需求</p>
+<h3 id="Cisco"><a href="#Cisco" class="headerlink" title="Cisco"></a><a target="_blank" rel="noopener" href="https://www.cisco.com/">Cisco</a></h3><p>2013.3-2015.8 | 软件工程师<br>参与思科 WebEx 视频会议 Android 版本的开发，支持高质量的多点语音(支持纯VoIP以 及电话与VoIP混合)、多点视频、屏幕共享等</p>
+<h2 id="主要项目经验"><a href="#主要项目经验" class="headerlink" title="主要项目经验"></a>主要项目经验</h2><h3 id="动态化跨平台框架"><a href="#动态化跨平台框架" class="headerlink" title="动态化跨平台框架"></a>动态化跨平台框架</h3><p>负责方案的调研、设计与实现。基于 React Native 实现了爱奇艺的移动端跨平台开发框架，完成了基础库开发、工具链开发、性能优化，并在爱奇艺公司内部各个业务线推广与落地。目前已经在 Android 和 iOS 双端稳定运行，有10个以上业务方接入本框架，线上页面数量100个以上，节省了开发人力，提高开发效率</p>
+<h3 id="H5-Hybrid-容器"><a href="#H5-Hybrid-容器" class="headerlink" title="H5 Hybrid 容器"></a>H5 Hybrid 容器</h3><p>负责爱奇艺 App H5 容器框架开发与优化，包括H5页面模板化与离线化、预加载、网络优化、H5 页面全链路性能监控等，提升 App 内部 H5 页面加载速度超过20%</p>
+<h3 id="移动端性能监控体系"><a href="#移动端性能监控体系" class="headerlink" title="移动端性能监控体系"></a>移动端性能监控体系</h3><p>参与开发了移动 APP 性能监控体系项目，支持上亿日活用户的实时数据平台，主要包括崩溃栈捕获与投递、性能、卡顿监控、网络耗时、连接成功率等</p>
+<h3 id="Chromium内核移植与定制"><a href="#Chromium内核移植与定制" class="headerlink" title="Chromium内核移植与定制"></a>Chromium内核移植与定制</h3><ul>
+<li>基于 Chromium 内核，开发定制了独立 Android WebView 引擎，集成到蘑菇街 H5 容器中，并在实际业务场景中落地与推广。独立引擎解决了 WebView 碎片化问题，优化了蘑菇街 H5 页面使用体验，App 内部 H5 页面加载耗时平均减少800毫秒</li>
+<li>实时跟进线上稳定性以及兼容性问题，及时修复问题，逐步把独立 WebView 引擎覆盖了提升到了85%</li>
+<li>设计并实现了 Chromium 内核动态加载机制，解决了集成包大小问题</li>
+<li>基于 Chromium 网络栈，定制了蘑菇街 App 跨平台基础网络库，优化了 App 内部网络加载速度：App随机加载20张图片，定制后的网络库比系统网络库提速接近30%</li>
+</ul>
+<h3 id="Cisco-WebEx-视频会议系统-Android-客户端"><a href="#Cisco-WebEx-视频会议系统-Android-客户端" class="headerlink" title="Cisco WebEx 视频会议系统 Android 客户端"></a>Cisco WebEx 视频会议系统 Android 客户端</h3><ul>
+<li>Native C++ 崩溃/异常捕捉处理、堆栈收集</li>
+<li>基础库安全问题修复：系统库函数、中间人攻击、WebView JS注入漏洞、SSL证书吊销校验等等</li>
+<li>C++ 实现网络库：SSL Socket，HTTP Proxy，JNI接口</li>
+<li>OpenSSL 会议数据端到端加/解密</li>
+<li>C++ 实现跨平台业务组件：视频、音频业务</li>
+<li>OpenGL 多路视频渲染</li>
+</ul>
+<h2 id="开源项目"><a href="#开源项目" class="headerlink" title="开源项目"></a>开源项目</h2><ul>
+<li>深度学习颜值评分模型: <a target="_blank" rel="noopener" href="https://github.com/ustcqidi/BeautyPredict">BeautyPredict</a></li>
+</ul>
+<h2 id="活动"><a href="#活动" class="headerlink" title="活动"></a>活动</h2><ul>
+<li>思科创新论坛 Best Practice 项目: 移动视频会议多屏互动</li>
+<li>WOT百城沙龙高可用设计架构专场：基于Chromium内核的Hybrid体验优化</li>
+</ul>
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E4%BF%A1%E6%81%AF"><span class="toc-text">个人信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%94%E7%B3%BB%E6%96%B9%E5%BC%8F"><span class="toc-text">联系方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%99%E8%82%B2%E8%83%8C%E6%99%AF"><span class="toc-text">教育背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E5%9B%BD%E7%A7%91%E5%AD%A6%E6%8A%80%E6%9C%AF%E5%A4%A7%E5%AD%A6"><span class="toc-text">中国科学技术大学</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E5%BE%BD%E7%A7%91%E6%8A%80%E5%AD%A6%E9%99%A2"><span class="toc-text">安徽科技学院</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8A%80%E8%83%BD%E6%B8%85%E5%8D%95"><span class="toc-text">技能清单</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%BB%8F%E9%AA%8C"><span class="toc-text">工作经验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%B1%E5%A5%87%E8%89%BA"><span class="toc-text">爱奇艺</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BE%8E%E4%B8%BD%E8%81%94%E5%90%88%E9%9B%86%E5%9B%A2"><span class="toc-text">美丽联合集团</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cisco"><span class="toc-text">Cisco</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E9%A1%B9%E7%9B%AE%E7%BB%8F%E9%AA%8C"><span class="toc-text">主要项目经验</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%8C%96%E8%B7%A8%E5%B9%B3%E5%8F%B0%E6%A1%86%E6%9E%B6"><span class="toc-text">动态化跨平台框架</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#H5-Hybrid-%E5%AE%B9%E5%99%A8"><span class="toc-text">H5 Hybrid 容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7%E4%BD%93%E7%B3%BB"><span class="toc-text">移动端性能监控体系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Chromium%E5%86%85%E6%A0%B8%E7%A7%BB%E6%A4%8D%E4%B8%8E%E5%AE%9A%E5%88%B6"><span class="toc-text">Chromium内核移植与定制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Cisco-WebEx-%E8%A7%86%E9%A2%91%E4%BC%9A%E8%AE%AE%E7%B3%BB%E7%BB%9F-Android-%E5%AE%A2%E6%88%B7%E7%AB%AF"><span class="toc-text">Cisco WebEx 视频会议系统 Android 客户端</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE"><span class="toc-text">开源项目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B4%BB%E5%8A%A8"><span class="toc-text">活动</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+  <article class="card card-content widescreen-archive">
+    <div class="archive-card">
+  <div class="archive-card-header"><i class="iconfont icon-wodebaobiao" style="padding-right: 2px;"></i>Archive</div>
+  <div class="archive-card-list">
+    
+    
+    
+      
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2023" class="archive-card-list-item">
+              2023
+              <span class="archive-card-list-item-badge">2</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+          <a href="/archives/2022" class="archive-card-list-item">
+              2022
+              <span class="archive-card-list-item-badge">1</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2021" class="archive-card-list-item">
+              2021
+              <span class="archive-card-list-item-badge">8</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2020" class="archive-card-list-item">
+              2020
+              <span class="archive-card-list-item-badge">11</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2019" class="archive-card-list-item">
+              2019
+              <span class="archive-card-list-item-badge">6</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+    
+      <a href="/archives/2018" class="archive-card-list-item">
+          2018
+          <span class="archive-card-list-item-badge">7</span>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="archive-card">
+  <div class="archive-card-header"><i class="iconfont icon-wodebaobiao" style="padding-right: 2px;"></i>Archive</div>
+  <div class="archive-card-list">
+    
+    
+    
+      
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2023" class="archive-card-list-item">
+              2023
+              <span class="archive-card-list-item-badge">2</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+          <a href="/archives/2022" class="archive-card-list-item">
+              2022
+              <span class="archive-card-list-item-badge">1</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2021" class="archive-card-list-item">
+              2021
+              <span class="archive-card-list-item-badge">8</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2020" class="archive-card-list-item">
+              2020
+              <span class="archive-card-list-item-badge">11</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2019" class="archive-card-list-item">
+              2019
+              <span class="archive-card-list-item-badge">6</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+    
+      <a href="/archives/2018" class="archive-card-list-item">
+          2018
+          <span class="archive-card-list-item-badge">7</span>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

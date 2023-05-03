@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      Chromium 工程源码是如何测试的
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2019-01-14T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2019-01-14</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/Chromium/" class="post-meta-link">Chromium</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>1.1k words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/单元测试/" class="post-meta-link">单元测试</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/性能测试/" class="post-meta-link">性能测试</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/Chromium/" class="post-meta-link">Chromium</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <p>Chromium 这样庞大的工程，涉及超多的模块依赖，如何保证代码质量？源码中随处可见 xxx_unittest.cc 和 xxx_fuzzer.cc 这样的文件，它们是如何组织的呢？项目的每一个 Commit 需要执行哪些测试，流程是什么？Chromium 做了哪些基础的工作支持繁琐又重要的测试工作，我们是否可以借鉴用到自己的项目中？<br><span id="more"></span><br>带着这些问题，开始阅读源码~ 先看一下 src 目录下有个 testing 的文件夹，里面存放了测试相关的基础代码和脚本:</p>
+<p><img src="https://file.notion.so/f/s/fb95b4dd-ed06-4821-b5d3-163d1a4cc584/Untitled.png?id=b469e8e4-e887-444a-bf54-cf05ae6de327&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234223275&amp;signature=s7Ywzu2vSiXmU9ZFT9I4LSWFwxQAlw00WOE8YsKtEC4" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/fb95b4dd-ed06-4821-b5d3-163d1a4cc584/Untitled.png?id=b469e8e4-e887-444a-bf54-cf05ae6de327&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234223275&amp;signature=s7Ywzu2vSiXmU9ZFT9I4LSWFwxQAlw00WOE8YsKtEC4" class="lozad post-image"></p>
+<p>Chromium 工程做了哪些测试呢？这里列举一下我从源码看到的，可能不全面。</p>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a><strong>单元测试</strong></h2><p>项目中所有模块都有大量的单元测试，命名规则为 xxx_unitest.cc, 每个模块的单元测试文件会放到一个 target 里编译, 比如下图就是 net 模块的单元测试 target。C/C++ 部分的单元测试是基于 gtest/gmock 这个框架的，可以看出来 Chromium 的 committer 花费了大量的时间保证大部分代码都是经过单元测试的。这个值得我们学习，我在 <a target="_blank" rel="noopener" href="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/#more">Chromium 跨平台基础库：多线程</a> 中提到过，单元测试一方面保证代码质量，另一方面单元测试是很好的 code example，方便别人了解如何使用我们的代码。</p>
+<p><img src="https://file.notion.so/f/s/529a130e-c52a-4986-8791-0270435b6c43/chromium_testing_unittest.png?id=a1338ee5-512a-48fc-8f52-8ddc14a3013d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234223470&amp;signature=NRsJ7Q_QBxPeQpNNAGdc8W1awvVh-_z0d5OJViT00fY" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/529a130e-c52a-4986-8791-0270435b6c43/chromium_testing_unittest.png?id=a1338ee5-512a-48fc-8f52-8ddc14a3013d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234223470&amp;signature=NRsJ7Q_QBxPeQpNNAGdc8W1awvVh-_z0d5OJViT00fY" class="lozad post-image"></p>
+<h2 id="fuzz-testing"><a href="#fuzz-testing" class="headerlink" title="fuzz testing"></a><strong>fuzz testing</strong></h2><p>以前完全没听过，所以查了一下，这是原文解释：”Fuzzing, which is simply providing potentially invalid, unexpected, or random data as an input to a program, is an extremely effective way of finding bugs in large software systems, and is an important part of the software development life cycle.”<br>大体意思是随机输入大量无效、随机数据进行测试。对于 C/C++ 工程来说，可能会测出来潜在的内存越界，栈溢出等问题。一般大型的项目都需要 fuzz testing。<br>Chromium 的 fuzz test 是基于 <a target="_blank" rel="noopener" href="https://llvm.org/docs/LibFuzzer.html">libFuzzer</a> 这个库；具体的 fuzz test 只需要 fuzz target 这个函数就行了，实际上就是一个入口函数：</p>
+<pre class="highlight"><span class="line"><span class="comment">// fuzz_target.cc</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="function"><span class="keyword">int</span> <span class="title">LLVMFuzzerTestOneInput</span><span class="params">(<span class="keyword">const</span> <span class="keyword">uint8_t</span> *Data, <span class="keyword">size_t</span> Size)</span> </span>&#123;</span><br><span class="line">  <span class="built_in">DoSomethingInterestingWithMyAPI</span>(Data, Size);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// Non-zero return values are reserved for future use.</span></span><br><span class="line">&#125;</span><br></pre>
+<p>Chromium 的 fuzz test 文件命名规则为 xxx_fuzzer.cc, 因为只需要在 fuzz target 中把随机数据输入到待测试的接口中就行了，所以代码比单元测试少的多，下图是 dns_hosts_parse 的 fuzz testing</p>
+<p><img src="https://file.notion.so/f/s/78652df6-e98e-4f13-931b-d69bcc110747/chromium_testing_dns_fuzz.png?id=009dd2f5-ddfa-4813-aa2f-68358bd52783&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234228832&amp;signature=yMZUpdeok9AIZ8rkeP9DNwdB6uLJlOCqzM9VL90qGXo" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/78652df6-e98e-4f13-931b-d69bcc110747/chromium_testing_dns_fuzz.png?id=009dd2f5-ddfa-4813-aa2f-68358bd52783&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234228832&amp;signature=yMZUpdeok9AIZ8rkeP9DNwdB6uLJlOCqzM9VL90qGXo" class="lozad post-image"></p>
+<h3 id="Dr-Memory-Dr-Fuzz"><a href="#Dr-Memory-Dr-Fuzz" class="headerlink" title="Dr.Memory / Dr.Fuzz"></a><strong>Dr.Memory / Dr.Fuzz</strong></h3><p>Dr.Fuzz 是 Dr.Memory 的一部分，Chromium 中的所有 fuzz testing 都是用 Dr.Fuzz 运行起来的；<a target="_blank" rel="noopener" href="http://drmemory.org/">Dr.Memory</a> 是一个内存分析工具，主要用于检测内存相关的错误，比如：</p>
+<ul>
+<li>读取未初始化内存</li>
+<li>访问无效内存区域（比如：buffer overflow/underflow, user-after-free）</li>
+<li>多次释放内存，内存泄漏</li>
+<li>handle 泄漏等</li>
+</ul>
+<p>无论我们自己的项目中是否有 fuzz testing, Dr.Memory 这个工具是非常有用的。</p>
+<h3 id="fuzz-testing-管理"><a href="#fuzz-testing-管理" class="headerlink" title="fuzz testing 管理"></a><strong>fuzz testing 管理</strong></h3><p>与单元测试类似，Chromium 中所有的 fuzz testing 文件都对应一个编译 target</p>
+<p><img src="https://file.notion.so/f/s/8b806cc2-56d0-4562-9467-76ea0a9fada3/chromium_testing_fuzz_target.png?id=c246fe76-cb97-4cb6-b5aa-d003e289d3c3&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234229046&amp;signature=XL1vd5m-nezti2thR0xSguOPzrdJnpBkbhHnm5S_hIc" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/8b806cc2-56d0-4562-9467-76ea0a9fada3/chromium_testing_fuzz_target.png?id=c246fe76-cb97-4cb6-b5aa-d003e289d3c3&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234229046&amp;signature=XL1vd5m-nezti2thR0xSguOPzrdJnpBkbhHnm5S_hIc" class="lozad post-image"></p>
+<p>每次 fuzz test 都会从 net_dns_hosts_parse_fuzzer.dict 中选一个作为 data</p>
+<p><img src="https://file.notion.so/f/s/7dedbb47-415f-44f7-ae72-bc72419790e5/chromium_testing_fuzz_dict.png?id=8ffd5476-67fc-4868-a329-8fbe90c62d3f&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234229263&amp;signature=JuDzwuJrlISHsAowFXFwz6etOTDYKJqjfaC7x_ub0s8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/7dedbb47-415f-44f7-ae72-bc72419790e5/chromium_testing_fuzz_dict.png?id=8ffd5476-67fc-4868-a329-8fbe90c62d3f&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234229263&amp;signature=JuDzwuJrlISHsAowFXFwz6etOTDYKJqjfaC7x_ub0s8" class="lozad post-image"></p>
+<h3 id="fuzz-testing-编译、运行"><a href="#fuzz-testing-编译、运行" class="headerlink" title="fuzz testing 编译、运行"></a><strong>fuzz testing 编译、运行</strong></h3><ul>
+<li>编译<ul>
+<li>mkdir -p out/DrFuzz</li>
+<li>gn gen out/DrFuzz –args=use_drfuzz=true</li>
+<li>ninja -C out\DrFuzz net_dns_hosts_parse_fuzzer</li>
+</ul>
+</li>
+<li>运行<ul>
+<li>bin/drmemory -fuzz_function LLVMFuzzerTestOneInput out/DrFuzz/net_dns_hosts_parse_fuzzer</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://file.notion.so/f/s/15d834ea-3989-43a5-9057-df61c970c3e8/chromium_testing_fuzz_result.png?id=f5316aa9-f7a0-40aa-b37c-e575b6c62f7d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234229868&amp;signature=YudQMbNWzzxtqKxxvhnhuBPiE3dIN5JyzXd-65PI_C8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/15d834ea-3989-43a5-9057-df61c970c3e8/chromium_testing_fuzz_result.png?id=f5316aa9-f7a0-40aa-b37c-e575b6c62f7d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234229868&amp;signature=YudQMbNWzzxtqKxxvhnhuBPiE3dIN5JyzXd-65PI_C8" class="lozad post-image"></p>
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a><strong>性能测试</strong></h2><p>单元测试和 fuzz testing 都是针对代码层面的白盒测试。下面再看看性能测试，Chromium 的开发者们开发了一套性能分析、测试、监控的工具集：</p>
+<ul>
+<li>Trace-view ：性能数据分析和可视化，支持 Chromium 的 trace_event 和 Linux 内核 trace (ftrace)</li>
+<li>Telemetry ：性能测试框架</li>
+<li>Performance Dashboard ：性能 Dashboard</li>
+<li>systrace ： Android systrace 解析</li>
+<li>Web Page Replay ：网页操作和录屏</li>
+</ul>
+<p>这套工具集被放在一个独立的工程中：<a target="_blank" rel="noopener" href="https://github.com/catapult-project/catapult">catapult</a>, 对于 Chromium 的开发者和前端开发者都非常有价值，比如你正在优化某个前端网页的加载时间，你可以把网络加载的过程 dump 出来，然后使用 Trace-View 加载分析；Trace-View 甚至可以解析 Android 平台 dump 出来的 systrace。解析效果如下：</p>
+<p><img src="https://file.notion.so/f/s/7196f19f-5731-473b-9adf-9ada19fdf56f/chromium_perf_profile.png?id=d5ee3a67-6551-4284-ba5f-9f22b201eb53&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234230032&amp;signature=pUInNgTy4AR1mmORaJbjCSeAiW9hhAP9dyxPTw9vwS0" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/7196f19f-5731-473b-9adf-9ada19fdf56f/chromium_perf_profile.png?id=d5ee3a67-6551-4284-ba5f-9f22b201eb53&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234230032&amp;signature=pUInNgTy4AR1mmORaJbjCSeAiW9hhAP9dyxPTw9vwS0" class="lozad post-image"></p>
+<p>catapult 是一套完整的解决方案，其设计思路对我们项目开发有指导意义，后面我会专门研究一下。这里我只关注 Telemetry 这个性能测试框架。</p>
+<h3 id="Telemetry"><a href="#Telemetry" class="headerlink" title="Telemetry"></a><strong>Telemetry</strong></h3><p>Telemetry 是 Chrome 浏览器的性能测试框架，它使用 <a target="_blank" rel="noopener" href="https://developer.chrome.com/devtools/docs/remote-debugging">DevTools Remote Debugging Protocol</a> 这个协议，实现了网页的自动化测试、获取性能数据以及生成性能数据报表。</p>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = Chromium 工程源码是如何测试的
+Date = 2019-1-14
+Published = true
+Category = Chromium
+Tag = ['单元测试', '性能测试', 'Chromium']
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2019/01/17/libcurl_yu_ming_jie_xi_fen_xi/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">libcurl 域名解析分析 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2019/01/06/zen_yang_yue_du_yuan_dai_ma/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">怎样阅读源代码 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-text">单元测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fuzz-testing"><span class="toc-text">fuzz testing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dr-Memory-Dr-Fuzz"><span class="toc-text">Dr.Memory &#x2F; Dr.Fuzz</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fuzz-testing-%E7%AE%A1%E7%90%86"><span class="toc-text">fuzz testing 管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fuzz-testing-%E7%BC%96%E8%AF%91%E3%80%81%E8%BF%90%E8%A1%8C"><span class="toc-text">fuzz testing 编译、运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="toc-text">性能测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Telemetry"><span class="toc-text">Telemetry</span></a></li></ol></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-text">单元测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fuzz-testing"><span class="toc-text">fuzz testing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dr-Memory-Dr-Fuzz"><span class="toc-text">Dr.Memory &#x2F; Dr.Fuzz</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fuzz-testing-%E7%AE%A1%E7%90%86"><span class="toc-text">fuzz testing 管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fuzz-testing-%E7%BC%96%E8%AF%91%E3%80%81%E8%BF%90%E8%A1%8C"><span class="toc-text">fuzz testing 编译、运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="toc-text">性能测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Telemetry"><span class="toc-text">Telemetry</span></a></li></ol></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="toc-text">单元测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fuzz-testing"><span class="toc-text">fuzz testing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Dr-Memory-Dr-Fuzz"><span class="toc-text">Dr.Memory &#x2F; Dr.Fuzz</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fuzz-testing-%E7%AE%A1%E7%90%86"><span class="toc-text">fuzz testing 管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fuzz-testing-%E7%BC%96%E8%AF%91%E3%80%81%E8%BF%90%E8%A1%8C"><span class="toc-text">fuzz testing 编译、运行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="toc-text">性能测试</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Telemetry"><span class="toc-text">Telemetry</span></a></li></ol></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

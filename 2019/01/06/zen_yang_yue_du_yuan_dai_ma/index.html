@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      怎样阅读源代码
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2019-01-06T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2019-01-06</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/杂项/" class="post-meta-link">杂项</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>1.2k words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/源代码/" class="post-meta-link">源代码</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <p>阅读源代码是程序员最重要的基本功之一，研读高质量的开源项目源码是进阶的必要手段。那么面对一个新项目时，如何高效快速地熟悉整个源码呢？<br><span id="more"></span></p>
+<h2 id="我是怎么阅读源码的"><a href="#我是怎么阅读源码的" class="headerlink" title="我是怎么阅读源码的"></a><strong>我是怎么阅读源码的</strong></h2><p>根据阅读源码的仔细程度，主要分为三个阶段/粒度：Module Level，Class Level，Detail Level</p>
+<h3 id="Module-Level"><a href="#Module-Level" class="headerlink" title="Module Level"></a><strong>Module Level</strong></h3><p>浏览整个源码的目录结构，了解一下大体包含了哪些内容，搞清楚代码的大体组织结构，对项目整体有个感性的认识。</p>
+<h3 id="Class-Level"><a href="#Class-Level" class="headerlink" title="Class Level"></a><strong>Class Level</strong></h3><p>针对某个特定模块，搞清楚每个源文件/类的大体作用，搞清楚主要的接口有哪些、类之间的调用/依赖关系等；此外还需要对该模块的主要功能流程有直观的认识。通常这个时候我会画一些思维导图/流程图帮助理解。<br>比如, 下面这两张图是我看 Chromium 网络库中 DNS 解析相关的代码时画的。第一张图帮助理清该模块有哪些源文件以及他们之间的关系。</p>
+<p><img src="https://file.notion.so/f/s/3ea25134-79f7-4d6b-ac38-800c37ad9de0/Untitled.png?id=b531584c-35e5-47bd-8ffa-df8ee26e6567&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234208848&amp;signature=qpOZkaWeWjQ4yz63WoSGj3Kw0lpKwwo9XqwClniQGlc" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/3ea25134-79f7-4d6b-ac38-800c37ad9de0/Untitled.png?id=b531584c-35e5-47bd-8ffa-df8ee26e6567&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234208848&amp;signature=qpOZkaWeWjQ4yz63WoSGj3Kw0lpKwwo9XqwClniQGlc" class="lozad post-image"></p>
+<p>下面这张图是具体的功能流程图，帮助理解整体的流程。</p>
+<p><img src="https://file.notion.so/f/s/dbb9bcb0-9bc6-4e14-a896-44a1c8eab704/Untitled.png?id=52e632e5-5d2c-4039-91ae-405efd9bbfb1&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209019&amp;signature=2d3bt7BEHmUBFAKmlHxZOWUav8NkrPo_HyVI4kj40W8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/dbb9bcb0-9bc6-4e14-a896-44a1c8eab704/Untitled.png?id=52e632e5-5d2c-4039-91ae-405efd9bbfb1&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209019&amp;signature=2d3bt7BEHmUBFAKmlHxZOWUav8NkrPo_HyVI4kj40W8" class="lozad post-image"></p>
+<h3 id="Detail-Level"><a href="#Detail-Level" class="headerlink" title="Detail Level"></a><strong>Detail Level</strong></h3><p>经过前面两个阶段，对源码有了宏观上的认识，Detail Level 是根据具体需求，更加细粒度地研读代码，比如研究某个函数的实现细节，优化思路等等</p>
+<h2 id="大家的观点"><a href="#大家的观点" class="headerlink" title="大家的观点"></a><strong>大家的观点</strong></h2><p>知乎，HackNews 上有很多讨论此类话题的帖子：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/26766601">如何去阅读并学习一些优秀的开源框架的源码？</a></li>
+<li><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=9784008">How do you familiarize yourself with a new codebase?</a></li>
+<li><a target="_blank" rel="noopener" href="https://news.ycombinator.com/item?id=8263402">Strategies to quickly become productive in an unfamiliar codebase</a></li>
+</ul>
+<p>总结一下高赞回答的观点:</p>
+<h3 id="通读一遍官方文档和-demo"><a href="#通读一遍官方文档和-demo" class="headerlink" title="通读一遍官方文档和 demo"></a><strong>通读一遍官方文档和 demo</strong></h3><h3 id="带着问题去读"><a href="#带着问题去读" class="headerlink" title="带着问题去读"></a><strong>带着问题去读</strong></h3><p>读代码通常要能回答两个问题：要解决什么问题？如何实现的？大到整个项目，小到一个模块，函数，看的时候，都要抱着这两个问题去看。看完了，这两个问题能答上来，才是有效</p>
+<h3 id="边读边干"><a href="#边读边干" class="headerlink" title="边读边干"></a><strong>边读边干</strong></h3><p>尽可能编译调试。能调试的代码，几乎没有看不懂的</p>
+<h3 id="层次分明"><a href="#层次分明" class="headerlink" title="层次分明"></a><strong>层次分明</strong></h3><p>横向分层，纵向分块。代码都是分模块的，有的是 core, 有的是 util，parser 之类的，要知道看的是哪一层，那一块</p>
+<h3 id="Deep-Dive"><a href="#Deep-Dive" class="headerlink" title="Deep Dive"></a><strong>Deep Dive</strong></h3><p>I start with a relatively high level interface point, such as an important function in a public API. Such functions and methods tend to accomplish easily understandable things. And by “important” I mean something that is fundamental to what the system accomplishes.<br>Then you dive.<br>Your goal is to have a decent understanding of how this fundamental thing is accomplished. You start at the public facing function, then find the actual implementation of that function, and start reading code. If things make sense, you keep going. If you can’t make sense of it, then you will probably need to start diving into related APIs and - most importantly - data structures.<br>This process will tend to have a point where you have dozens of files open, which have non-trivial relationships with each other, and they are a variety of interfaces and data structures. That’s okay. You’re just trying to get a feel for all of it; you’re not necessarily going for total, complete understanding.<br>What you’re going for is that Aha! moment where you can feel confident in saying, “Oh, that’s how it’s done.” This will tend to happen once you find those fundamental data structures, and have finally pieced together some understanding of how they all fit together. Once you’ve had the Aha! moment, you can start to trace the results back out, to make sure that is how the thing is accomplished, or what is returned. I do this with all large codebases I encounter that I want to understand. It’s quite fun to do this with the Linux source code.<br>My philosophy is that “It’s all just code”, which means that with enough patience, it’s all understandable. Sometimes a good strategy is to just start diving into it.</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a><strong>工具</strong></h2><p>工具顺手，事半功倍，借助工具帮我们阅读并理解源码至关重要。</p>
+<h3 id="IDE"><a href="#IDE" class="headerlink" title="IDE"></a><strong>IDE</strong></h3><p>一般的中小型项目，选择一个用的顺手就行。我个人喜欢用 VS Code 和 Source Insigth。但是如果是代码量很大的项目，比如 Chromium，Linux 等，动辄就几千万行代码，一般的 IDE 是扛不住的。我曾经尝试用 VS Code 和 Visual Studio 读完整版的 Chromium 源码，结果查找一个符号的 reference 就卡到崩溃。最终我只好打开部分模块，这样基本是可以解决刚才所说的问题，但是前提是你要读的这部分代码相对比较独立；如果依赖很多模块的话，那么可能要丢失一些依赖或引用信息了。 所幸的是，Google 推出了一个在线阅读 Chromium 源码的方案： <a target="_blank" rel="noopener" href="https://cs.chromium.org/">https://cs.chromium.org/</a> ，在这个也可以快速方便地阅读完整版 Chromium 源码，更棒的是，可以非常快速地查找引用，调用关系，修改历史，declarations, definition 和 class 的 outline 等等。 其他大型的项目一般也是有在线阅读的方案，如果是在没有，可以自己搭建一个这样的服务；Google 开源了一个 Code Search 的工具，具体细节可以在<a target="_blank" rel="noopener" href="https://github.com/google/codesearch">这里</a></p>
+<h3 id="流程图"><a href="#流程图" class="headerlink" title="流程图"></a><strong>流程图</strong></h3><p>我个人喜欢用 XMind 和 <a target="_blank" rel="noopener" href="https://www.websequencediagrams.com/">https://www.websequencediagrams.com/</a></p>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = 怎样阅读源代码
+Date = 2019-01-06
+Published = true
+Category = 杂项
+Tag = 源代码
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2019/01/14/chromium_gong_cheng_yuan_ma_shi_ru_he_ce_shi_de/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">Chromium 工程源码是如何测试的 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2018/12/30/2018_nian_du_zong_jie/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">2018 年度总结 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E9%98%85%E8%AF%BB%E6%BA%90%E7%A0%81%E7%9A%84"><span class="toc-text">我是怎么阅读源码的</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Module-Level"><span class="toc-text">Module Level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Class-Level"><span class="toc-text">Class Level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Detail-Level"><span class="toc-text">Detail Level</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E5%AE%B6%E7%9A%84%E8%A7%82%E7%82%B9"><span class="toc-text">大家的观点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%AF%BB%E4%B8%80%E9%81%8D%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%92%8C-demo"><span class="toc-text">通读一遍官方文档和 demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E5%8E%BB%E8%AF%BB"><span class="toc-text">带着问题去读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%B9%E8%AF%BB%E8%BE%B9%E5%B9%B2"><span class="toc-text">边读边干</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%82%E6%AC%A1%E5%88%86%E6%98%8E"><span class="toc-text">层次分明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep-Dive"><span class="toc-text">Deep Dive</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IDE"><span class="toc-text">IDE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-text">流程图</span></a></li></ol></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E9%98%85%E8%AF%BB%E6%BA%90%E7%A0%81%E7%9A%84"><span class="toc-text">我是怎么阅读源码的</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Module-Level"><span class="toc-text">Module Level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Class-Level"><span class="toc-text">Class Level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Detail-Level"><span class="toc-text">Detail Level</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E5%AE%B6%E7%9A%84%E8%A7%82%E7%82%B9"><span class="toc-text">大家的观点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%AF%BB%E4%B8%80%E9%81%8D%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%92%8C-demo"><span class="toc-text">通读一遍官方文档和 demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E5%8E%BB%E8%AF%BB"><span class="toc-text">带着问题去读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%B9%E8%AF%BB%E8%BE%B9%E5%B9%B2"><span class="toc-text">边读边干</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%82%E6%AC%A1%E5%88%86%E6%98%8E"><span class="toc-text">层次分明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep-Dive"><span class="toc-text">Deep Dive</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IDE"><span class="toc-text">IDE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-text">流程图</span></a></li></ol></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E9%98%85%E8%AF%BB%E6%BA%90%E7%A0%81%E7%9A%84"><span class="toc-text">我是怎么阅读源码的</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Module-Level"><span class="toc-text">Module Level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Class-Level"><span class="toc-text">Class Level</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Detail-Level"><span class="toc-text">Detail Level</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%A7%E5%AE%B6%E7%9A%84%E8%A7%82%E7%82%B9"><span class="toc-text">大家的观点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%AF%BB%E4%B8%80%E9%81%8D%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E5%92%8C-demo"><span class="toc-text">通读一遍官方文档和 demo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E7%9D%80%E9%97%AE%E9%A2%98%E5%8E%BB%E8%AF%BB"><span class="toc-text">带着问题去读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%B9%E8%AF%BB%E8%BE%B9%E5%B9%B2"><span class="toc-text">边读边干</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%82%E6%AC%A1%E5%88%86%E6%98%8E"><span class="toc-text">层次分明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deep-Dive"><span class="toc-text">Deep Dive</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B7%A5%E5%85%B7"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#IDE"><span class="toc-text">IDE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="toc-text">流程图</span></a></li></ol></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

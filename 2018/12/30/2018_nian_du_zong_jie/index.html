@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      2018 年度总结
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2018-12-30T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2018-12-30</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/年度总结/" class="post-meta-link">年度总结</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>758 words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/年度总结/" class="post-meta-link">年度总结</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <h3 id="买了公寓"><a href="#买了公寓" class="headerlink" title="买了公寓"></a><strong>买了公寓</strong></h3><p>买了一套公寓给父母住，总算是了却了心中一桩事</p>
+<h3 id="做了手术"><a href="#做了手术" class="headerlink" title="做了手术"></a><strong>做了手术</strong></h3><p>左侧肩膀有个皮下肿物，每次洗澡都会关注是不是又长大，今年做了一个手术切掉了。病理分析结果是黑素纤维瘤，有恶变可能，幸亏及时割掉了。平时得多注意身体，发现有异常情况要及时去医院<br><span id="more"></span></p>
+<h3 id="涨薪了也降薪了"><a href="#涨薪了也降薪了" class="headerlink" title="涨薪了也降薪了"></a><strong>涨薪了也降薪了</strong></h3><p>工资涨了 20%，但是由于回家心切，降薪 40% 回到了老家三线城市</p>
+<h3 id="参加了一大波面试"><a href="#参加了一大波面试" class="headerlink" title="参加了一大波面试"></a><strong>参加了一大波面试</strong></h3><p>今年一年感觉特别躁动，也许是感觉在爱奇艺没有什么进步的空间了。所以一直在不停地面试，聊过的公司有百度、阿里巴巴、今日头条、流利说等等，最终都是因为职级没有达到预期没有去。这个过程我也比较清晰地认识到自己的技术深度不够、专注力不够</p>
+<h3 id="回到了老家城市工作"><a href="#回到了老家城市工作" class="headerlink" title="回到了老家城市工作"></a><strong>回到了老家城市工作</strong></h3><p>考虑到孩子越来越大需要陪伴，结束了三年的漂泊之旅，选择了一个相对稳定的外企，换了一种生活方式</p>
+<h3 id="养成了一个习惯"><a href="#养成了一个习惯" class="headerlink" title="养成了一个习惯"></a><strong>养成了一个习惯</strong></h3><p>上下班开车途中听书，每天大概30分钟。已经听了《曾国藩》和《平凡的世界》这两个大部头，听书的沉浸感更强，现在特别享受每天这 30 分钟</p>
+<h3 id="一次旅行"><a href="#一次旅行" class="headerlink" title="一次旅行"></a><strong>一次旅行</strong></h3><p>年初跟基友们去了一趟重庆，非常开心的旅行</p>
+<h3 id="读过最好的书"><a href="#读过最好的书" class="headerlink" title="读过最好的书"></a><strong>读过最好的书</strong></h3><ul>
+<li>《平凡的世界》</li>
+</ul>
+<h3 id="看过最好的纪录片"><a href="#看过最好的纪录片" class="headerlink" title="看过最好的纪录片"></a><strong>看过最好的纪录片</strong></h3><ul>
+<li>最后的棒棒</li>
+</ul>
+<h3 id="离不开思维导图了"><a href="#离不开思维导图了" class="headerlink" title="离不开思维导图了"></a><strong>离不开思维导图了</strong></h3><p>面对复杂的代码和业务时，用思维导图整理思路；效果很好，现在工作中越来越离不开思维导图了</p>
+<h3 id="C-跨平台开发"><a href="#C-跨平台开发" class="headerlink" title="C++ 跨平台开发"></a><strong>C++ 跨平台开发</strong></h3><p>又一次开始了 C++ 跨平台开发，迫切地想学好 windbg 和 lldb</p>
+<h3 id="搭建了blog"><a href="#搭建了blog" class="headerlink" title="搭建了blog"></a><strong>搭建了blog</strong></h3><p>一直觉得写 blog 很重要，今年自己在 github 上搭建了 blog，但是没有坚持下来，只写了几篇 wwdc 的总结</p>
+<h3 id="辞去了多年的兼职"><a href="#辞去了多年的兼职" class="headerlink" title="辞去了多年的兼职"></a><strong>辞去了多年的兼职</strong></h3><p>下了很大的决心，辞去了多年的兼职。没有了额外的收入，收获了更多的业余时间</p>
+<hr>
+<h2 id="2019-年的计划"><a href="#2019-年的计划" class="headerlink" title="2019 年的计划"></a><strong>2019 年的计划</strong></h2><h3 id="读书"><a href="#读书" class="headerlink" title="读书"></a><strong>读书</strong></h3><ul>
+<li>《红楼梦》</li>
+<li>矛盾文学奖系列</li>
+<li>《白鹿原》</li>
+<li>《聊斋志异》</li>
+<li>《三体》</li>
+<li>《鬼吹灯》</li>
+<li>《改变心理学的40项研究》</li>
+<li>《亲密关系》</li>
+<li>《Parent Effectiveness Training》</li>
+<li>《The Boy Who Was Raised as a Dog》</li>
+<li>《Unix 网络编程》</li>
+<li>《TCP/IP 高效编程-改善网络程序的44个技巧》</li>
+</ul>
+<h3 id="奥斯卡经典电影"><a href="#奥斯卡经典电影" class="headerlink" title="奥斯卡经典电影"></a><strong>奥斯卡经典电影</strong></h3><h3 id="带老婆孩子出一次远门旅行"><a href="#带老婆孩子出一次远门旅行" class="headerlink" title="带老婆孩子出一次远门旅行"></a><strong>带老婆孩子出一次远门旅行</strong></h3><h3 id="熟练掌握调试器"><a href="#熟练掌握调试器" class="headerlink" title="熟练掌握调试器"></a><strong>熟练掌握调试器</strong></h3><ul>
+<li>windbg</li>
+<li>lldb</li>
+</ul>
+<h3 id="学习-Chromium-基础库"><a href="#学习-Chromium-基础库" class="headerlink" title="学习 Chromium 基础库"></a><strong>学习 Chromium 基础库</strong></h3><h3 id="base"><a href="#base" class="headerlink" title="base"></a><strong>base</strong></h3><ul>
+<li>多线程</li>
+<li>字符串</li>
+<li>日志</li>
+<li>智能指针</li>
+<li>IPC</li>
+</ul>
+<h3 id="网络"><a href="#网络" class="headerlink" title="网络"></a><strong>网络</strong></h3><ul>
+<li>总体架构</li>
+<li>Proxy<ul>
+<li>Resolution</li>
+<li>Server</li>
+<li>Client</li>
+</ul>
+</li>
+<li>NetLog</li>
+</ul>
+<h3 id="报考一级注册消防工程师"><a href="#报考一级注册消防工程师" class="headerlink" title="报考一级注册消防工程师"></a><strong>报考一级注册消防工程师</strong></h3><h3 id="关注理财"><a href="#关注理财" class="headerlink" title="关注理财"></a><strong>关注理财</strong></h3><h3 id="关注产品"><a href="#关注产品" class="headerlink" title="关注产品"></a><strong>关注产品</strong></h3><h3 id="亟需养成的习惯"><a href="#亟需养成的习惯" class="headerlink" title="亟需养成的习惯"></a><strong>亟需养成的习惯</strong></h3><ul>
+<li>早起</li>
+<li>坚持写文章</li>
+<li>深度思考</li>
+<li>步行或跑步</li>
+<li>多读书</li>
+<li>学会情绪管理</li>
+</ul>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = 2018 年度总结
+Date = 2018-12-30
+Published = true
+Category = 年度总结
+Tag = 年度总结
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2019/01/06/zen_yang_yue_du_yuan_dai_ma/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">怎样阅读源代码 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2018/12/14/chromium_kua_ping_tai_ji_chu_ku_duo_xian_cheng/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">Chromium 跨平台基础库：多线程 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%B0%E4%BA%86%E5%85%AC%E5%AF%93"><span class="toc-text">买了公寓</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E4%BA%86%E6%89%8B%E6%9C%AF"><span class="toc-text">做了手术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%A8%E8%96%AA%E4%BA%86%E4%B9%9F%E9%99%8D%E8%96%AA%E4%BA%86"><span class="toc-text">涨薪了也降薪了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E5%8A%A0%E4%BA%86%E4%B8%80%E5%A4%A7%E6%B3%A2%E9%9D%A2%E8%AF%95"><span class="toc-text">参加了一大波面试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E5%88%B0%E4%BA%86%E8%80%81%E5%AE%B6%E5%9F%8E%E5%B8%82%E5%B7%A5%E4%BD%9C"><span class="toc-text">回到了老家城市工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%BB%E6%88%90%E4%BA%86%E4%B8%80%E4%B8%AA%E4%B9%A0%E6%83%AF"><span class="toc-text">养成了一个习惯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E6%97%85%E8%A1%8C"><span class="toc-text">一次旅行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E8%BF%87%E6%9C%80%E5%A5%BD%E7%9A%84%E4%B9%A6"><span class="toc-text">读过最好的书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%8B%E8%BF%87%E6%9C%80%E5%A5%BD%E7%9A%84%E7%BA%AA%E5%BD%95%E7%89%87"><span class="toc-text">看过最好的纪录片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%BB%E4%B8%8D%E5%BC%80%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E4%BA%86"><span class="toc-text">离不开思维导图了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91"><span class="toc-text">C++ 跨平台开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E4%BA%86blog"><span class="toc-text">搭建了blog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%9E%E5%8E%BB%E4%BA%86%E5%A4%9A%E5%B9%B4%E7%9A%84%E5%85%BC%E8%81%8C"><span class="toc-text">辞去了多年的兼职</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-%E5%B9%B4%E7%9A%84%E8%AE%A1%E5%88%92"><span class="toc-text">2019 年的计划</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%B9%A6"><span class="toc-text">读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%A5%E6%96%AF%E5%8D%A1%E7%BB%8F%E5%85%B8%E7%94%B5%E5%BD%B1"><span class="toc-text">奥斯卡经典电影</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E8%80%81%E5%A9%86%E5%AD%A9%E5%AD%90%E5%87%BA%E4%B8%80%E6%AC%A1%E8%BF%9C%E9%97%A8%E6%97%85%E8%A1%8C"><span class="toc-text">带老婆孩子出一次远门旅行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%86%9F%E7%BB%83%E6%8E%8C%E6%8F%A1%E8%B0%83%E8%AF%95%E5%99%A8"><span class="toc-text">熟练掌握调试器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0-Chromium-%E5%9F%BA%E7%A1%80%E5%BA%93"><span class="toc-text">学习 Chromium 基础库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base"><span class="toc-text">base</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C"><span class="toc-text">网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A5%E8%80%83%E4%B8%80%E7%BA%A7%E6%B3%A8%E5%86%8C%E6%B6%88%E9%98%B2%E5%B7%A5%E7%A8%8B%E5%B8%88"><span class="toc-text">报考一级注册消防工程师</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E7%90%86%E8%B4%A2"><span class="toc-text">关注理财</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E4%BA%A7%E5%93%81"><span class="toc-text">关注产品</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%9F%E9%9C%80%E5%85%BB%E6%88%90%E7%9A%84%E4%B9%A0%E6%83%AF"><span class="toc-text">亟需养成的习惯</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%B0%E4%BA%86%E5%85%AC%E5%AF%93"><span class="toc-text">买了公寓</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E4%BA%86%E6%89%8B%E6%9C%AF"><span class="toc-text">做了手术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%A8%E8%96%AA%E4%BA%86%E4%B9%9F%E9%99%8D%E8%96%AA%E4%BA%86"><span class="toc-text">涨薪了也降薪了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E5%8A%A0%E4%BA%86%E4%B8%80%E5%A4%A7%E6%B3%A2%E9%9D%A2%E8%AF%95"><span class="toc-text">参加了一大波面试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E5%88%B0%E4%BA%86%E8%80%81%E5%AE%B6%E5%9F%8E%E5%B8%82%E5%B7%A5%E4%BD%9C"><span class="toc-text">回到了老家城市工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%BB%E6%88%90%E4%BA%86%E4%B8%80%E4%B8%AA%E4%B9%A0%E6%83%AF"><span class="toc-text">养成了一个习惯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E6%97%85%E8%A1%8C"><span class="toc-text">一次旅行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E8%BF%87%E6%9C%80%E5%A5%BD%E7%9A%84%E4%B9%A6"><span class="toc-text">读过最好的书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%8B%E8%BF%87%E6%9C%80%E5%A5%BD%E7%9A%84%E7%BA%AA%E5%BD%95%E7%89%87"><span class="toc-text">看过最好的纪录片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%BB%E4%B8%8D%E5%BC%80%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E4%BA%86"><span class="toc-text">离不开思维导图了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91"><span class="toc-text">C++ 跨平台开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E4%BA%86blog"><span class="toc-text">搭建了blog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%9E%E5%8E%BB%E4%BA%86%E5%A4%9A%E5%B9%B4%E7%9A%84%E5%85%BC%E8%81%8C"><span class="toc-text">辞去了多年的兼职</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-%E5%B9%B4%E7%9A%84%E8%AE%A1%E5%88%92"><span class="toc-text">2019 年的计划</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%B9%A6"><span class="toc-text">读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%A5%E6%96%AF%E5%8D%A1%E7%BB%8F%E5%85%B8%E7%94%B5%E5%BD%B1"><span class="toc-text">奥斯卡经典电影</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E8%80%81%E5%A9%86%E5%AD%A9%E5%AD%90%E5%87%BA%E4%B8%80%E6%AC%A1%E8%BF%9C%E9%97%A8%E6%97%85%E8%A1%8C"><span class="toc-text">带老婆孩子出一次远门旅行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%86%9F%E7%BB%83%E6%8E%8C%E6%8F%A1%E8%B0%83%E8%AF%95%E5%99%A8"><span class="toc-text">熟练掌握调试器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0-Chromium-%E5%9F%BA%E7%A1%80%E5%BA%93"><span class="toc-text">学习 Chromium 基础库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base"><span class="toc-text">base</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C"><span class="toc-text">网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A5%E8%80%83%E4%B8%80%E7%BA%A7%E6%B3%A8%E5%86%8C%E6%B6%88%E9%98%B2%E5%B7%A5%E7%A8%8B%E5%B8%88"><span class="toc-text">报考一级注册消防工程师</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E7%90%86%E8%B4%A2"><span class="toc-text">关注理财</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E4%BA%A7%E5%93%81"><span class="toc-text">关注产品</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%9F%E9%9C%80%E5%85%BB%E6%88%90%E7%9A%84%E4%B9%A0%E6%83%AF"><span class="toc-text">亟需养成的习惯</span></a></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%B0%E4%BA%86%E5%85%AC%E5%AF%93"><span class="toc-text">买了公寓</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%81%9A%E4%BA%86%E6%89%8B%E6%9C%AF"><span class="toc-text">做了手术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%A8%E8%96%AA%E4%BA%86%E4%B9%9F%E9%99%8D%E8%96%AA%E4%BA%86"><span class="toc-text">涨薪了也降薪了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E5%8A%A0%E4%BA%86%E4%B8%80%E5%A4%A7%E6%B3%A2%E9%9D%A2%E8%AF%95"><span class="toc-text">参加了一大波面试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E5%88%B0%E4%BA%86%E8%80%81%E5%AE%B6%E5%9F%8E%E5%B8%82%E5%B7%A5%E4%BD%9C"><span class="toc-text">回到了老家城市工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%BB%E6%88%90%E4%BA%86%E4%B8%80%E4%B8%AA%E4%B9%A0%E6%83%AF"><span class="toc-text">养成了一个习惯</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E6%AC%A1%E6%97%85%E8%A1%8C"><span class="toc-text">一次旅行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E8%BF%87%E6%9C%80%E5%A5%BD%E7%9A%84%E4%B9%A6"><span class="toc-text">读过最好的书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9C%8B%E8%BF%87%E6%9C%80%E5%A5%BD%E7%9A%84%E7%BA%AA%E5%BD%95%E7%89%87"><span class="toc-text">看过最好的纪录片</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A6%BB%E4%B8%8D%E5%BC%80%E6%80%9D%E7%BB%B4%E5%AF%BC%E5%9B%BE%E4%BA%86"><span class="toc-text">离不开思维导图了</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E8%B7%A8%E5%B9%B3%E5%8F%B0%E5%BC%80%E5%8F%91"><span class="toc-text">C++ 跨平台开发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E4%BA%86blog"><span class="toc-text">搭建了blog</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%9E%E5%8E%BB%E4%BA%86%E5%A4%9A%E5%B9%B4%E7%9A%84%E5%85%BC%E8%81%8C"><span class="toc-text">辞去了多年的兼职</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2019-%E5%B9%B4%E7%9A%84%E8%AE%A1%E5%88%92"><span class="toc-text">2019 年的计划</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%B9%A6"><span class="toc-text">读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A5%A5%E6%96%AF%E5%8D%A1%E7%BB%8F%E5%85%B8%E7%94%B5%E5%BD%B1"><span class="toc-text">奥斯卡经典电影</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E8%80%81%E5%A9%86%E5%AD%A9%E5%AD%90%E5%87%BA%E4%B8%80%E6%AC%A1%E8%BF%9C%E9%97%A8%E6%97%85%E8%A1%8C"><span class="toc-text">带老婆孩子出一次远门旅行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%86%9F%E7%BB%83%E6%8E%8C%E6%8F%A1%E8%B0%83%E8%AF%95%E5%99%A8"><span class="toc-text">熟练掌握调试器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0-Chromium-%E5%9F%BA%E7%A1%80%E5%BA%93"><span class="toc-text">学习 Chromium 基础库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base"><span class="toc-text">base</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C"><span class="toc-text">网络</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%A5%E8%80%83%E4%B8%80%E7%BA%A7%E6%B3%A8%E5%86%8C%E6%B6%88%E9%98%B2%E5%B7%A5%E7%A8%8B%E5%B8%88"><span class="toc-text">报考一级注册消防工程师</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E7%90%86%E8%B4%A2"><span class="toc-text">关注理财</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E6%B3%A8%E4%BA%A7%E5%93%81"><span class="toc-text">关注产品</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%9F%E9%9C%80%E5%85%BB%E6%88%90%E7%9A%84%E4%B9%A0%E6%83%AF"><span class="toc-text">亟需养成的习惯</span></a></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

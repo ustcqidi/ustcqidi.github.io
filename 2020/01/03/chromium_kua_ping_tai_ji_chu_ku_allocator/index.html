@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      Chromium 跨平台基础库：allocator
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2020-01-03T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2020-01-03</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/Chromium/" class="post-meta-link">Chromium</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>704 words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/Chromium/" class="post-meta-link">Chromium</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/allocator/" class="post-meta-link">allocator</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/基础库/" class="post-meta-link">基础库</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <p>allocator 是 C++ std 中引入的，为了处理各种内存管理模式（比如共享内存、垃圾回收等）的内存分配问题，负责内存的分配、回收，对象的创建析构等。<br><span id="more"></span><br>Chromium 的 base 库中有个 allocator 的目录，这是 Chromium 中使用的 allocator，为啥需要自己定义一个 allocator，不直接用系统的呢？ 这篇文章是我看代码过程的记录和总结。先看一下代码的目录结构：</p>
+<p><img src="https://file.notion.so/f/s/ab2325d7-db54-406d-afca-8376e3da5f45/Untitled.png?id=86096db0-d163-4bfd-9db4-83817f874204&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209202&amp;signature=rpz-AN9ze0qbH-DEy6qB4oXZbKdNVI2_DWKnX03_aq0" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/ab2325d7-db54-406d-afca-8376e3da5f45/Untitled.png?id=86096db0-d163-4bfd-9db4-83817f874204&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209202&amp;signature=rpz-AN9ze0qbH-DEy6qB4oXZbKdNVI2_DWKnX03_aq0" class="lozad post-image"></p>
+<h2 id="Chromium-中的-allocator"><a href="#Chromium-中的-allocator" class="headerlink" title="Chromium 中的 allocator"></a><strong>Chromium 中的 allocator</strong></h2><p>Chromium code base 中用到了多个 allocator，比如 allocator_shim, PartitionAlloc，还有 Blink 中用到的 Olipan。这篇文章主要关注 allocator_shim 和 PartitionAlloc。</p>
+<h3 id="allocator-shim"><a href="#allocator-shim" class="headerlink" title="allocator_shim"></a><strong>allocator_shim</strong></h3><p>allocator_shim 就是对各个平台 allocator 的封装，比如 malloc / new, 为什么要增加这一层封装呢？ 主要基于两点考虑，其一是在封装层增加很多 Security 检测逻辑，避免一些常见的安全漏洞，比如缓冲区溢出等。第二，可以 dump 更多 memery 相关的信息，方便排查内存以及性能问题等。<br>Chromium 有完整的 MemoryInfra 体系，包括采集 measuring data(chrome://tracing), memory dump, benchmarks (Telemetry) 和 chromeperf dashboard。这套体系的数据采集离不开自定义 allocator 的支持。</p>
+<p><img src="https://file.notion.so/f/s/347b9f5e-70ea-496c-86af-cccba38a1f94/Untitled.png?id=59e6cd5c-7da2-4d13-8380-e99506719ab3&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209383&amp;signature=vubFoHYVDDVz6XNwc_mPgUVnSErYCWfmk2-_Tg8KYIs" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/347b9f5e-70ea-496c-86af-cccba38a1f94/Untitled.png?id=59e6cd5c-7da2-4d13-8380-e99506719ab3&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209383&amp;signature=vubFoHYVDDVz6XNwc_mPgUVnSErYCWfmk2-_Tg8KYIs" class="lozad post-image"></p>
+<h3 id="PartitionAlloc"><a href="#PartitionAlloc" class="headerlink" title="PartitionAlloc"></a><strong>PartitionAlloc</strong></h3><p>allocator_shim 仅仅是对系统 allocator 的封装，而 PartitionAlloc 是基于 Partitions 和 Buckets 模型实现了一个 allocator。<br>Partition 是一个堆，它包含特定的对象类型、特定大小的对象或特定生命周期的对象（如调用方所愿）。调用方可以根据需要创建任意多个分区。每个 Partition 包含多个Buckets。bucket 是 Partition 中包含相似大小对象的区域。<br>PartitionAlloc 在 Security 方面做的更好，保证每个 Partition 都是独立的，并且受到保护，不受任何其他 Partition 的影响。这样一来可以避免 buffer overflow 破坏其他 Partition 的数据。</p>
+<h3 id="PartitionAlloc-的主要接口"><a href="#PartitionAlloc-的主要接口" class="headerlink" title="PartitionAlloc 的主要接口"></a><strong>PartitionAlloc 的主要接口</strong></h3><ul>
+<li>PartitionRoot::Alloc() / PartitionRoot::Free()<ul>
+<li>Partition 操作非线程安全</li>
+<li>编译时决定需分配的内存大小(不能超过某个最大值)</li>
+<li>分配对象大小必须是系统指针大小的整数倍</li>
+</ul>
+</li>
+<li>PartitionRootGeneric::Alloc() / PartitionRootGeneric::Free()<ul>
+<li>Partition 线程安全</li>
+<li>可以分配任意大小的内存 (不能超过 INT_MAX)</li>
+<li>Bucket 大小由待分配内存决定，自动填充为系统指针 size 整数倍, 比如申请分配大小为 4000， bucket 大小则为 4096</li>
+</ul>
+</li>
+</ul>
+<p>PartitionRoot / PartitionRootGeneric 实现的功能类似于 malloc 和 free。不同的是，该对象表示一个 “堆分区”， 每个分区在一个独立的地址空间内，互不干扰。</p>
+<ul>
+<li>SizeSpecificPartitionAllocator / PartitionAllocatorGeneric</li>
+</ul>
+<h3 id="PartitionAlloc-的数据结构"><a href="#PartitionAlloc-的数据结构" class="headerlink" title="PartitionAlloc 的数据结构"></a><strong>PartitionAlloc 的数据结构</strong></h3><ul>
+<li>PartitionSuperPageExtentEntry</li>
+</ul>
+<p><img src="https://file.notion.so/f/s/6d9b4fdd-e9d3-49e8-a0db-e4278f55711f/Untitled.png?id=56bc9771-128b-4ad5-8aa8-0b09ac9f3457&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209864&amp;signature=xNgkcPwlorrqR6qdG3yjNdSkjHhlE66Afa4A1QlE02g" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/6d9b4fdd-e9d3-49e8-a0db-e4278f55711f/Untitled.png?id=56bc9771-128b-4ad5-8aa8-0b09ac9f3457&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234209864&amp;signature=xNgkcPwlorrqR6qdG3yjNdSkjHhlE66Afa4A1QlE02g" class="lozad post-image"></p>
+<ul>
+<li>PartitionRootBase</li>
+</ul>
+<p><img src="https://file.notion.so/f/s/ae4e17f8-ea36-4e35-89c7-1692d39c0ae9/Untitled.png?id=b4f03eb7-8517-43ae-b0f8-05d88f15d218&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210025&amp;signature=1luKUhyqF6-E5kgmzbhkwPgCre9lln_iyOT707FKeSw" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/ae4e17f8-ea36-4e35-89c7-1692d39c0ae9/Untitled.png?id=b4f03eb7-8517-43ae-b0f8-05d88f15d218&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210025&amp;signature=1luKUhyqF6-E5kgmzbhkwPgCre9lln_iyOT707FKeSw" class="lozad post-image"></p>
+<ul>
+<li>PartitionBucket 与 PartitionPage</li>
+</ul>
+<p><img src="https://file.notion.so/f/s/06198f3a-abae-4fe2-9e4a-750d8e475c39/Untitled.png?id=e5d694c2-3d10-4598-937b-3803dbf1ffc4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210195&amp;signature=68Kln9FDomDSONSC_szP9zouu-Th_3Tm_tcCDImeDJc" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/06198f3a-abae-4fe2-9e4a-750d8e475c39/Untitled.png?id=e5d694c2-3d10-4598-937b-3803dbf1ffc4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210195&amp;signature=68Kln9FDomDSONSC_szP9zouu-Th_3Tm_tcCDImeDJc" class="lozad post-image"></p>
+<h3 id="PartitionAlloc-的代码结构"><a href="#PartitionAlloc-的代码结构" class="headerlink" title="PartitionAlloc 的代码结构"></a><strong>PartitionAlloc 的代码结构</strong></h3><p><img src="https://file.notion.so/f/s/bec2987e-d049-49ab-a59b-aa658426d4bb/Untitled.png?id=8306c988-4bc4-41c6-a728-17ddd2e07c97&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210468&amp;signature=4khMQxFStANUjhuC8uwCAhJvwnnnbjKuzWkE0G_MyjE" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/bec2987e-d049-49ab-a59b-aa658426d4bb/Untitled.png?id=8306c988-4bc4-41c6-a728-17ddd2e07c97&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210468&amp;signature=4khMQxFStANUjhuC8uwCAhJvwnnnbjKuzWkE0G_MyjE" class="lozad post-image"></p>
+<h2 id="学习到的一些知识点"><a href="#学习到的一些知识点" class="headerlink" title="学习到的一些知识点"></a><strong>学习到的一些知识点</strong></h2><ul>
+<li>spin lock 的用法</li>
+<li>constexpr 关键字</li>
+<li>volatile 关键字</li>
+<li>unittest 与 perftest 的思路</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a><strong>参考资料</strong></h2><ol>
+<li><a target="_blank" rel="noopener" href="https://www.geeksforgeeks.org/understanding-volatile-qualifier-in-c">Understanding “volatile” qualifier in C | Set 2 (Examples)</a></li>
+</ol>
+<h2 id="修改历史"><a href="#修改历史" class="headerlink" title="修改历史"></a><strong>修改历史</strong></h2><ul>
+<li>创建文档+初稿 2020-01-03</li>
+<li>增加 PartitionAlloc 部分 2020-01-04</li>
+</ul>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = Chromium 跨平台基础库：allocator
+Date = 2020-01-03
+Published = true
+Category = Chromium
+Tag = ['Chromium', 'allocator', '基础库']
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2020/02/11/guan_yu_gong_zuo_bi_ji/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">关于工作笔记 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2019/12/29/2019_nian_du_zong_jie/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">2019 年度总结 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Chromium-%E4%B8%AD%E7%9A%84-allocator"><span class="toc-text">Chromium 中的 allocator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#allocator-shim"><span class="toc-text">allocator_shim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc"><span class="toc-text">PartitionAlloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E4%B8%BB%E8%A6%81%E6%8E%A5%E5%8F%A3"><span class="toc-text">PartitionAlloc 的主要接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">PartitionAlloc 的数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-text">PartitionAlloc 的代码结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-text">学习到的一些知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%8E%86%E5%8F%B2"><span class="toc-text">修改历史</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Chromium-%E4%B8%AD%E7%9A%84-allocator"><span class="toc-text">Chromium 中的 allocator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#allocator-shim"><span class="toc-text">allocator_shim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc"><span class="toc-text">PartitionAlloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E4%B8%BB%E8%A6%81%E6%8E%A5%E5%8F%A3"><span class="toc-text">PartitionAlloc 的主要接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">PartitionAlloc 的数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-text">PartitionAlloc 的代码结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-text">学习到的一些知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%8E%86%E5%8F%B2"><span class="toc-text">修改历史</span></a></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Chromium-%E4%B8%AD%E7%9A%84-allocator"><span class="toc-text">Chromium 中的 allocator</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#allocator-shim"><span class="toc-text">allocator_shim</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc"><span class="toc-text">PartitionAlloc</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E4%B8%BB%E8%A6%81%E6%8E%A5%E5%8F%A3"><span class="toc-text">PartitionAlloc 的主要接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84"><span class="toc-text">PartitionAlloc 的数据结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PartitionAlloc-%E7%9A%84%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-text">PartitionAlloc 的代码结构</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%88%B0%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-text">学习到的一些知识点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-text">参考资料</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%8E%86%E5%8F%B2"><span class="toc-text">修改历史</span></a></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

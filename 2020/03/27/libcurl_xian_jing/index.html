@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      libcurl 陷阱
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2020-03-27T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2020-03-27</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/cURL/" class="post-meta-link">cURL</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>2.3k words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/cURL/" class="post-meta-link">cURL</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/网络编程/" class="post-meta-link">网络编程</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <p>记录项目使用 libcurl 时遇到的一些坑，持续更新！<br><span id="more"></span></p>
+<h2 id="动态库卸载-Crash"><a href="#动态库卸载-Crash" class="headerlink" title="动态库卸载 Crash"></a><strong>动态库卸载 Crash</strong></h2><p>libcurl 作为动态库一部分，在动态库卸载时如果有 pending 的 dns 解析请求可能会导致 Crash。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/997">相关issue</a></li>
+<li><a target="_blank" rel="noopener" href="https://curl.haxx.se/libcurl/c/curl_global_cleanup.html">官方文档说明</a></li>
+</ul>
+<blockquote>
+<p>curl_global_cleanup does not block waiting for any libcurl-created threads to terminate (such as threads used for name resolving). If a module containing libcurl is dynamically unloaded while libcurl-created threads are still running then your program may crash or other corruption may occur. We recommend you do not run libcurl from any module that may be unloaded dynamically. This behavior may be addressed in the future.</p>
+</blockquote>
+<h2 id="Connection-Cache-复用问题"><a href="#Connection-Cache-复用问题" class="headerlink" title="Connection Cache 复用问题"></a><strong>Connection Cache 复用问题</strong></h2><p>网络切换/中断、App前后台切换，可能会导致 Connection Cache 的 socket 连接实例失效，但是 libcurl 没有针对这种情况做 Connection Cache 的及时清理，导致连接复用时可能会出现连接失败。这个问题在 iOS, Mac 平台上很容易出现。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://curl.haxx.se/mail/lib-2016-07/0032.html">相关讨论</a></li>
+</ul>
+<blockquote>
+<p>I’ve got a situation where connection cache is kept through internet connection change (Wifi -&gt; 3G for example). After network change cURL will try to reuse the connection from cache and will fail and open a new connection. The problem is that it takes ~20 seconds to understand that the connection was dead.</p>
+</blockquote>
+<h2 id="WebSocket-支持"><a href="#WebSocket-支持" class="headerlink" title="WebSocket 支持"></a><strong>WebSocket 支持</strong></h2><p>主要思路是使用 libcurl 作 https 通信，具体的 websocket 协议解析与封装需要自己实现。但是有个问题，libcurl 官方是不支持 websocket，因此 websocket 请求实例拿到 response 以后。这个实例可能会被 re-use。当然，民间也有一些基于 libcurl 支持 websocket 的讨论。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://curl.haxx.se/video/curlup-2017/2017-03-19_05_Michael_Kaufmann_Websocket_support_for_curl.mp4">https://curl.haxx.se/video/curlup-2017/2017-03-19_05_Michael_Kaufmann_Websocket_support_for_curl.mp4</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bagder/curl/pull/86">https://github.com/bagder/curl/pull/86</a></li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/mkauf/5ce3574ce821b2cf02986d4d701bfa86">https://gist.github.com/mkauf/5ce3574ce821b2cf02986d4d701bfa86</a></li>
+</ul>
+<h2 id="NTLM-认证"><a href="#NTLM-认证" class="headerlink" title="NTLM 认证"></a><strong>NTLM 认证</strong></h2><p>这次升级 libcurl 到 7.71.1 版本后，NTLM 认证在 Android 和 iOS 上认证都会失败。之前升级 libcurl 到 7.55.1 时也遇到过 NTLM 认证的问题。<br>相比其他认证方式，NTLM 认证过程更为复杂，整体流程如下图：</p>
+<p><img src="https://file.notion.so/f/s/327e7ce5-4c8c-41da-a82b-41098bf96c84/Untitled.png?id=2dec26b6-1c94-46b1-a956-63352ceac3b4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210649&amp;signature=OfNZuqYBuSVz364P7XjN9bltb_2SMwEpX50ebGTfFE8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/327e7ce5-4c8c-41da-a82b-41098bf96c84/Untitled.png?id=2dec26b6-1c94-46b1-a956-63352ceac3b4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234210649&amp;signature=OfNZuqYBuSVz364P7XjN9bltb_2SMwEpX50ebGTfFE8" class="lozad post-image"></p>
+<p>Client 和 Server 需要几次“握手”交换认证信息，并且要求这几次“握手”的连接实例是同一个。http(s) 是无状态连接，libcurl 本身也有 connection reuse 机制，所以可能有各种原因会导致，交换 NTLM 认证信息的几次连接可能使用的不是同一个实例，这就会导致认证失败。<br>我提交过几个 issue 给 libcurl，5911 这个 issue 是官方其中一个版本引入的 regression，我提了一个 PR Fix 了<br>Issues:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/3647">https://github.com/curl/curl/issues/3647</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/5693">https://github.com/curl/curl/issues/5693</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/5911">https://github.com/curl/curl/issues/5911</a></li>
+</ul>
+<p>Pull Request:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/pull/5914">https://github.com/curl/curl/pull/5914</a></li>
+</ul>
+<p>这些使用上的坑也具有指导意义。</p>
+<h3 id="Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection"><a href="#Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection" class="headerlink" title="Could not re-use the connection for NTLM challenge, and always create a new connection"></a><strong>Could not re-use the connection for NTLM challenge, and always create a new connection</strong></h3><h3 id="Root-Cause"><a href="#Root-Cause" class="headerlink" title="Root Cause"></a><strong>Root Cause</strong></h3><p>Connection 42 is still name resolving, can’t reuse. So create a new connection 43, which cause NTLM challenge failed, and cause once more redirect. It’s very wired because Connection 42 have left intact just now.</p>
+<h3 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a><strong>Solution</strong></h3><p>define the macro HAVE_GETPEERNAME</p>
+<h3 id="abnormal-logs"><a href="#abnormal-logs" class="headerlink" title="abnormal logs"></a><strong>abnormal logs</strong></h3><pre class="highlight"><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #42 to host exchange2016.com left intact</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Issue another request to this URL: &#x27;https://exchange2016.com/EWS/Exchange.asmx&#x27;</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Found bundle for host exchange2016.com: 0x7a72130c30 [serially]</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #11 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #23 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #24 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #25 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #26 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #29 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #31 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #42 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Hostname exchange2016.com was found in DNS cache</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :  Trying 10.100.87.8:443...</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connected to exchange2016.com () port 443 (#43)</span><br><span class="line"></span><br></pre>
+<h3 id="normal-logs"><a href="#normal-logs" class="headerlink" title="normal logs"></a><strong>normal logs</strong></h3><p>Re-using existing connection! (43) for NTLM challenge</p>
+<pre class="highlight"><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Connection #43 to host exchange2013.com left intact</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Issue another request to this URL: &#x27;https://exchange2013.com/EWS/Exchange.asmx&#x27;</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Found bundle for host exchange2013.com: 0x2823928e0 [serially]</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Re-using existing connection! (#43) with host exchange2013.com</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Connected to exchange2013.com () port 443 (#43)</span><br><span class="line"></span><br></pre>
+<h3 id="Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge"><a href="#Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge" class="headerlink" title="Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge"></a><strong>Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge</strong></h3><h3 id="Root-Cause-1"><a href="#Root-Cause-1" class="headerlink" title="Root Cause"></a><strong>Root Cause</strong></h3><ul>
+<li>Connection cache is full, closing the oldest one. So create a new connection 50, which cause NTLM challenge failed, and cause once more redirect. But why Closing connection 49, it seems to the latest one not oldest one.</li>
+<li>websocket connections make the connection cache full, and can not be closed</li>
+</ul>
+<p>As following code snippet, for websocket connection we will set the connect_only as true, which will never be candidate connection for close.</p>
+<pre class="highlight"><span class="line">// conncache.c</span><br><span class="line">struct connectdata *</span><br><span class="line">Curl_conncache_extract_oldest(struct Curl_easy *data) &#123;</span><br><span class="line"></span><br><span class="line">    ....</span><br><span class="line"></span><br><span class="line">    while(curr) &#123;</span><br><span class="line">      conn = curr-&gt;ptr;</span><br><span class="line"></span><br><span class="line">      if(!CONN_INUSE(conn) &amp;&amp; !conn-&gt;data &amp;&amp; !conn-&gt;bits.close &amp;&amp;</span><br><span class="line">         !conn-&gt;bits.connect_only) &#123;</span><br><span class="line">        /* Set higher score for the age passed since the connection was used */</span><br><span class="line">        score = Curl_timediff(now, conn-&gt;lastused);</span><br><span class="line"></span><br><span class="line">        if(score &gt; highscore) &#123;</span><br><span class="line">          highscore = score;</span><br><span class="line">          conn_candidate = conn;</span><br><span class="line">          bundle_candidate = bundle;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      curr = curr-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ....</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre>
+<h3 id="abnormal-logs-1"><a href="#abnormal-logs-1" class="headerlink" title="abnormal logs"></a><strong>abnormal logs</strong></h3><pre class="highlight"><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Connected to exchange2013.<span class="built_in">com</span> () port <span class="number">443</span> (#<span class="number">49</span>)</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :ALPN, offering http/<span class="number">1.1</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.3</span> (OUT), TLS handshake, <span class="function">Client <span class="title">hello</span> <span class="params">(<span class="number">1</span>)</span>:</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.3</span> (IN), TLS handshake, Server hello (<span class="number">2</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (IN), TLS handshake, Certificate (<span class="number">11</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (IN), TLS handshake, Server key exchange (<span class="number">12</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (IN), TLS handshake, Server finished (<span class="number">14</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (OUT), TLS handshake, Client key exchange (<span class="number">16</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (OUT), TLS change cipher, Change cipher spec (<span class="number">1</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (OUT), TLS handshake, Finished (<span class="number">20</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (IN), TLS handshake, Finished (<span class="number">20</span>):</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :SSL connection using TLSv1<span class="number">.2</span> / ECDHE-RSA-AES256-SHA384</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :ALPN, server did not agree to a protocol</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Server certificate:</span></span><br><span class="line"><span class="function">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT : subject: CN=</span>*.com</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT : start date: Apr <span class="number">22</span> <span class="number">00</span>:<span class="number">00</span>:<span class="number">00</span> <span class="number">2020</span> GMT</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT : expire date: Apr <span class="number">22</span> <span class="number">23</span>:<span class="number">59</span>:<span class="number">59</span> <span class="number">2022</span> GMT</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT : subjectAltName: host <span class="string">&quot;exchange2013.com&quot;</span> matched cert<span class="number">&#x27;</span>s <span class="string">&quot;*.com&quot;</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT : issuer: C=GB; ST=Greater Manchester; L=Salford; O=Sectigo Limited; CN=Sectigo RSA Domain Validation Secure Server CA</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT : SSL certificate verify ok.</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Server auth <span class="keyword">using</span> NTLM with user <span class="string">&#x27;foo-bar&#x27;</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_OUT :POST /EWS/Exchange.asmx HTTP/<span class="number">1.1</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Mark bundle as <span class="keyword">not</span> supporting multiuse</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :HTTP/<span class="number">1.1</span> <span class="number">401</span> Unauthorized</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :Server: Microsoft-IIS/<span class="number">7.5</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :request-id: <span class="number">9811034b</span><span class="number">-32e4</span><span class="number">-45e5</span>-b300<span class="number">-5b</span>e1efb8d8f3</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :WWW-Authenticate: balabalabalabalabalabalabalabalabalabala</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :WWW-Authenticate: Negotiate</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :X-Powered-By: ASP.NET</span><br><span class="line">my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :X-FEServer: WIN<span class="number">-1</span>TRC9B5MS6A</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :Date: Thu, <span class="number">16</span> Jul <span class="number">2020</span> <span class="number">19</span>:<span class="number">02</span>:<span class="number">54</span> GMT</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :Content-Length: <span class="number">0</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> HEADER_IN :</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Connection cache is full, closing the oldest one.</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Closing connection <span class="number">49</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :TLSv1<span class="number">.2</span> (OUT), TLS alert, close <span class="built_in">notify</span> (<span class="number">256</span>):</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Issue another request to <span class="keyword">this</span> URL: <span class="string">&#x27;https://exchange2013.com/EWS/Exchange.asmx&#x27;</span></span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Found bundle <span class="keyword">for</span> host exchange2013.com: <span class="number">0x2823b9680</span> [serially]</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Hostname exchange2013.com was found in DNS cache</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :  Trying <span class="number">10.100</span><span class="number">.87</span><span class="number">.7</span>:<span class="number">443.</span>..</span><br><span class="line">[my_curl_debug_callback] This: <span class="number">5412314808</span> TEXT :Connected to exchange2013.<span class="built_in">com</span> () port <span class="number">443</span> (#<span class="number">50</span>)</span><br><span class="line"></span><br></pre>
+<h3 id="NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password"><a href="#NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password" class="headerlink" title="NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password"></a><strong>NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password</strong></h3><p>开启抓包工具使用没有用户名或密码的代理服务器，NTLM 就认证就会失败。<br>分析如下：<br>this code snippet seems to the condition alway as true if i have config proxy server without password, which maybe cause failed to reuse the connections for NTLM challenge.</p>
+<pre class="highlight"><span class="line">#ifndef CURL_DISABLE_PROXY</span><br><span class="line">        /* Same for Proxy NTLM authentication */</span><br><span class="line">        if(wantProxyNTLMhttp) &#123;</span><br><span class="line">          /* Both check-&gt;http_proxy.user and check-&gt;http_proxy.passwd can be</span><br><span class="line">           * NULL */</span><br><span class="line">          if(!check-&gt;http_proxy.user || !check-&gt;http_proxy.passwd)</span><br><span class="line">            continue;</span><br><span class="line"></span><br><span class="line">          if(strcmp(needle-&gt;http_proxy.user, check-&gt;http_proxy.user) ||</span><br><span class="line">             strcmp(needle-&gt;http_proxy.passwd, check-&gt;http_proxy.passwd))</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        else if(check-&gt;proxy_ntlm_state != NTLMSTATE_NONE) &#123;</span><br><span class="line">          /* Proxy connection is using NTLM auth but we don&#x27;t want NTLM */</span><br><span class="line">          continue;</span><br><span class="line">        &#125;</span><br><span class="line">#endif</span><br></pre>
+<h3 id="abnormal-logs-2"><a href="#abnormal-logs-2" class="headerlink" title="abnormal logs"></a><strong>abnormal logs</strong></h3><pre class="highlight"><span class="line">Line 6374: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Found bundle for host xxx.com: 0xf781740 [serially]</span><br><span class="line">Line 6376: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Re-using existing connection! (#8) with proxy 127.0.0.1</span><br><span class="line">Line 6378: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Connected to 127.0.0.1 (127.0.0.1) port 8888 (#8)</span><br><span class="line">Line 6380: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Server auth using NTLM with user &#x27;balabala&#x27;</span><br><span class="line">Line 6382: [18048:16268:09-04/10:49:34.941:INFO:(389)]HEADER_OUT :POST /EWS/Exchange.asmx HTTP/1.1</span><br><span class="line">Line 6385: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Mark bundle as not supporting multiuse</span><br><span class="line">Line 6387: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :HTTP/1.1 401 Unauthorized</span><br><span class="line">Line 6391: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Server: Microsoft-IIS/8.5</span><br><span class="line">Line 6395: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :request-id: 8ae68c1b-25f1-449f-b911-0808b135cb44</span><br><span class="line">Line 6399: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :WWW-Authenticate: NTLM TlRMTVNTUAACAAAAGAAYADgAAAAFgomiPXW5AdNSBywAAAAAAAAAAAoBCgFQAAAABgOAJQAAAA9FAFgAQwBIAEEATgBHAEUAMgAwADEANgACABgARQBYAEMASABBAE4ARwBFADIAMAAxADYAAQAeAFcASQBOAC0ARgA2AEYAMgBOAEkATQBOAFMASABNAAQAMABlAHgAYwBoAGEAbgBnAGUAMgAwADEANgAuAHMAdQB6AGgAbwB1AC4AegBvAG8AbQADAFAAVwBJAE4ALQBGADYARgAyAE4ASQBNAE4AUwBIAE0ALgBlAHgAYwBoAGEAbgBnAGUAMgAwADEANgAuAHMAdQB6AGgAbwB1AC4AegBvAG8AbQAFADAAZQB4AGMAaABhAG4AZwBlADIAMAAxADYALgBzAHUAegBoAG8AdQAuAHoAbwBvAG0ABwAIAEvkOQZmgtYBAAAAAA==</span><br><span class="line">Line 6403: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :WWW-Authenticate: Negotiate</span><br><span class="line">Line 6407: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :X-Powered-By: ASP.NET</span><br><span class="line">Line 6411: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :X-FEServer: WIN-F6F2NIMNSHM</span><br><span class="line">Line 6415: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Date: Fri, 04 Sep 2020 02:49:35 GMT</span><br><span class="line">Line 6419: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Content-Length: 0</span><br><span class="line">Line 6423: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Proxy-Support: Session-Based-Authentication</span><br><span class="line">Line 6427: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :</span><br><span class="line">Line 6429: [18048:16268:09-04/10:49:35.018:INFO:(389)]HEADER_IN :</span><br><span class="line">Line 6431: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Connection #8 to host 127.0.0.1 left intact</span><br><span class="line">Line 6433: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Issue another request to this URL: &#x27;https://xxx.com/EWS/Exchange.asmx&#x27;</span><br><span class="line">Line 6435: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Found bundle for host xxx.com: 0xf781740 [serially]</span><br><span class="line">Line 6437: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :NTLM-proxy picked AND auth done set, clear picked!</span><br><span class="line">Line 6439: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Hostname 127.0.0.1 was found in DNS cache</span><br><span class="line">Line 6441: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :  Trying 127.0.0.1:8888...</span><br><span class="line">Line 6445: [18048:16268:09-04/10:49:35.029:INFO:(389)]TEXT :Connected to 127.0.0.1 (127.0.0.1) port 8888 (#13)</span><br><span class="line">Line 6447: [18048:16268:09-04/10:49:35.029:INFO:(389)]TEXT :allocate connect buffer!</span><br><span class="line">Line 6449: [18048:16268:09-04/10:49:35.029:INFO:(389)]TEXT :Establish HTTP proxy tunnel to xxx.com:443</span><br></pre>
+<p>出来混早晚是要还的，技术债务也是如此。少一些 Workaround，多一点 Root Cause。</p>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = libcurl 陷阱
+Date = 2020-03-27
+Published = true
+Category = cURL
+Tag = ['cURL', '网络编程']
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2020/05/01/kai_fa_ji_chu_ku_xu_yao_zhu_yi_shi_yao/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">开发基础库需要注意什么 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2020/03/27/ti_gao_xiao_lu_de_gong_ju_ji/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">提高效率的工具集 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%8D%B8%E8%BD%BD-Crash"><span class="toc-text">动态库卸载 Crash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Connection-Cache-%E5%A4%8D%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-text">Connection Cache 复用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebSocket-%E6%94%AF%E6%8C%81"><span class="toc-text">WebSocket 支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NTLM-%E8%AE%A4%E8%AF%81"><span class="toc-text">NTLM 认证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection"><span class="toc-text">Could not re-use the connection for NTLM challenge, and always create a new connection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Root-Cause"><span class="toc-text">Root Cause</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Solution"><span class="toc-text">Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs"><span class="toc-text">abnormal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#normal-logs"><span class="toc-text">normal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge"><span class="toc-text">Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Root-Cause-1"><span class="toc-text">Root Cause</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs-1"><span class="toc-text">abnormal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password"><span class="toc-text">NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs-2"><span class="toc-text">abnormal logs</span></a></li></ol></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%8D%B8%E8%BD%BD-Crash"><span class="toc-text">动态库卸载 Crash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Connection-Cache-%E5%A4%8D%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-text">Connection Cache 复用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebSocket-%E6%94%AF%E6%8C%81"><span class="toc-text">WebSocket 支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NTLM-%E8%AE%A4%E8%AF%81"><span class="toc-text">NTLM 认证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection"><span class="toc-text">Could not re-use the connection for NTLM challenge, and always create a new connection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Root-Cause"><span class="toc-text">Root Cause</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Solution"><span class="toc-text">Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs"><span class="toc-text">abnormal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#normal-logs"><span class="toc-text">normal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge"><span class="toc-text">Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Root-Cause-1"><span class="toc-text">Root Cause</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs-1"><span class="toc-text">abnormal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password"><span class="toc-text">NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs-2"><span class="toc-text">abnormal logs</span></a></li></ol></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%8D%B8%E8%BD%BD-Crash"><span class="toc-text">动态库卸载 Crash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Connection-Cache-%E5%A4%8D%E7%94%A8%E9%97%AE%E9%A2%98"><span class="toc-text">Connection Cache 复用问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebSocket-%E6%94%AF%E6%8C%81"><span class="toc-text">WebSocket 支持</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NTLM-%E8%AE%A4%E8%AF%81"><span class="toc-text">NTLM 认证</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection"><span class="toc-text">Could not re-use the connection for NTLM challenge, and always create a new connection</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Root-Cause"><span class="toc-text">Root Cause</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Solution"><span class="toc-text">Solution</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs"><span class="toc-text">abnormal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#normal-logs"><span class="toc-text">normal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge"><span class="toc-text">Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Root-Cause-1"><span class="toc-text">Root Cause</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs-1"><span class="toc-text">abnormal logs</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password"><span class="toc-text">NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#abnormal-logs-2"><span class="toc-text">abnormal logs</span></a></li></ol></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      2021 年度总结
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2021-12-27T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2021-12-27</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/年度总结/" class="post-meta-link">年度总结</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>632 words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/年度总结/" class="post-meta-link">年度总结</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <p>先看看去年立的 flag 的完成情况</p>
+<h2 id="2021-年-flag"><a href="#2021-年-flag" class="headerlink" title="2021 年 flag"></a><strong>2021 年 flag</strong></h2><h3 id="理财-（基金定投）"><a href="#理财-（基金定投）" class="headerlink" title="理财 （基金定投）"></a><strong>理财 （基金定投）</strong></h3><ul>
+<li>计划投入 50W</li>
+<li>预期收益率 20%</li>
+</ul>
+<blockquote>
+<p>负收益，只能说是一塌糊涂 ！保持定投就可以了，不要瞎操作 ！！！</p>
+</blockquote>
+<h3 id="装修"><a href="#装修" class="headerlink" title="装修"></a><strong>装修</strong></h3><blockquote>
+<p>如期按照计划正常进行</p>
+</blockquote>
+<h3 id="跑步，控制体重在-60kg-以内"><a href="#跑步，控制体重在-60kg-以内" class="headerlink" title="跑步，控制体重在 60kg 以内"></a><strong>跑步，控制体重在 60kg 以内</strong></h3><blockquote>
+<p>跑步次数并不是很多，需要更加自律</p>
+</blockquote>
+<h3 id="减少体检异常指标"><a href="#减少体检异常指标" class="headerlink" title="减少体检异常指标"></a><strong>减少体检异常指标</strong></h3><blockquote>
+<p>喝酒太多&gt; 焦虑情绪太多&gt; 饮食结构 需要优化</p>
+</blockquote>
+<h3 id="陪儿子一起学习钢琴课程"><a href="#陪儿子一起学习钢琴课程" class="headerlink" title="陪儿子一起学习钢琴课程"></a><del><strong>陪儿子一起学习钢琴课程</strong></del></h3><blockquote>
+<p>儿子实在不喜欢钢琴，计划已经放弃</p>
+</blockquote>
+<h3 id="学完英语流利说：商务英语"><a href="#学完英语流利说：商务英语" class="headerlink" title="学完英语流利说：商务英语"></a><del><strong>学完英语流利说：商务英语</strong></del></h3><blockquote>
+<p>改成看 Youtube 技术 Channel</p>
+</blockquote>
+<h3 id="学完-CS155"><a href="#学完-CS155" class="headerlink" title="学完 CS155"></a><del><strong>学完 CS155</strong></del></h3><blockquote>
+<p>Project / Problem Based Learning, 没有完整地跟着课程学习</p>
+</blockquote>
+<h3 id="使用日程管理-App，做好任务清单、计划管理"><a href="#使用日程管理-App，做好任务清单、计划管理" class="headerlink" title="使用日程管理 App，做好任务清单、计划管理"></a><strong>使用日程管理 App，做好任务清单、计划管理</strong></h3><blockquote>
+<p>用 Notion 做 Worksapce，今年最大的收获</p>
+</blockquote>
+<h3 id="每个月看完两本书"><a href="#每个月看完两本书" class="headerlink" title="每个月看完两本书"></a><strong>每个月看完两本书</strong></h3><ul>
+<li>用思维导图整理读书心得</li>
+</ul>
+<blockquote>
+<p>用微信读书读了 15 本，整体还是比较满意，开始把微信读书笔记整合同步到 Notion，学习卡片笔记等方法论，专业书籍读的偏少。</p>
+</blockquote>
+<h3 id="每周-每月总结复盘"><a href="#每周-每月总结复盘" class="headerlink" title="每周/每月总结复盘"></a><strong>每周/每月总结复盘</strong></h3><ul>
+<li>计划完成情况</li>
+<li>思考总结</li>
+<li>输出 PPT</li>
+</ul>
+<blockquote>
+<p>Weekly Review 做的还比较满意</p>
+</blockquote>
+<hr>
+<h2 id="2021-年回顾盘点"><a href="#2021-年回顾盘点" class="headerlink" title="2021 年回顾盘点"></a><strong>2021 年回顾盘点</strong></h2><h3 id="读了-15-本书"><a href="#读了-15-本书" class="headerlink" title="读了 15 本书"></a>读了 15 本书</h3><h3 id="跑步-200-多公里"><a href="#跑步-200-多公里" class="headerlink" title="跑步 200 多公里"></a>跑步 200 多公里</h3><h3 id="每周陪儿子打羽毛球，下象棋，教他用-Scratch-编程"><a href="#每周陪儿子打羽毛球，下象棋，教他用-Scratch-编程" class="headerlink" title="每周陪儿子打羽毛球，下象棋，教他用 Scratch 编程"></a>每周陪儿子打羽毛球，下象棋，教他用 Scratch 编程</h3><h3 id="用-Notion-做日程管理、文档、计划，整合-amp-优化了-Workflow"><a href="#用-Notion-做日程管理、文档、计划，整合-amp-优化了-Workflow" class="headerlink" title="用 Notion 做日程管理、文档、计划，整合 &amp; 优化了 Workflow"></a>用 Notion 做日程管理、文档、计划，整合 &amp; 优化了 Workflow</h3><h3 id="装修-1"><a href="#装修-1" class="headerlink" title="装修"></a>装修</h3><h3 id="924-剁手"><a href="#924-剁手" class="headerlink" title="924 剁手"></a>924 剁手</h3><p>太轻易相信别人，血的教训</p>
+<h3 id="身体健康"><a href="#身体健康" class="headerlink" title="身体健康"></a><strong>身体健康</strong></h3><ul>
+<li>体检情况比 2020 年严重，各种亚健康问题凸显</li>
+</ul>
+<h3 id="家庭关系"><a href="#家庭关系" class="headerlink" title="家庭关系"></a>家庭关系</h3><ul>
+<li>跟父母关系处理的比较糟糕，沟通太少</li>
+<li>更多的亲子陪伴时间</li>
+<li>跟老婆的沟通太少</li>
+</ul>
+<h3 id="Side-Project"><a href="#Side-Project" class="headerlink" title="Side Project"></a>Side Project</h3><ul>
+<li>完整上线了 Google Slide 插件</li>
+</ul>
+<hr>
+<h2 id="2022-年度目标"><a href="#2022-年度目标" class="headerlink" title="2022 年度目标"></a>2022 年度目标</h2><h3 id="保持健康"><a href="#保持健康" class="headerlink" title="保持健康"></a>保持健康</h3><ul>
+<li>不酗酒、少熬夜</li>
+<li>午休</li>
+<li>保持积极、愉悦的心情</li>
+<li>少吃腌制食品，减少外出就餐</li>
+<li>保持运动</li>
+</ul>
+<h3 id="家庭关系-1"><a href="#家庭关系-1" class="headerlink" title="家庭关系"></a>家庭关系</h3><ul>
+<li>多跟家人聊天、沟通</li>
+<li>保持和谐的家庭氛围，减少抱怨，不要轻易发脾气</li>
+<li>亲子陪伴：羽毛球、象棋、Scratch 编程</li>
+</ul>
+<h3 id="个人成长"><a href="#个人成长" class="headerlink" title="个人成长"></a>个人成长</h3><ul>
+<li>学习提高认知以及专业能力<ul>
+<li>Blog</li>
+<li>YouTube Channel</li>
+</ul>
+</li>
+<li>戒骄戒躁，每天晚上读读书</li>
+<li>戒掉不良习惯，争取摆脱最近几年的 “魔咒”</li>
+<li>高质量完成工作</li>
+<li>控制情绪，减少内耗</li>
+</ul>
+<h3 id="财务"><a href="#财务" class="headerlink" title="财务"></a>财务</h3><ul>
+<li>保持定投，不要瞎操作。尽量不亏钱。</li>
+</ul>
+<hr>
+<h2 id="2021-常用-App-年度总结"><a href="#2021-常用-App-年度总结" class="headerlink" title="2021 常用 App 年度总结"></a>2021 <strong>常用 App 年度总结</strong></h2><h3 id="音乐"><a href="#音乐" class="headerlink" title="音乐"></a><strong>音乐</strong></h3><p><img src="https://file.notion.so/f/s/bad0a5b0-f517-480e-88c9-b07a0845245f/Untitled.png?id=43f28135-d900-4558-b5fa-d4f36da31b60&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234215896&amp;signature=ll60L4i2i2XWtXnR6-u6oNZJS3sj7gAp36NM4hcqnlY" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/bad0a5b0-f517-480e-88c9-b07a0845245f/Untitled.png?id=43f28135-d900-4558-b5fa-d4f36da31b60&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234215896&amp;signature=ll60L4i2i2XWtXnR6-u6oNZJS3sj7gAp36NM4hcqnlY" class="lozad post-image"></p>
+<p><img src="https://file.notion.so/f/s/7fb00ad8-c54e-4982-9ca8-e69213e3b7d4/Untitled.png?id=d0987571-35f4-4443-b712-1683468fb3db&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234216056&amp;signature=NElzcwLv-EcyCEab8_5Li-YmDr2uW7w0l-Q061TmSAA" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/7fb00ad8-c54e-4982-9ca8-e69213e3b7d4/Untitled.png?id=d0987571-35f4-4443-b712-1683468fb3db&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234216056&amp;signature=NElzcwLv-EcyCEab8_5Li-YmDr2uW7w0l-Q061TmSAA" class="lozad post-image"></p>
+<h3 id="豆瓣"><a href="#豆瓣" class="headerlink" title="豆瓣"></a><strong>豆瓣</strong></h3><p><img src="https://file.notion.so/f/s/8a61227e-a38e-42e0-8ab4-2d27dba3bec1/Screenshot_20211229_141544_com.douban.frodo.jpg?id=30afc2d2-cf3f-406e-8df7-518e3239e6ae&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234216234&amp;signature=bNjBDQxJa5sYvL5ZLQ_gxOgUH44hAqlHsJC472vV8FU" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/8a61227e-a38e-42e0-8ab4-2d27dba3bec1/Screenshot_20211229_141544_com.douban.frodo.jpg?id=30afc2d2-cf3f-406e-8df7-518e3239e6ae&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234216234&amp;signature=bNjBDQxJa5sYvL5ZLQ_gxOgUH44hAqlHsJC472vV8FU" class="lozad post-image"></p>
+<h3 id="微信读书"><a href="#微信读书" class="headerlink" title="微信读书"></a><strong>微信读书</strong></h3><!-- ColumnList BGN -->
+<p><img src="https://file.notion.so/f/s/fa4236e3-5e7c-4c1c-8151-8d8fa46a746d/Untitled.png?id=117f82b5-2aca-456f-ad51-89e634f71fb5&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234216704&amp;signature=M0VVrR81zpWh2QBXvgmhmDJ-hFx2rVV2hPeU9eu4XdA" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/fa4236e3-5e7c-4c1c-8151-8d8fa46a746d/Untitled.png?id=117f82b5-2aca-456f-ad51-89e634f71fb5&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234216704&amp;signature=M0VVrR81zpWh2QBXvgmhmDJ-hFx2rVV2hPeU9eu4XdA" class="lozad post-image"><br><img src="https://file.notion.so/f/s/1140dd78-c67f-444b-b90c-f795bcd29570/Untitled.png?id=1cc372aa-c9e7-4b0b-9030-d6f52bbb2d81&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217098&amp;signature=Qnvc5DjhYSxrSnIdwnLRnWZP7Dz48cdD1UvtzYncld0" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/1140dd78-c67f-444b-b90c-f795bcd29570/Untitled.png?id=1cc372aa-c9e7-4b0b-9030-d6f52bbb2d81&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217098&amp;signature=Qnvc5DjhYSxrSnIdwnLRnWZP7Dz48cdD1UvtzYncld0" class="lozad post-image"><br><!-- ColumnList END --></p>
+<h3 id="理财"><a href="#理财" class="headerlink" title="理财"></a><strong>理财</strong></h3><p><img src="https://file.notion.so/f/s/b60e2570-b3b7-4fdc-8e82-65351f7e66f2/Screenshot_20211231_223808.jpg?id=68305349-60c6-4c12-a65d-340966e1b03d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217358&amp;signature=J-LPOgK5JEOfyVSFsVilRvaiFFmdxIrVBP26WeGMUtA" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/b60e2570-b3b7-4fdc-8e82-65351f7e66f2/Screenshot_20211231_223808.jpg?id=68305349-60c6-4c12-a65d-340966e1b03d&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217358&amp;signature=J-LPOgK5JEOfyVSFsVilRvaiFFmdxIrVBP26WeGMUtA" class="lozad post-image"></p>
+<h3 id="bilibili"><a href="#bilibili" class="headerlink" title="bilibili"></a><strong>bilibili</strong></h3><p><img src="https://file.notion.so/f/s/d0dfaee0-17c6-4f70-859c-10819508d957/Screenshot_20211231_113252_tv.danmaku.bili.jpg?id=a34cff16-07b6-48d5-b9c7-8583bedae0cd&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217559&amp;signature=EDSXHmsn-mpkg7lj94zLbEJh3lez41fyywu8bUCLiv8" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/d0dfaee0-17c6-4f70-859c-10819508d957/Screenshot_20211231_113252_tv.danmaku.bili.jpg?id=a34cff16-07b6-48d5-b9c7-8583bedae0cd&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217559&amp;signature=EDSXHmsn-mpkg7lj94zLbEJh3lez41fyywu8bUCLiv8" class="lozad post-image"></p>
+<p><img src="https://file.notion.so/f/s/6fa1a1ff-39ef-4967-a89b-59e783820f0f/Screenshot_20211231_113342_tv.danmaku.bili.jpg?id=87f5590e-878f-48f1-94c9-8a21f9386e66&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217857&amp;signature=W6zdbFqOiSJ823g62rsVSdt4YoHLG9cxQ_o31ifyuvE" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/6fa1a1ff-39ef-4967-a89b-59e783820f0f/Screenshot_20211231_113342_tv.danmaku.bili.jpg?id=87f5590e-878f-48f1-94c9-8a21f9386e66&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234217857&amp;signature=W6zdbFqOiSJ823g62rsVSdt4YoHLG9cxQ_o31ifyuvE" class="lozad post-image"></p>
+<p><img src="https://file.notion.so/f/s/e726abdc-3750-4723-aa13-320d585a15d9/Screenshot_20211231_113325_tv.danmaku.bili.jpg?id=8733fcf8-5af7-46d1-88ed-0a7111d99fb4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234218078&amp;signature=CCrzBxe6udDoD0_UxNFRM37C-6LqKZKvMQ75TRReUj4" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/e726abdc-3750-4723-aa13-320d585a15d9/Screenshot_20211231_113325_tv.danmaku.bili.jpg?id=8733fcf8-5af7-46d1-88ed-0a7111d99fb4&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234218078&amp;signature=CCrzBxe6udDoD0_UxNFRM37C-6LqKZKvMQ75TRReUj4" class="lozad post-image"></p>
+<p><img src="https://file.notion.so/f/s/b8fafb98-3452-4d15-938d-a8793c304d4f/Screenshot_20211231_113404_tv.danmaku.bili.jpg?id=ebbfc982-74aa-485d-bcd5-b313cf0d68cb&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234218249&amp;signature=py27Z46lltKckufBX-HKth9XCRozLIvTTl2VW146X24" alt="" srcset="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20300%20300'%3E%3C/svg%3E" data-src="https://file.notion.so/f/s/b8fafb98-3452-4d15-938d-a8793c304d4f/Screenshot_20211231_113404_tv.danmaku.bili.jpg?id=ebbfc982-74aa-485d-bcd5-b313cf0d68cb&amp;table=block&amp;spaceId=08f6d77b-cbbe-4add-baa8-abe73b38583e&amp;expirationTimestamp=1683234218249&amp;signature=py27Z46lltKckufBX-HKth9XCRozLIvTTl2VW146X24" class="lozad post-image"></p>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = 2021 年度总结
+Date = 2021-12-27
+Published = true
+Category = 年度总结
+Tag = 年度总结
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">如何在 Google Slide 插件中下载 Drive 大文件 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2021/12/22/go_ji_chu_kai_fa_huan_jing_da_jian/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">Go 基础开发环境搭建 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B9%B4-flag"><span class="toc-text">2021 年 flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%B4%A2-%EF%BC%88%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%EF%BC%89"><span class="toc-text">理财 （基金定投）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E4%BF%AE"><span class="toc-text">装修</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%91%E6%AD%A5%EF%BC%8C%E6%8E%A7%E5%88%B6%E4%BD%93%E9%87%8D%E5%9C%A8-60kg-%E4%BB%A5%E5%86%85"><span class="toc-text">跑步，控制体重在 60kg 以内</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E5%B0%91%E4%BD%93%E6%A3%80%E5%BC%82%E5%B8%B8%E6%8C%87%E6%A0%87"><span class="toc-text">减少体检异常指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%AA%E5%84%BF%E5%AD%90%E4%B8%80%E8%B5%B7%E5%AD%A6%E4%B9%A0%E9%92%A2%E7%90%B4%E8%AF%BE%E7%A8%8B"><span class="toc-text">陪儿子一起学习钢琴课程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E5%AE%8C%E8%8B%B1%E8%AF%AD%E6%B5%81%E5%88%A9%E8%AF%B4%EF%BC%9A%E5%95%86%E5%8A%A1%E8%8B%B1%E8%AF%AD"><span class="toc-text">学完英语流利说：商务英语</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E5%AE%8C-CS155"><span class="toc-text">学完 CS155</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%97%A5%E7%A8%8B%E7%AE%A1%E7%90%86-App%EF%BC%8C%E5%81%9A%E5%A5%BD%E4%BB%BB%E5%8A%A1%E6%B8%85%E5%8D%95%E3%80%81%E8%AE%A1%E5%88%92%E7%AE%A1%E7%90%86"><span class="toc-text">使用日程管理 App，做好任务清单、计划管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E4%B8%AA%E6%9C%88%E7%9C%8B%E5%AE%8C%E4%B8%A4%E6%9C%AC%E4%B9%A6"><span class="toc-text">每个月看完两本书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E5%91%A8-%E6%AF%8F%E6%9C%88%E6%80%BB%E7%BB%93%E5%A4%8D%E7%9B%98"><span class="toc-text">每周&#x2F;每月总结复盘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B9%B4%E5%9B%9E%E9%A1%BE%E7%9B%98%E7%82%B9"><span class="toc-text">2021 年回顾盘点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%BA%86-15-%E6%9C%AC%E4%B9%A6"><span class="toc-text">读了 15 本书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%91%E6%AD%A5-200-%E5%A4%9A%E5%85%AC%E9%87%8C"><span class="toc-text">跑步 200 多公里</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E5%91%A8%E9%99%AA%E5%84%BF%E5%AD%90%E6%89%93%E7%BE%BD%E6%AF%9B%E7%90%83%EF%BC%8C%E4%B8%8B%E8%B1%A1%E6%A3%8B%EF%BC%8C%E6%95%99%E4%BB%96%E7%94%A8-Scratch-%E7%BC%96%E7%A8%8B"><span class="toc-text">每周陪儿子打羽毛球，下象棋，教他用 Scratch 编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-Notion-%E5%81%9A%E6%97%A5%E7%A8%8B%E7%AE%A1%E7%90%86%E3%80%81%E6%96%87%E6%A1%A3%E3%80%81%E8%AE%A1%E5%88%92%EF%BC%8C%E6%95%B4%E5%90%88-amp-%E4%BC%98%E5%8C%96%E4%BA%86-Workflow"><span class="toc-text">用 Notion 做日程管理、文档、计划，整合 &amp; 优化了 Workflow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E4%BF%AE-1"><span class="toc-text">装修</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#924-%E5%89%81%E6%89%8B"><span class="toc-text">924 剁手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BA%AB%E4%BD%93%E5%81%A5%E5%BA%B7"><span class="toc-text">身体健康</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B6%E5%BA%AD%E5%85%B3%E7%B3%BB"><span class="toc-text">家庭关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Side-Project"><span class="toc-text">Side Project</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2022-%E5%B9%B4%E5%BA%A6%E7%9B%AE%E6%A0%87"><span class="toc-text">2022 年度目标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E6%8C%81%E5%81%A5%E5%BA%B7"><span class="toc-text">保持健康</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B6%E5%BA%AD%E5%85%B3%E7%B3%BB-1"><span class="toc-text">家庭关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%88%90%E9%95%BF"><span class="toc-text">个人成长</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A2%E5%8A%A1"><span class="toc-text">财务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B8%B8%E7%94%A8-App-%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93"><span class="toc-text">2021 常用 App 年度总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9F%B3%E4%B9%90"><span class="toc-text">音乐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B1%86%E7%93%A3"><span class="toc-text">豆瓣</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6"><span class="toc-text">微信读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%B4%A2"><span class="toc-text">理财</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bilibili"><span class="toc-text">bilibili</span></a></li></ol></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B9%B4-flag"><span class="toc-text">2021 年 flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%B4%A2-%EF%BC%88%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%EF%BC%89"><span class="toc-text">理财 （基金定投）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E4%BF%AE"><span class="toc-text">装修</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%91%E6%AD%A5%EF%BC%8C%E6%8E%A7%E5%88%B6%E4%BD%93%E9%87%8D%E5%9C%A8-60kg-%E4%BB%A5%E5%86%85"><span class="toc-text">跑步，控制体重在 60kg 以内</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E5%B0%91%E4%BD%93%E6%A3%80%E5%BC%82%E5%B8%B8%E6%8C%87%E6%A0%87"><span class="toc-text">减少体检异常指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%AA%E5%84%BF%E5%AD%90%E4%B8%80%E8%B5%B7%E5%AD%A6%E4%B9%A0%E9%92%A2%E7%90%B4%E8%AF%BE%E7%A8%8B"><span class="toc-text">陪儿子一起学习钢琴课程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E5%AE%8C%E8%8B%B1%E8%AF%AD%E6%B5%81%E5%88%A9%E8%AF%B4%EF%BC%9A%E5%95%86%E5%8A%A1%E8%8B%B1%E8%AF%AD"><span class="toc-text">学完英语流利说：商务英语</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E5%AE%8C-CS155"><span class="toc-text">学完 CS155</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%97%A5%E7%A8%8B%E7%AE%A1%E7%90%86-App%EF%BC%8C%E5%81%9A%E5%A5%BD%E4%BB%BB%E5%8A%A1%E6%B8%85%E5%8D%95%E3%80%81%E8%AE%A1%E5%88%92%E7%AE%A1%E7%90%86"><span class="toc-text">使用日程管理 App，做好任务清单、计划管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E4%B8%AA%E6%9C%88%E7%9C%8B%E5%AE%8C%E4%B8%A4%E6%9C%AC%E4%B9%A6"><span class="toc-text">每个月看完两本书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E5%91%A8-%E6%AF%8F%E6%9C%88%E6%80%BB%E7%BB%93%E5%A4%8D%E7%9B%98"><span class="toc-text">每周&#x2F;每月总结复盘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B9%B4%E5%9B%9E%E9%A1%BE%E7%9B%98%E7%82%B9"><span class="toc-text">2021 年回顾盘点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%BA%86-15-%E6%9C%AC%E4%B9%A6"><span class="toc-text">读了 15 本书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%91%E6%AD%A5-200-%E5%A4%9A%E5%85%AC%E9%87%8C"><span class="toc-text">跑步 200 多公里</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E5%91%A8%E9%99%AA%E5%84%BF%E5%AD%90%E6%89%93%E7%BE%BD%E6%AF%9B%E7%90%83%EF%BC%8C%E4%B8%8B%E8%B1%A1%E6%A3%8B%EF%BC%8C%E6%95%99%E4%BB%96%E7%94%A8-Scratch-%E7%BC%96%E7%A8%8B"><span class="toc-text">每周陪儿子打羽毛球，下象棋，教他用 Scratch 编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-Notion-%E5%81%9A%E6%97%A5%E7%A8%8B%E7%AE%A1%E7%90%86%E3%80%81%E6%96%87%E6%A1%A3%E3%80%81%E8%AE%A1%E5%88%92%EF%BC%8C%E6%95%B4%E5%90%88-amp-%E4%BC%98%E5%8C%96%E4%BA%86-Workflow"><span class="toc-text">用 Notion 做日程管理、文档、计划，整合 &amp; 优化了 Workflow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E4%BF%AE-1"><span class="toc-text">装修</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#924-%E5%89%81%E6%89%8B"><span class="toc-text">924 剁手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BA%AB%E4%BD%93%E5%81%A5%E5%BA%B7"><span class="toc-text">身体健康</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B6%E5%BA%AD%E5%85%B3%E7%B3%BB"><span class="toc-text">家庭关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Side-Project"><span class="toc-text">Side Project</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2022-%E5%B9%B4%E5%BA%A6%E7%9B%AE%E6%A0%87"><span class="toc-text">2022 年度目标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E6%8C%81%E5%81%A5%E5%BA%B7"><span class="toc-text">保持健康</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B6%E5%BA%AD%E5%85%B3%E7%B3%BB-1"><span class="toc-text">家庭关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%88%90%E9%95%BF"><span class="toc-text">个人成长</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A2%E5%8A%A1"><span class="toc-text">财务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B8%B8%E7%94%A8-App-%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93"><span class="toc-text">2021 常用 App 年度总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9F%B3%E4%B9%90"><span class="toc-text">音乐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B1%86%E7%93%A3"><span class="toc-text">豆瓣</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6"><span class="toc-text">微信读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%B4%A2"><span class="toc-text">理财</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bilibili"><span class="toc-text">bilibili</span></a></li></ol></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B9%B4-flag"><span class="toc-text">2021 年 flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%B4%A2-%EF%BC%88%E5%9F%BA%E9%87%91%E5%AE%9A%E6%8A%95%EF%BC%89"><span class="toc-text">理财 （基金定投）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E4%BF%AE"><span class="toc-text">装修</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%91%E6%AD%A5%EF%BC%8C%E6%8E%A7%E5%88%B6%E4%BD%93%E9%87%8D%E5%9C%A8-60kg-%E4%BB%A5%E5%86%85"><span class="toc-text">跑步，控制体重在 60kg 以内</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%8F%E5%B0%91%E4%BD%93%E6%A3%80%E5%BC%82%E5%B8%B8%E6%8C%87%E6%A0%87"><span class="toc-text">减少体检异常指标</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%99%AA%E5%84%BF%E5%AD%90%E4%B8%80%E8%B5%B7%E5%AD%A6%E4%B9%A0%E9%92%A2%E7%90%B4%E8%AF%BE%E7%A8%8B"><span class="toc-text">陪儿子一起学习钢琴课程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E5%AE%8C%E8%8B%B1%E8%AF%AD%E6%B5%81%E5%88%A9%E8%AF%B4%EF%BC%9A%E5%95%86%E5%8A%A1%E8%8B%B1%E8%AF%AD"><span class="toc-text">学完英语流利说：商务英语</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E5%AE%8C-CS155"><span class="toc-text">学完 CS155</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%97%A5%E7%A8%8B%E7%AE%A1%E7%90%86-App%EF%BC%8C%E5%81%9A%E5%A5%BD%E4%BB%BB%E5%8A%A1%E6%B8%85%E5%8D%95%E3%80%81%E8%AE%A1%E5%88%92%E7%AE%A1%E7%90%86"><span class="toc-text">使用日程管理 App，做好任务清单、计划管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E4%B8%AA%E6%9C%88%E7%9C%8B%E5%AE%8C%E4%B8%A4%E6%9C%AC%E4%B9%A6"><span class="toc-text">每个月看完两本书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E5%91%A8-%E6%AF%8F%E6%9C%88%E6%80%BB%E7%BB%93%E5%A4%8D%E7%9B%98"><span class="toc-text">每周&#x2F;每月总结复盘</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B9%B4%E5%9B%9E%E9%A1%BE%E7%9B%98%E7%82%B9"><span class="toc-text">2021 年回顾盘点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%BA%86-15-%E6%9C%AC%E4%B9%A6"><span class="toc-text">读了 15 本书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%91%E6%AD%A5-200-%E5%A4%9A%E5%85%AC%E9%87%8C"><span class="toc-text">跑步 200 多公里</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AF%8F%E5%91%A8%E9%99%AA%E5%84%BF%E5%AD%90%E6%89%93%E7%BE%BD%E6%AF%9B%E7%90%83%EF%BC%8C%E4%B8%8B%E8%B1%A1%E6%A3%8B%EF%BC%8C%E6%95%99%E4%BB%96%E7%94%A8-Scratch-%E7%BC%96%E7%A8%8B"><span class="toc-text">每周陪儿子打羽毛球，下象棋，教他用 Scratch 编程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8-Notion-%E5%81%9A%E6%97%A5%E7%A8%8B%E7%AE%A1%E7%90%86%E3%80%81%E6%96%87%E6%A1%A3%E3%80%81%E8%AE%A1%E5%88%92%EF%BC%8C%E6%95%B4%E5%90%88-amp-%E4%BC%98%E5%8C%96%E4%BA%86-Workflow"><span class="toc-text">用 Notion 做日程管理、文档、计划，整合 &amp; 优化了 Workflow</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E4%BF%AE-1"><span class="toc-text">装修</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#924-%E5%89%81%E6%89%8B"><span class="toc-text">924 剁手</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BA%AB%E4%BD%93%E5%81%A5%E5%BA%B7"><span class="toc-text">身体健康</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B6%E5%BA%AD%E5%85%B3%E7%B3%BB"><span class="toc-text">家庭关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Side-Project"><span class="toc-text">Side Project</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2022-%E5%B9%B4%E5%BA%A6%E7%9B%AE%E6%A0%87"><span class="toc-text">2022 年度目标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%9D%E6%8C%81%E5%81%A5%E5%BA%B7"><span class="toc-text">保持健康</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%B6%E5%BA%AD%E5%85%B3%E7%B3%BB-1"><span class="toc-text">家庭关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AA%E4%BA%BA%E6%88%90%E9%95%BF"><span class="toc-text">个人成长</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A2%E5%8A%A1"><span class="toc-text">财务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2021-%E5%B8%B8%E7%94%A8-App-%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93"><span class="toc-text">2021 常用 App 年度总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9F%B3%E4%B9%90"><span class="toc-text">音乐</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B1%86%E7%93%A3"><span class="toc-text">豆瓣</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6"><span class="toc-text">微信读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%B4%A2"><span class="toc-text">理财</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bilibili"><span class="toc-text">bilibili</span></a></li></ol></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

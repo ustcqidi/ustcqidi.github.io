@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      我的 Workflow 和生产力工具
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2021-11-29T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2021-11-29</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/生产力/" class="post-meta-link">生产力</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>2.8k words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/效率/" class="post-meta-link">效率</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/生产力/" class="post-meta-link">生产力</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <h1 id="Part-1-我的-Workflow"><a href="#Part-1-我的-Workflow" class="headerlink" title="Part 1: 我的 Workflow"></a>Part 1: 我的 Workflow</h1><p>这篇文章总结我工作流程中每一个环节，包括事务 &amp; 日程管理、计划总结、学习沉淀、文档输出，以及使用到的工具，还有我如何高效的使用这些工具，以及如何自动化整个过程，提高我的生产力。</p>
+<p>比如拿工作来说，通常遇到一个问题去查一些资料，然后找到具体的解决方案，或者问题的原因，然后把它解决掉，最终会形成一个文档或者经验总结，这个是典型的工作中的一个场景。</p>
+<p>再拿学习来说，一般都是去看书或者去看别人的博客、微信公众号之类的，然后会提炼出一些比较重点的或者是有用的信息，保存到我的个人笔记里面去，有时候也会形成一篇博客。<br><span id="more"></span></p>
+<h2 id="输入"><a href="#输入" class="headerlink" title="输入"></a>输入</h2><h3 id="微信读书"><a href="#微信读书" class="headerlink" title="微信读书"></a>微信读书</h3><p>读书的过程中我会去把每篇文章里面的关键信息做一些标注，有时候也会去写一些自己的想法。</p>
+<p>我没有去写读书笔记的习惯，基本上都是读书的过程中做的一些标注，或者是简单的想法。没有写读书笔记的主要原因，可能是我读完以后就忘记了，然后没有很好的去整理整个读书过程中的一些想法细节。</p>
+<p>这里需要解决的问题就是能把我在微信读书这里面做的标注或者想法同步到我的一个我笔记系统里面去，这样的话长期有助于沉淀或者是形成读书笔记。</p>
+<h3 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h3><p>微信公众号里面通常会读一些技术文章，我关注了不少技术博客或者是公众号或者是别人在群里共分享的一些文章。</p>
+<p>微信公众号文章有一个特点就是比较碎片。我的微信的收藏夹里面收藏了很多之前没有看完的文章，通常添加到收藏夹里面去，以后基本上后面也不会打开看。</p>
+<p>需要解决的问题跟微信读书里面的类似。就是我们在读完微信公众号里面的文章以后，要记一些笔记，提炼出来一些重点，然后同步到自己的笔记系统里面去。只有这样才可以沉淀积累一些知识。不然的话就是单纯的看了很多，然后丢了就忘记了。</p>
+<h3 id="网页"><a href="#网页" class="headerlink" title="网页"></a>网页</h3><p>网页里面看到的一些文章，我的浏览器收藏夹里面也收藏了很多文章，通常也不会去看。</p>
+<h3 id="电子书"><a href="#电子书" class="headerlink" title="电子书"></a>电子书</h3><p>电子书一般是下载的 PDF 文档或者是一些论文。也有类似的问题，我没有在读书的过程中记笔记。提炼重点信息。</p>
+<h2 id="沉淀与输出"><a href="#沉淀与输出" class="headerlink" title="沉淀与输出"></a>沉淀与输出</h2><p>不管是读书读论文还是看一些技术文章，最好是需要有一些对应的输出，比如形成一篇博客，或者是使用一些重点的笔记，想法总结。</p>
+<p>我把输出主要分成下面几部分：</p>
+<h3 id="读书笔记"><a href="#读书笔记" class="headerlink" title="读书笔记"></a>读书笔记</h3><p>一般就是微信读书里面我看过的一些书的摘要或者是自己的想法。</p>
+<h3 id="重点摘要"><a href="#重点摘要" class="headerlink" title="重点摘要"></a>重点摘要</h3><p>看网上的一些文章或者是微信公众号的时候，提炼出来一些重点。</p>
+<h3 id="工作笔记"><a href="#工作笔记" class="headerlink" title="工作笔记"></a>工作笔记</h3><p>平时工作过程中解决的一些具体问题，后面做的一些总结。</p>
+<h3 id="Blog"><a href="#Blog" class="headerlink" title="Blog"></a>Blog</h3><p>对某一个技术的方向，或者是某一些思考做的一些沉淀或者是总结。</p>
+<p>以上就是我学习或者工作过程中输入或者输出的一些习惯。第2部分是针对我这些习惯，我然后找了哪些工具，怎么来高效利用这些工具，怎么尽可能做到自动化，提高效率。</p>
+<h1 id="Part-2-生产力工具"><a href="#Part-2-生产力工具" class="headerlink" title="Part 2: 生产力工具"></a>Part 2: 生产力工具</h1><h2 id="All-in-one-workspace-Notion"><a href="#All-in-one-workspace-Notion" class="headerlink" title="All-in-one workspace: Notion"></a>All-in-one workspace: Notion</h2><p>这个是最主要的生产的工具, 包括我的笔记、事务管理、日程管理，还有一些零散的信息的保存等等，都是放在这里面。<br>我以前在另一篇文章里面也写过我的笔记，演化的一些历程。 个人事务管理，我也用过很多的工具，最终我发现这个工具功能比较强大，然后我所有的需求都可以满足。</p>
+<p>我目前用 Notion 主要做下面这几件事情：</p>
+<h3 id="Weekly-Review"><a href="#Weekly-Review" class="headerlink" title="Weekly Review"></a>Weekly Review</h3><p>每周的工作计划，每天的具体的做的事情记录，还有这一周要做的事情的列表，每周的总结反思，还有每周娱乐项目的一些记录。<br>有了 Weekly Review 以后，更加的明确每天要做什么什么东西重要，什么东西不重要，写周报的时候也更轻松方便一点。</p>
+<h3 id="PBL"><a href="#PBL" class="headerlink" title="PBL"></a>PBL</h3><p>项目或者问题驱动式去学习，这个效率最高，效果最好。我目前的做法是在我的 Notion 里面创建一个具体的项目，然后在里面增加一些 TODO</p>
+<h3 id="工作笔记-1"><a href="#工作笔记-1" class="headerlink" title="工作笔记"></a>工作笔记</h3><p>记录项目中遇到的一些问题，以及解决了这些问题以后做的一些总结。<br>目前集中在用户的问题的总结上，这个还是很有用的，方便我以后排查问题的时候，能借鉴以前的经验，也有助于文档化之前的工作。</p>
+<h3 id="碎片知识库"><a href="#碎片知识库" class="headerlink" title="碎片知识库"></a>碎片知识库</h3><p>在网上读一些文章或者是看书的时候提炼出来的一些东西，目前不是很多，因为我之前没有自动化的一个工作流程，导致我每次看完一些文章，其实并没有沉淀出来多少碎片化知识。</p>
+<h2 id="阅读笔记系统"><a href="#阅读笔记系统" class="headerlink" title="阅读笔记系统"></a>阅读笔记系统</h2><p>综合上面的分析，还有我的个人习惯，我的笔记系统具体的几点需求，总结如下。<br>具体需求：</p>
+<ul>
+<li><p>Read Later 延迟阅读</p>
+<ul>
+<li>比如我有一些公众号文章我当前读不完或者是不想读，那我就把它放到这个延迟阅读列表里面，而不是简单的一个收藏夹。我需要把我所有的当前发现的好文章，统一放到一起来。最好都是放到 Notion 里面。</li>
+</ul>
+</li>
+<li><p>Highlight 我在看一些网页文章</p>
+<ul>
+<li>通过鼠标来去标注一些文章的东西，类似于微信读书里面的标注，然后标注完了以后可以自动同步到Notion 的碎片知识管理区里面。</li>
+</ul>
+</li>
+<li><p>Sync to Notion </p>
+<ul>
+<li>把我的读书笔记，还有我想读的文章自动同步到某一个数据库里面去，这样我就能把一些碎片化的知识整沉淀下来。</li>
+</ul>
+</li>
+<li><p>零碎想法记录 </p>
+<ul>
+<li>平时的突然冒出来的一些想法，能快速的整理出来。比如我正在走路的时候，跑步的时候，吃饭的时候等等，经常会冒出来一些很短的一些想法，这个需要比较高效的记录下来。<br>下面的这几个工具，就是我在实践过程中发现比较适合我用的几个工具：</li>
+</ul>
+</li>
+</ul>
+<h3 id="Flomo-做碎片化沉淀"><a href="#Flomo-做碎片化沉淀" class="headerlink" title="Flomo 做碎片化沉淀"></a>Flomo 做碎片化沉淀</h3><p>这是一个小众产品，目前用的人不多，但是做的还是挺好的，我目前把它跟我的微信绑定了，可以支持微信输入一些临时的琐碎的想法，然后自动同步到 Flomo 的账号里面。<br>支持的功能挺多的，包括可以收藏微信公众号的文章，可以把文章同步到 Notion 里，也可以做一些文章的标注。原本我是打算用它做完整的工作流管理，但如果需要定制一些个性化需求的时候可能会有受限。所以我只用它来记录我平时想法的碎片。<br>这样可以形成我的一些碎片化思维的或者是碎片化输出的一个总结，比如周报或者是日记。</p>
+<h3 id="Kami-做-PDF-标注"><a href="#Kami-做-PDF-标注" class="headerlink" title="Kami 做 PDF 标注"></a>Kami 做 PDF 标注</h3><p> PDF 标注的话是很有用的，我之前去读 PDF 版本的书或者论文的时候。通常读完以后，没有任何的想法的沉淀或者是重点的提炼。后来发现了 Kami 这个平台工具，我觉得挺适合做 PDF 标注的。<br>现在我通常把会要读的论文或者是书籍的 PDF 版本传到 Google Drive 上，然后用 Kami 打开，做一些重点标注和笔记。</p>
+<h3 id="微信读书笔记同步到-Notion"><a href="#微信读书笔记同步到-Notion" class="headerlink" title="微信读书笔记同步到 Notion"></a>微信读书笔记同步到 Notion</h3><p>微信读书的笔记是保存在 APP 上面的，我在网上找到了一个浏览器插件，可以提取当前这本书里标注的重点，还有个人的想法。所以我在每读完一本书，就把这本书的标记提取出来，然后同步到 Notion 上。</p>
+<h3 id="自研-Chrome-插件用于网页-Highlight-和-Sync-to-Notion"><a href="#自研-Chrome-插件用于网页-Highlight-和-Sync-to-Notion" class="headerlink" title="自研 Chrome 插件用于网页 Highlight 和 Sync to Notion"></a>自研 Chrome 插件用于网页 Highlight 和 Sync to Notion</h3><p>这个工具是自己开发的，主要用来同步网页，还有微信公众号的文章到 Notion 上，还支持网页内容标注。使用这个工具有助于碎片化知识的沉淀。</p>
+<h2 id="博客系统"><a href="#博客系统" class="headerlink" title="博客系统"></a>博客系统</h2><p>我的博客是基于 GitHub 和 Hexo 搭建的。更新频率比较低，有一方面的原因是我的之前的工作流没有形成高效的闭环；还有一点就是我的博客的生成发布比较麻烦：需要搭建环境，写好博客以后，还需要执行好几个命令才能发布一篇博客。我的知识获取和输出这中间存在一些断裂环节，导致我更新的频率并不高。<br>这里的一个诉求就是能否把知识的获取和最终的输出，形成一个自动化或者半自动化的流程。</p>
+<h3 id="如何把-Notion-上的文章自动部署到博客"><a href="#如何把-Notion-上的文章自动部署到博客" class="headerlink" title="如何把 Notion 上的文章自动部署到博客"></a>如何把 Notion 上的文章自动部署到博客</h3><p>需要解决几个问题：</p>
+<ul>
+<li>获取 Notion 里面某个数据库的文章</li>
+<li>生成 Hexo 格式的文章</li>
+<li>发布到博客</li>
+<li>定时触发 &amp; 自动化构建</li>
+</ul>
+<p>经过调研了一番，我发现 GitHub Actions 特别适合做这个事情，刚好我的 Blog 也是部署在 GitHub 上。参考一些教程，我逐个解决了上面提到的几个问题，实现了 Notion 文章自动化部署到 Blog 的需求。<br>这里贴出 GitHub Actions</p>
+<pre class="highlight"><span class="line">name: Build <span class="keyword">and</span> Deploy</span><br><span class="line">on:</span><br><span class="line">  # Triggers the workflow on push <span class="keyword">or</span> pull request events but only <span class="keyword">for</span> the master branch</span><br><span class="line">  push:</span><br><span class="line">    branches: [ master ]</span><br><span class="line">  schedule:</span><br><span class="line">    - cron: <span class="string">&#x27;0 21 * * *&#x27;</span></span><br><span class="line"></span><br><span class="line">  # Allows you to run <span class="keyword">this</span> workflow manually from the Actions tab</span><br><span class="line">  workflow_dispatch:</span><br><span class="line">    inputs:</span><br><span class="line">              name:</span><br><span class="line">                  description: <span class="string">&#x27;Person to greet&#x27;</span></span><br><span class="line">                  required: <span class="literal">true</span></span><br><span class="line">                  <span class="keyword">default</span>: <span class="string">&#x27;Mona the Octocat&#x27;</span></span><br><span class="line">              home:</span><br><span class="line">                  description: <span class="string">&#x27;location&#x27;</span></span><br><span class="line">                  required: <span class="literal">false</span></span><br><span class="line">                  <span class="keyword">default</span>: <span class="string">&#x27;The Octoverse&#x27;</span></span><br><span class="line">                  </span><br><span class="line">jobs:</span><br><span class="line">  build-<span class="keyword">and</span>-deploy:</span><br><span class="line">    runs-on: ubuntu-latest</span><br><span class="line">    steps:</span><br><span class="line">      - name: Checkout</span><br><span class="line">        uses: actions/checkout@master</span><br><span class="line">        </span><br><span class="line">      - name: Setup Python</span><br><span class="line">        uses: actions/setup-python@v2<span class="number">.3</span><span class="number">.0</span></span><br><span class="line">        </span><br><span class="line">      - name: Python Pip Install</span><br><span class="line">        uses: logikal-code/pip-install@v1<span class="number">.0</span><span class="number">.0</span></span><br><span class="line">        with:</span><br><span class="line">          requirements: ./notion-down/requirements.txt</span><br><span class="line">          </span><br><span class="line">      - name: notion to markdown</span><br><span class="line">        run: PYTHONPATH=./notion-down python ./notion-down/main.py --blog_url https:<span class="comment">//www.notion.so/Blog-**__** --token_v2 **********</span></span><br><span class="line">        </span><br><span class="line">      - name: copy markdown files</span><br><span class="line">        run: cp notion-down/build/Hexo/_posts<span class="comment">/*.md source/_posts/</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">      - name: Build and Deploy</span></span><br><span class="line"><span class="comment">        uses: ustcqidi/hexo-deploy-github-pages-action@master #  Use specialized deployment  Hexo  To  GitHub pages  Of  action</span></span><br><span class="line"><span class="comment">        env:</span></span><br><span class="line"><span class="comment">          PERSONAL_TOKEN: *******************</span></span><br><span class="line"><span class="comment">          PUBLISH_REPOSITORY: ustcqidi/ustcqidi.github.io</span></span><br><span class="line"><span class="comment">          BRANCH: master</span></span><br><span class="line"><span class="comment">          PUBLISH_DIR: ./public</span></span><br></pre>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = 我的 Workflow 和生产力工具
+Date = 2021-11-29
+Published = true
+Category = 生产力
+Tag = ['生产力', '效率']
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2021/12/01/zhe_pian_wen_zhang_shi_yong_zui_xie_chu_lai_de/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+        <div class="nav-title">这篇文章是用“嘴”写出来的 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+  <div class="nav-item-next">
+    <a href="/2021/05/24/tun_tap/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">TUN &amp; TAP </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Part-1-%E6%88%91%E7%9A%84-Workflow"><span class="toc-text">Part 1: 我的 Workflow</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5"><span class="toc-text">输入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6"><span class="toc-text">微信读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7"><span class="toc-text">微信公众号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5"><span class="toc-text">网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E5%AD%90%E4%B9%A6"><span class="toc-text">电子书</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B2%89%E6%B7%80%E4%B8%8E%E8%BE%93%E5%87%BA"><span class="toc-text">沉淀与输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"><span class="toc-text">读书笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%82%B9%E6%91%98%E8%A6%81"><span class="toc-text">重点摘要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0"><span class="toc-text">工作笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Blog"><span class="toc-text">Blog</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Part-2-%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7"><span class="toc-text">Part 2: 生产力工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#All-in-one-workspace-Notion"><span class="toc-text">All-in-one workspace: Notion</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Weekly-Review"><span class="toc-text">Weekly Review</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PBL"><span class="toc-text">PBL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0-1"><span class="toc-text">工作笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A2%8E%E7%89%87%E7%9F%A5%E8%AF%86%E5%BA%93"><span class="toc-text">碎片知识库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E7%B3%BB%E7%BB%9F"><span class="toc-text">阅读笔记系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flomo-%E5%81%9A%E7%A2%8E%E7%89%87%E5%8C%96%E6%B2%89%E6%B7%80"><span class="toc-text">Flomo 做碎片化沉淀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kami-%E5%81%9A-PDF-%E6%A0%87%E6%B3%A8"><span class="toc-text">Kami 做 PDF 标注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E5%90%8C%E6%AD%A5%E5%88%B0-Notion"><span class="toc-text">微信读书笔记同步到 Notion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E7%A0%94-Chrome-%E6%8F%92%E4%BB%B6%E7%94%A8%E4%BA%8E%E7%BD%91%E9%A1%B5-Highlight-%E5%92%8C-Sync-to-Notion"><span class="toc-text">自研 Chrome 插件用于网页 Highlight 和 Sync to Notion</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F"><span class="toc-text">博客系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8A%8A-Notion-%E4%B8%8A%E7%9A%84%E6%96%87%E7%AB%A0%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E5%8D%9A%E5%AE%A2"><span class="toc-text">如何把 Notion 上的文章自动部署到博客</span></a></li></ol></li></ol></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Part-1-%E6%88%91%E7%9A%84-Workflow"><span class="toc-text">Part 1: 我的 Workflow</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5"><span class="toc-text">输入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6"><span class="toc-text">微信读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7"><span class="toc-text">微信公众号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5"><span class="toc-text">网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E5%AD%90%E4%B9%A6"><span class="toc-text">电子书</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B2%89%E6%B7%80%E4%B8%8E%E8%BE%93%E5%87%BA"><span class="toc-text">沉淀与输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"><span class="toc-text">读书笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%82%B9%E6%91%98%E8%A6%81"><span class="toc-text">重点摘要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0"><span class="toc-text">工作笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Blog"><span class="toc-text">Blog</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Part-2-%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7"><span class="toc-text">Part 2: 生产力工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#All-in-one-workspace-Notion"><span class="toc-text">All-in-one workspace: Notion</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Weekly-Review"><span class="toc-text">Weekly Review</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PBL"><span class="toc-text">PBL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0-1"><span class="toc-text">工作笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A2%8E%E7%89%87%E7%9F%A5%E8%AF%86%E5%BA%93"><span class="toc-text">碎片知识库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E7%B3%BB%E7%BB%9F"><span class="toc-text">阅读笔记系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flomo-%E5%81%9A%E7%A2%8E%E7%89%87%E5%8C%96%E6%B2%89%E6%B7%80"><span class="toc-text">Flomo 做碎片化沉淀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kami-%E5%81%9A-PDF-%E6%A0%87%E6%B3%A8"><span class="toc-text">Kami 做 PDF 标注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E5%90%8C%E6%AD%A5%E5%88%B0-Notion"><span class="toc-text">微信读书笔记同步到 Notion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E7%A0%94-Chrome-%E6%8F%92%E4%BB%B6%E7%94%A8%E4%BA%8E%E7%BD%91%E9%A1%B5-Highlight-%E5%92%8C-Sync-to-Notion"><span class="toc-text">自研 Chrome 插件用于网页 Highlight 和 Sync to Notion</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F"><span class="toc-text">博客系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8A%8A-Notion-%E4%B8%8A%E7%9A%84%E6%96%87%E7%AB%A0%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E5%8D%9A%E5%AE%A2"><span class="toc-text">如何把 Notion 上的文章自动部署到博客</span></a></li></ol></li></ol></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Part-1-%E6%88%91%E7%9A%84-Workflow"><span class="toc-text">Part 1: 我的 Workflow</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5"><span class="toc-text">输入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6"><span class="toc-text">微信读书</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7"><span class="toc-text">微信公众号</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E9%A1%B5"><span class="toc-text">网页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%B5%E5%AD%90%E4%B9%A6"><span class="toc-text">电子书</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B2%89%E6%B7%80%E4%B8%8E%E8%BE%93%E5%87%BA"><span class="toc-text">沉淀与输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0"><span class="toc-text">读书笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E7%82%B9%E6%91%98%E8%A6%81"><span class="toc-text">重点摘要</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0"><span class="toc-text">工作笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Blog"><span class="toc-text">Blog</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Part-2-%E7%94%9F%E4%BA%A7%E5%8A%9B%E5%B7%A5%E5%85%B7"><span class="toc-text">Part 2: 生产力工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#All-in-one-workspace-Notion"><span class="toc-text">All-in-one workspace: Notion</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Weekly-Review"><span class="toc-text">Weekly Review</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PBL"><span class="toc-text">PBL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E7%AC%94%E8%AE%B0-1"><span class="toc-text">工作笔记</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A2%8E%E7%89%87%E7%9F%A5%E8%AF%86%E5%BA%93"><span class="toc-text">碎片知识库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%85%E8%AF%BB%E7%AC%94%E8%AE%B0%E7%B3%BB%E7%BB%9F"><span class="toc-text">阅读笔记系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Flomo-%E5%81%9A%E7%A2%8E%E7%89%87%E5%8C%96%E6%B2%89%E6%B7%80"><span class="toc-text">Flomo 做碎片化沉淀</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Kami-%E5%81%9A-PDF-%E6%A0%87%E6%B3%A8"><span class="toc-text">Kami 做 PDF 标注</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AE%E4%BF%A1%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0%E5%90%8C%E6%AD%A5%E5%88%B0-Notion"><span class="toc-text">微信读书笔记同步到 Notion</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E7%A0%94-Chrome-%E6%8F%92%E4%BB%B6%E7%94%A8%E4%BA%8E%E7%BD%91%E9%A1%B5-Highlight-%E5%92%8C-Sync-to-Notion"><span class="toc-text">自研 Chrome 插件用于网页 Highlight 和 Sync to Notion</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E7%B3%BB%E7%BB%9F"><span class="toc-text">博客系统</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%8A%8A-Notion-%E4%B8%8A%E7%9A%84%E6%96%87%E7%AB%A0%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2%E5%88%B0%E5%8D%9A%E5%AE%A2"><span class="toc-text">如何把 Notion 上的文章自动部署到博客</span></a></li></ol></li></ol></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

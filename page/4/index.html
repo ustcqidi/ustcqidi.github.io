@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2018/06/25/objective_c_runtime/">
+      <h1 class="post-title">
+        Objective-C Runtime
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪些知识点。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2018-06-25T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2018-06-25</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/iOS/" class="post-meta-link">iOS</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>695 words</span>
+        
+      </div>
+      <a href="/2018/06/25/objective_c_runtime/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2018/06/13/wwdc_2018_practical_approaches_to_great_app_performance/">
+      <h1 class="post-title">
+        WWDC 2018-Practical Approaches to Great App Performance
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      本文内容基于 Practical Approaches to Great App Performance 整理，这个Session主要介绍App 性能优化相关的问题，包括如何使用 Instruments 和其他工具解决性能问题，另外作者还介绍了他们对Xcode和Photos性能调优的一些实践经验。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2018-06-13T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2018-06-13</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/iOS/" class="post-meta-link">iOS</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>860 words</span>
+        
+      </div>
+      <a href="/2018/06/13/wwdc_2018_practical_approaches_to_great_app_performance/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2018/06/12/wwdc_2018_understanding_crashes_and_crash_logs/">
+      <h1 class="post-title">
+        WWDC 2018-Understanding Crashes and Crash Logs
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      本文内容基于WWDC 2018中 Understanding Crashes and Crash Logs 整理的。这个Session主要介绍iOS Crash相关的知识：如何分析crash logs，怎么调试和修复crash问题，比如难以重现的内存问题和多线程问题。
+
+Sudden app crashes are a source of bad user experience and app review rejections. Learn how crash logs can be analyzed, what information they contain and how to diagnose the causes of crashes, including hard-to-reproduce memory corruptions and multithreading issues.
+
+Fundamentals什么是Crash，为什么会产生crash？
+impossible for CPU to execute code
+Operating system is enforcing a policy，为了保证系统流畅性，操作系统会kill 掉内存占用过多的App
+Programming language is preventing failure, 比如assert
+Developer is preventing failure
+
+Crash长啥样当App发生crash时, attached的debugger会暂停App的运行，并定位的crash位置。详细看一下crash栈，这里是App启动入口
+
+这里是crash的具体位置
+
+发生crash时,debugger会收到signal，然后暂停App的运行,显示crash的调用栈
+
+如果当前没有attached的debugger，系统会吧crash堆栈信息dump到一个log文件中
+
+release版本的app发生crash时，log文件的调用栈只有地址信息
+
+xcode符号化后的crash log
+
+Accessing crash logs线上APP发生崩溃时，系统会把log文件上传到云端，然后可以通过xcode的organizer获取并分析crash，整体流程如图：
+
+crash organizer中有TestFlight and App Store上App的crash数据。包括了最近crash的统计数据，受影响最大的devices信息，crash具体位置信息等
+
+使用Crash Organizer
+App Store users opt in
+使用apple id登录Xcode
+上传带符号的App
+打开Crash Organizer
+
+crash堆栈符号化最佳实践
+Upload app symbols for server-side symbolication
+Keep your app archive for local symbolication
+Download debug symbols for bitcode apps
+
+Analyzing crash logslog文件中包含crash的的基本信息，crash原因，崩溃栈，寄存器等。
+
+
+
+有了这些信息后，怎么分析crash原因呢？首先看一下Exception Type，通过这个可以知道crash的原因，比如这个例子中EXC_BAD_INSTRUCTION的意思是CPU可能尝试执行不合法的指令。也可以看一下Crash Thread的调用栈。
+
+Assertions and PreconditionsDeliberately halt the process when an error has occurred Examples:
+
+Forced unwrap of an Optional that stores nil
+Out-of-bounds Swift.Array access
+Swift arithmetic overflow
+Uncaught exception
+Custom assertion in your code
+
+操作系统 Kill
+Watchdog 定时器超时
+设备过热
+内存耗尽
+无效签名
+
+一个具体的例子，下面这个crash信息可以看出，具体原因是看门狗定时器超时，一般是因为APP启动的时间过长或者响应系统事件事件超时导致；比如在主线程进行网络请求，主线程会一直卡住直到网络回调回来。
+
+Avoiding Launch Timeouts
+Frequent crash reason in app review
+Disabled in Simulator and in the debugger
+Test your app without the debugger
+on a real device
+on older hardware
+
+Memory issues内存问题分析
+over released
+buffer overflow
+used after free
+
+
+通过crash地址可以得到更多信息，7fdd5e70700这个地址在MALLOC_TINY的地址空间范围内，下图描述了objc_release的正常过程。
+
+但如果该对象已经被free了，objc_release会导致崩溃。
+
+找到具体的对象有没有办法知道具体是哪个object被多次release导致的crash呢？日志里面虽然有调用栈信息，但是都是编译器生成的函数，没有跟crash相关的具体信息。下面通过一个具体的例子说明如何找到LoginViewController中被多次release的对象。
+
+Text12345678// LoginViewController.swiftclass LoginViewController: UIViewController &amp;#123;    var userName: String    var database: DatabaseProxy    var views: [UIView]    ...&amp;#125;
+
+在命令行或者xcode打开lldb
+command script import lldb.macosx.crashlog
+加载crash log文件
+
+
+反汇编（disassemble），打印出crash位置的汇编代码，通过分析汇编代码可以知道哪里出了问题。
+
+常见内存问题
+Crash in objc_msgSend or retain/release
+Unrecognized selector exception
+abort() inside malloc/free
+
+小结
+找到crash的原因
+看一下crash线程的调用堆栈
+通过crash地址和反汇编的方式找到更多的线索
+
+Multithread issues
+多线程问题比较难重现和排查
+多线程问题经常会导致内存问题
+同一个问题崩溃位置通常不一致
+
+使用Thread Sanitizer调试多线程问题
+Reliably reproduces multithreaded
+bugs Works in Simulator
+
+给每个线程加个名字，发生崩溃是容易定位问题
+
+小结
+Use Organizer to access crash logs
+Analyze reproducible crashes
+Look for signs of memory corruption and threading issues
+Use bug-finding tools to help reproduce
+Address Sanitizer for memory corruption bugs
+Thread Sanitizer for multithreading problems
+
+
+
+更多资料
+Understanding and Analyzing Application Crash Reports
+iOS crash文件解析及常见的Exception类型
+
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2018-06-12T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2018-06-12</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/iOS/" class="post-meta-link">iOS</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>1.1k words</span>
+        
+      </div>
+      <a href="/2018/06/12/wwdc_2018_understanding_crashes_and_crash_logs/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2018/06/08/yykityuan_ma_xue_xi_yymodel/">
+      <h1 class="post-title">
+        YYKit源码学习-YYModel
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      YYModel是一个高性能的 iOS JSON 模型框架，如果让我设计类似的框架，我能考虑到的几个关键点或者需要解决的问题有这几个：
+
+怎么实现JSON/Dictionary与Model的互相转换
+怎么保证类型安全
+如何做到对Model代码无侵入
+Model嵌套如何支持
+如何设计性能测试benchmark
+性能方面的坑点
+
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2018-06-08T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2018-06-08</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/iOS/" class="post-meta-link">iOS</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>2.3k words</span>
+        
+      </div>
+      <a href="/2018/06/08/yykityuan_ma_xue_xi_yymodel/">Read More </a>
+    </div>
+  </article>
+</div>
+
+<div class="card">
+  
+  <article class="card card-content">
+    <a href="/2018/06/08/yykityuan_ma_xue_xi_zong_lan/">
+      <h1 class="post-title">
+        YYKit源码学习-总览
+      </h1>
+    </a>
+    <div class="card-excerpt">
+      
+      偶然翻到前同事博客的一篇文章：阅读源码的乐趣，这位老哥是iOS开发领域的网红，相信很多人都看过他的博客。文章中他通过一个栗子详细描述了自己是怎么看源码的，强调看源码对扩宽视野，提高品味，锻炼思维等等各方面的重要性，个人觉得他这篇文章还是挺有指导意义的。
+      
+    </div>
+    <div class="card-post-footer">
+      <div class="post-meta">
+        <time datetime="2018-06-08T00:00:00.000Z" style="display: flex; align-items: center;">
+          <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+          <span>2018-06-08</span>
+        </time>
+        
+        <span class="dot"></span>
+        
+        <a href="categories/iOS/" class="post-meta-link">iOS</a>
+        
+        
+        
+        <span class="dot"></span>
+        <span>1.7k words</span>
+        
+      </div>
+      <a href="/2018/06/08/yykityuan_ma_xue_xi_zong_lan/">Read More </a>
+    </div>
+  </article>
+</div>
+
+
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/page/3/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">Prev</div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+</div>
+</main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+  <article class="card card-content widescreen-archive">
+    <div class="archive-card">
+  <div class="archive-card-header"><i class="iconfont icon-wodebaobiao" style="padding-right: 2px;"></i>Archive</div>
+  <div class="archive-card-list">
+    
+    
+    
+      
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2023" class="archive-card-list-item">
+              2023
+              <span class="archive-card-list-item-badge">2</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+          <a href="/archives/2022" class="archive-card-list-item">
+              2022
+              <span class="archive-card-list-item-badge">1</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2021" class="archive-card-list-item">
+              2021
+              <span class="archive-card-list-item-badge">8</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2020" class="archive-card-list-item">
+              2020
+              <span class="archive-card-list-item-badge">11</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2019" class="archive-card-list-item">
+              2019
+              <span class="archive-card-list-item-badge">6</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+    
+      <a href="/archives/2018" class="archive-card-list-item">
+          2018
+          <span class="archive-card-list-item-badge">7</span>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="archive-card">
+  <div class="archive-card-header"><i class="iconfont icon-wodebaobiao" style="padding-right: 2px;"></i>Archive</div>
+  <div class="archive-card-list">
+    
+    
+    
+      
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2023" class="archive-card-list-item">
+              2023
+              <span class="archive-card-list-item-badge">2</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+          <a href="/archives/2022" class="archive-card-list-item">
+              2022
+              <span class="archive-card-list-item-badge">1</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2021" class="archive-card-list-item">
+              2021
+              <span class="archive-card-list-item-badge">8</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2020" class="archive-card-list-item">
+              2020
+              <span class="archive-card-list-item-badge">11</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+          <a href="/archives/2019" class="archive-card-list-item">
+              2019
+              <span class="archive-card-list-item-badge">6</span>
+          </a>
+        
+        
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+      
+        
+      
+    
+    
+      <a href="/archives/2018" class="archive-card-list-item">
+          2018
+          <span class="archive-card-list-item-badge">7</span>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>

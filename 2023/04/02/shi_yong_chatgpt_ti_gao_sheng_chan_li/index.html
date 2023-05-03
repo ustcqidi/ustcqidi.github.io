@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/uploads/avatar.png">
+  <title>Diven's blog</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/uploads/avatar.png">
+      
+      <span class="navbar-logo-dsc">Diven's blog</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">Home </a>
+    
+    <a href="/archives" class="navbar-menu-item">Archive </a>
+    
+    <a href="/tags" class="navbar-menu-item">Tags </a>
+    
+    <a href="/categories" class="navbar-menu-item">Categories </a>
+    
+    <a href="/about" class="navbar-menu-item">About </a>
+    
+    <a href="/links" class="navbar-menu-item">Friends </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      使用 ChatGPT 提高生产力
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2023-04-02T00:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2023-04-02</span>
+    </time>
+    
+    
+    <span class="dot"></span>
+    <span>897 words</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/ChatGPT/" class="post-meta-link">ChatGPT</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <p>使用 ChatGPT 提高工作效率的场景与心得<br>自从 3 月份开始使用 ChatGPT，我的工作效率有了大幅提升。本文记录我使用 ChatGPT 的一些场景和心得。<br><span id="more"></span></p>
+<h3 id="文案生成和润色"><a href="#文案生成和润色" class="headerlink" title="文案生成和润色"></a>文案生成和润色</h3><p>我使用 ChatGPT 润色了部门季度总结会议的 PPT 内容。ChatGPT 提供了不少的修饰建议，使得最终文案更为流畅、易懂。</p>
+<h3 id="代码-Review"><a href="#代码-Review" class="headerlink" title="代码 Review"></a>代码 Review</h3><p>公司禁止直接使用 ChatGPT 生成的代码，但可以使用 ChatGPT 辅助 Review，移除敏感的代码片段并保留部分需要检查的代码段。使用 ChatGPT Review 代码的效果非常好。<br>一个具体的例子：<br>这是同事提交的原始代码：</p>
+<pre class="highlight"><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo::bar</span><span class="params">(<span class="keyword">const</span> Json::Value&amp; jsonData)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	eventMap.<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (jsonData.<span class="built_in">isMemberWithValidFormat</span>(<span class="string">&quot;event&quot;</span>)) &#123;</span><br><span class="line">		Json::Value event = jsonData[<span class="string">&quot;event&quot;</span>];</span><br><span class="line"></span><br><span class="line">		<span class="keyword">if</span>(event.<span class="built_in">isMemberWithValidFormat</span>(<span class="string">&quot;licenseTypeOption&quot;</span>))&#123;</span><br><span class="line">			Json::Value licenseTypeOption = event[<span class="string">&quot;licenseTypeOption&quot;</span>];</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (licenseTypeOption.<span class="built_in">isArray</span>()) &#123;</span><br><span class="line">				Json::Value::iterator it = licenseTypeOption.<span class="built_in">begin</span>();</span><br><span class="line">				<span class="keyword">for</span> (; it != licenseTypeOption.<span class="built_in">end</span>(); ++it) &#123;</span><br><span class="line">					Json::Value&amp; item = *it;</span><br><span class="line"></span><br><span class="line">					<span class="keyword">if</span> (item.<span class="built_in">isMemberWithValidFormat</span>(<span class="string">&quot;licenseType&quot;</span>)) &#123;</span><br><span class="line">						Json::Value&amp; licenseType = item[<span class="string">&quot;licenseType&quot;</span>];</span><br><span class="line">						Json::Value&amp; licenseOption = item[<span class="string">&quot;licenseOption&quot;</span>];</span><br><span class="line"></span><br><span class="line">						CAString licenseTypeStr = licenseType.<span class="built_in">isString</span>() ? licenseType.<span class="built_in">asString</span>() : <span class="string">&quot;&quot;</span>;</span><br><span class="line">						CAString licenseOptionStr = licenseOption.<span class="built_in">isString</span>() ? licenseOption.<span class="built_in">asString</span>() : <span class="string">&quot;&quot;</span>;</span><br><span class="line">						<span class="keyword">if</span> (!licenseTypeStr.<span class="built_in">IsEmpty</span>() &amp;&amp; !licenseOptionStr.<span class="built_in">IsEmpty</span>()) &#123;</span><br><span class="line">							eventMap[licenseTypeStr] = licenseOptionStr;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre>
+<p>这是 ChatGPT 优化过的代码：</p>
+<pre class="highlight"><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo::bar</span><span class="params">(<span class="keyword">const</span> Json::Value&amp; jsonData)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    eventMap.<span class="built_in">clear</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!jsonData.<span class="built_in">isMemberWithValidFormat</span>(<span class="string">&quot;event&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> Json::Value&amp; event = jsonData[<span class="string">&quot;event&quot;</span>];</span><br><span class="line">    <span class="keyword">if</span> (!event.<span class="built_in">isMemberWithValidFormat</span>(<span class="string">&quot;licenseTypeOption&quot;</span>)) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">const</span> Json::Value&amp; licenseTypeOption = event[<span class="string">&quot;licenseTypeOption&quot;</span>];</span><br><span class="line">    <span class="keyword">if</span> (!licenseTypeOption.<span class="built_in">isArray</span>()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; item : licenseTypeOption) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!item.<span class="built_in">isMemberWithValidFormat</span>(<span class="string">&quot;licenseType&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">const</span> Json::Value&amp; licenseType = item[<span class="string">&quot;licenseType&quot;</span>];</span><br><span class="line">        <span class="keyword">const</span> Json::Value&amp; licenseOption = item[<span class="string">&quot;licenseOption&quot;</span>];</span><br><span class="line">        <span class="keyword">if</span> (!licenseType.<span class="built_in">isString</span>() || !licenseOption.<span class="built_in">isString</span>()) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        eventMap[licenseType.<span class="built_in">asString</span>()] = licenseOption.<span class="built_in">asString</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+<p>ChatGPT 还给出了相关的说明<br>if 语句嵌套太多，可以考虑进行重构，以提高代码的可读性和可维护性。一种常见的方法是使用早返回（early return）的方式，即在满足某些条件时直接返回结果，而不是嵌套多个if语句。以下是一个示例：<br>原始代码：</p>
+<pre class="highlight"><span class="line"><span class="keyword">if</span> (a) &#123;</span><br><span class="line">    <span class="keyword">if</span> (b) &#123;</span><br><span class="line">        <span class="keyword">if</span> (c) &#123;</span><br><span class="line">            <span class="comment">// do something</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// do something else</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// do something else</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// do something else</span></span><br><span class="line">&#125;</span><br></pre>
+<p>重构后的代码：</p>
+<pre class="highlight"><span class="line"><span class="keyword">if</span> (!a) &#123;</span><br><span class="line">    <span class="comment">// do something else</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!b) &#123;</span><br><span class="line">    <span class="comment">// do something else</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!c) &#123;</span><br><span class="line">    <span class="comment">// do something else</span></span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// do something</span></span><br></pre>
+<p>如上所示，通过早返回的方式，可以将原始代码中的多个嵌套if语句转换为多个单独的if语句，使得代码更加清晰和易于阅读。同时，还可以避免出现嵌套层数过深的情况，提高代码的可维护性。</p>
+<h3 id="定义类和接口"><a href="#定义类和接口" class="headerlink" title="定义类和接口"></a>定义类和接口</h3><p>ChatGPT 可以根据需求和变量命名规范要求，生成很不错的接口或类定义。</p>
+<h3 id="生成单元测试用例"><a href="#生成单元测试用例" class="headerlink" title="生成单元测试用例"></a>生成单元测试用例</h3><p>直接提供函数或接口给 ChatGPT，可以生成详细的测试用例和单元测试代码，提高了测试覆盖率。</p>
+<h3 id="搜索引擎"><a href="#搜索引擎" class="headerlink" title="搜索引擎"></a>搜索引擎</h3><p>我已经使用 ChatGPT 替代 Google 和 StackOverflow。ChatGPT 可以根据关键词快速给出相关信息，缩短了搜索的时间。</p>
+<h3 id="翻译"><a href="#翻译" class="headerlink" title="翻译"></a>翻译</h3><p>ChatGPT 在翻译方面也很强大。我用它来翻译了一些文档和文章，翻译质量非常好。</p>
+<h3 id="学习助手"><a href="#学习助手" class="headerlink" title="学习助手"></a>学习助手</h3><p>ChatGPT 可以帮助我总结所学知识，并提供更详细的说明，提高了学习效率。</p>
+<p>总的来说， ChatGPT 为我提供了很多帮助，提高了我的工作效率和学习效率。虽然 ChatGPT 目前还有一些局限性，但随着技术的发展，相信 ChatGPT 将会变得越来越强大，为程序员提供更多的帮助。</p>
+<!-- Generated by HexoWriter
+notion-down.version = 0.2.2
+notion-down.revision = b'b6864e2'
+Title = 使用 ChatGPT 提高生产力
+Date = 2023-04-02
+Published = true
+Category = 
+Tag = ChatGPT
+FileLocate = 
+FileName = 
+hexo.comments = true
+-->
+
+  </div>
+  <div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  
+  <div class="nav-item-next">
+    <a href="/2023/01/02/2022_nian_du_zong_jie/" class="nav-link">
+      <div>
+        <div class="nav-label">Next</div>
+        
+        <div class="nav-title">2022 年度总结 </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%A1%88%E7%94%9F%E6%88%90%E5%92%8C%E6%B6%A6%E8%89%B2"><span class="toc-text">文案生成和润色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-Review"><span class="toc-text">代码 Review</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3"><span class="toc-text">定义类和接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="toc-text">生成单元测试用例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="toc-text">搜索引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BF%BB%E8%AF%91"><span class="toc-text">翻译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B"><span class="toc-text">学习助手</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/uploads/avatar.png" class="author-img">
+
+<p class="author-name">Diven</p>
+<p class="author-description">Stay Hungry Stay Foolish</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>35</span>
+    <span>Posts</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>10</span>
+    <span>Categories</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>39</span>
+    <span>Tags</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%A1%88%E7%94%9F%E6%88%90%E5%92%8C%E6%B6%A6%E8%89%B2"><span class="toc-text">文案生成和润色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-Review"><span class="toc-text">代码 Review</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3"><span class="toc-text">定义类和接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="toc-text">生成单元测试用例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="toc-text">搜索引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BF%BB%E8%AF%91"><span class="toc-text">翻译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B"><span class="toc-text">学习助手</span></a></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>Categories</div>
+  <div class="categories-list">
+    
+      <a href="/categories/年度总结">
+        <div class="categories-list-item">
+          年度总结
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Chromium">
+        <div class="categories-list-item">
+          Chromium
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+      <a href="/categories/网络">
+        <div class="categories-list-item">
+          网络
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/cURL">
+        <div class="categories-list-item">
+          cURL
+          <span class="categories-list-item-badge">4</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Security">
+        <div class="categories-list-item">
+          Security
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Go">
+        <div class="categories-list-item">
+          Go
+          <span class="categories-list-item-badge">2</span>
+        </div>
+      </a>
+    
+      <a href="/categories/生产力">
+        <div class="categories-list-item">
+          生产力
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/杂项">
+        <div class="categories-list-item">
+          杂项
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/iOS">
+        <div class="categories-list-item">
+          iOS
+          <span class="categories-list-item-badge">5</span>
+        </div>
+      </a>
+    
+      <a href="/categories/阅读笔记">
+        <div class="categories-list-item">
+          阅读笔记
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>hot tags</div>
+  <div class="tags-list">
+    
+    <a href="\tags\年度总结" title="年度总结"><div class="tags-list-item">年度总结</div></a>
+    
+    <a href="\tags\工作效率" title="工作效率"><div class="tags-list-item">工作效率</div></a>
+    
+    <a href="\tags\cURL" title="cURL"><div class="tags-list-item">cURL</div></a>
+    
+    <a href="\tags\生产力" title="生产力"><div class="tags-list-item">生产力</div></a>
+    
+    <a href="\tags\效率" title="效率"><div class="tags-list-item">效率</div></a>
+    
+    <a href="\tags\基础库" title="基础库"><div class="tags-list-item">基础库</div></a>
+    
+    <a href="\tags\Chromium" title="Chromium"><div class="tags-list-item">Chromium</div></a>
+    
+    <a href="\tags\WWDC" title="WWDC"><div class="tags-list-item">WWDC</div></a>
+    
+    <a href="\tags\笔记" title="笔记"><div class="tags-list-item">笔记</div></a>
+    
+    <a href="\tags\Go" title="Go"><div class="tags-list-item">Go</div></a>
+    
+    <a href="\tags\Security" title="Security"><div class="tags-list-item">Security</div></a>
+    
+    <a href="\tags\网络" title="网络"><div class="tags-list-item">网络</div></a>
+    
+    <a href="\tags\性能测试" title="性能测试"><div class="tags-list-item">性能测试</div></a>
+    
+    <a href="\tags\单元测试" title="单元测试"><div class="tags-list-item">单元测试</div></a>
+    
+    <a href="\tags\源代码" title="源代码"><div class="tags-list-item">源代码</div></a>
+    
+    <a href="\tags\开源" title="开源"><div class="tags-list-item">开源</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>TOC</div>
+<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E6%A1%88%E7%94%9F%E6%88%90%E5%92%8C%E6%B6%A6%E8%89%B2"><span class="toc-text">文案生成和润色</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-Review"><span class="toc-text">代码 Review</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E7%B1%BB%E5%92%8C%E6%8E%A5%E5%8F%A3"><span class="toc-text">定义类和接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B"><span class="toc-text">生成单元测试用例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E"><span class="toc-text">搜索引擎</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BF%BB%E8%AF%91"><span class="toc-text">翻译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%8A%A9%E6%89%8B"><span class="toc-text">学习助手</span></a></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>Recent Posts</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-04-02</div>
+        <a href="/2023/04/02/shi_yong_chatgpt_ti_gao_sheng_chan_li/"><div class="recent-posts-item-content">使用 ChatGPT 提高生产力</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2023-01-02</div>
+        <a href="/2023/01/02/2022_nian_du_zong_jie/"><div class="recent-posts-item-content">2022 年度总结</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-01-11</div>
+        <a href="/2022/01/11/ru_he_zai_google_slide_cha_jian_zhong_xia_zai_drive_da_wen_jian/"><div class="recent-posts-item-content">如何在 Google Slide 插件中下载 Drive 大文件</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-12-27</div>
+        <a href="/2021/12/27/2021_nian_du_zong_jie/"><div class="recent-posts-item-content">2021 年度总结</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2023
+        </span>
+        <a href="/" class="footer-link">Diven's blog </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+      <div class="footer-dsc">
+        
+        本站总访问量<span id="busuanzi_value_site_pv"></span>次
+        
+        
+        <span>&nbsp;|&nbsp;</span>
+        
+        
+        本站总访客数<span id="busuanzi_value_site_uv"></span>次
+        
+      </div>
+      
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  <script>loadScript("/js/lib/busuanzi.min.js")</script>
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+</body>
+
+</html>
