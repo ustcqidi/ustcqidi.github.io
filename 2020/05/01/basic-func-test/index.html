@@ -17,12 +17,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ustcqidi.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="开发基础库需要注意什么">
-<meta property="og:url" content="http://yoursite.com/2020/05/01/basic-func-test/index.html">
+<meta property="og:url" content="https://ustcqidi.github.io/2020/05/01/basic-func-test/index.html">
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。">
 <meta property="og:locale">
@@ -36,10 +36,10 @@
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="http://yoursite.com/2020/05/01/basic-func-test/">
+<link rel="canonical" href="https://ustcqidi.github.io/2020/05/01/basic-func-test/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2020/05/01/basic-func-test/","path":"2020/05/01/basic-func-test/","title":"开发基础库需要注意什么"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://ustcqidi.github.io/2020/05/01/basic-func-test/","path":"2020/05/01/basic-func-test/","title":"开发基础库需要注意什么"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>开发基础库需要注意什么 | 祁迪的博客</title>
@@ -168,7 +168,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/05/01/basic-func-test/">
+    <link itemprop="mainEntityOfPage" href="https://ustcqidi.github.io/2020/05/01/basic-func-test/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -222,7 +222,7 @@
 <p>这个基础方法并不复杂，但是考虑到所有产品线，所有客户端，甚至服务端都会调用这个接口做加解密，所以我们还是做了很多测试，以保证万无一失。</p>
 <h3 id="文档文档文档"><a href="#文档文档文档" class="headerlink" title="文档文档文档"></a>文档文档文档</h3><p>文档非常非常重要，否则你每次都需要跟你的用户（基础库使用方）解释细节，直至暴走，怀疑人生。</p>
 <h3 id="代码-Review"><a href="#代码-Review" class="headerlink" title="代码 Review"></a>代码 Review</h3><p>代码 Review 常常能发现一些低级手抖错误，我实现这个方法时没有仔细考虑内存拷贝的开销，Review 代码时同事指出来了，后来想了一下，大量数据加解密调用时，频繁地内存拷贝可能会导致内存碎片，影响性能。</p>
-<h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p>单元测试简直是 Common SDK 开发者的保命法宝。我在 <a target="_blank" rel="noopener" href="https://ustcqidi.github.io/2019/01/14/chromium-testing/">Chromium 工程源码是如何测试的</a> 中提到过，Chromium 中所有基础库的代码都有大量的单元测试和性能测试。实现这个加解密方法时我写了大量的测试用例，测试了几波以后基本胸有成竹了。另外，如果产品源码编译时间很久的话，使用单元测试工程来开发会极大地提高效率。 </p>
+<h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p>单元测试简直是 Common SDK 开发者的保命法宝。我在 <a href="https://ustcqidi.github.io/2019/01/14/chromium-testing/">Chromium 工程源码是如何测试的</a> 中提到过，Chromium 中所有基础库的代码都有大量的单元测试和性能测试。实现这个加解密方法时我写了大量的测试用例，测试了几波以后基本胸有成竹了。另外，如果产品源码编译时间很久的话，使用单元测试工程来开发会极大地提高效率。 </p>
 <p>Daniel Stenberg 大哥有一个 <a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=U572Hq8LiWw">curl development with Daniel</a> 系列，直播撸 curl 的 feature。围观了后，发现大哥也是写完代码后，用 testing 工程验证。</p>
 <h3 id="Fuzzing-测试"><a href="#Fuzzing-测试" class="headerlink" title="Fuzzing 测试"></a>Fuzzing 测试</h3><p>Fuzzing 测试就是传入各种无效、随机、操蛋的参数，测试方法是否有异常，比如 Crash, 内存泄漏等等。通常需要写一些脚本随机生成脏数据，然后频繁地调用目标方法。</p>
 
@@ -317,7 +317,7 @@
 
 
 
-<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ustcqidi/blog-comments","issue_term":"pathname","theme":"github-light"}</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ustcqidi/blog-comments","issue_term":"pathname","theme":"github-light","cdn":"https://utteranc.es/client.js"}</script>
 <script src="/js/third-party/comments/utterances.js"></script>
 
 </body>

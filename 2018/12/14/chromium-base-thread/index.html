@@ -17,31 +17,31 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
 
-<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ustcqidi.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
     <meta name="description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Chromium 跨平台基础库：多线程">
-<meta property="og:url" content="http://yoursite.com/2018/12/14/chromium-base-thread/index.html">
+<meta property="og:url" content="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/index.html">
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="多线程是基础库非常重要的一部分，每个平台都有各自的多线程API，实现一套高效、易用的多线程基础库也是挺有挑战的。Chromium base库中有完整的跨平台thread封装和实现，本文主要整理一下Chromium 线程相关实现细节。">
 <meta property="og:locale">
-<meta property="og:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/code_overview.png">
-<meta property="og:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/thread_class.png">
+<meta property="og:image" content="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/code_overview.png">
+<meta property="og:image" content="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/thread_class.png">
 <meta property="article:published_time" content="2018-12-14T14:29:02.000Z">
 <meta property="article:modified_time" content="2025-01-04T02:21:58.673Z">
 <meta property="article:author" content="祁迪">
-<meta property="article:tag" content="基础库">
 <meta property="article:tag" content="Chromium">
+<meta property="article:tag" content="基础库">
 <meta property="article:tag" content="多线程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://yoursite.com/2018/12/14/chromium-base-thread/code_overview.png">
+<meta name="twitter:image" content="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/code_overview.png">
 
 
-<link rel="canonical" href="http://yoursite.com/2018/12/14/chromium-base-thread/">
+<link rel="canonical" href="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/">
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2018/12/14/chromium-base-thread/","path":"2018/12/14/chromium-base-thread/","title":"Chromium 跨平台基础库：多线程"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://ustcqidi.github.io/2018/12/14/chromium-base-thread/","path":"2018/12/14/chromium-base-thread/","title":"Chromium 跨平台基础库：多线程"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>Chromium 跨平台基础库：多线程 | 祁迪的博客</title>
@@ -170,7 +170,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/14/chromium-base-thread/">
+    <link itemprop="mainEntityOfPage" href="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -257,8 +257,8 @@ Chromium thread 的主要类以及他们之间的关系如下图：</li>
 
     <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%9F%BA%E7%A1%80%E5%BA%93/" rel="tag"># 基础库</a>
               <a href="/tags/Chromium/" rel="tag"># Chromium</a>
+              <a href="/tags/%E5%9F%BA%E7%A1%80%E5%BA%93/" rel="tag"># 基础库</a>
               <a href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/" rel="tag"># 多线程</a>
           </div>
 
@@ -339,7 +339,7 @@ Chromium thread 的主要类以及他们之间的关系如下图：</li>
 
 
 
-<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ustcqidi/blog-comments","issue_term":"pathname","theme":"github-light"}</script>
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ustcqidi/blog-comments","issue_term":"pathname","theme":"github-light","cdn":"https://utteranc.es/client.js"}</script>
 <script src="/js/third-party/comments/utterances.js"></script>
 
 </body>
