@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>祁迪的博客</title>
   
-  
+  <subtitle>企业级客户端技术探索：架构设计·性能优化·效能提升</subtitle>
   <link href="https://ustcqidi.github.io/atom.xml" rel="self"/>
   
   <link href="https://ustcqidi.github.io/"/>

@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>https://ustcqidi.github.io/tags/index.html</loc>
+    <loc>https://ustcqidi.github.io/tags/</loc>
     
     <lastmod>2025-01-04</lastmod>
     
@@ -29,7 +29,7 @@
   </url>
   
   <url>
-    <loc>https://ustcqidi.github.io/about/index.html</loc>
+    <loc>https://ustcqidi.github.io/about/</loc>
     
     <lastmod>2025-01-04</lastmod>
     
@@ -308,7 +308,7 @@
   </url>
   
   <url>
-    <loc>https://ustcqidi.github.io/404/index.html</loc>
+    <loc>https://ustcqidi.github.io/404/</loc>
     
     <lastmod>2025-01-04</lastmod>
     
@@ -375,14 +375,14 @@
   </url>
   
   <url>
-    <loc>https://ustcqidi.github.io/tags/allocator/</loc>
+    <loc>https://ustcqidi.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
     <lastmod>2025-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ustcqidi.github.io/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/</loc>
+    <loc>https://ustcqidi.github.io/tags/allocator/</loc>
     <lastmod>2025-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -417,14 +417,14 @@
   </url>
   
   <url>
-    <loc>https://ustcqidi.github.io/tags/DNS/</loc>
+    <loc>https://ustcqidi.github.io/tags/%E9%9D%A2%E8%AF%95/</loc>
     <lastmod>2025-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://ustcqidi.github.io/tags/%E9%9D%A2%E8%AF%95/</loc>
+    <loc>https://ustcqidi.github.io/tags/DNS/</loc>
     <lastmod>2025-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -480,6 +480,20 @@
   </url>
   
   <url>
+    <loc>https://ustcqidi.github.io/tags/WebSocket/</loc>
+    <lastmod>2025-01-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ustcqidi.github.io/tags/%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98/</loc>
+    <lastmod>2025-01-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://ustcqidi.github.io/tags/%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2025-01-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -523,20 +537,6 @@
   
   <url>
     <loc>https://ustcqidi.github.io/tags/Render/</loc>
-    <lastmod>2025-01-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ustcqidi.github.io/tags/WebSocket/</loc>
-    <lastmod>2025-01-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ustcqidi.github.io/tags/%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E7%BD%91%E7%BB%9C%E9%97%AE%E9%A2%98/</loc>
     <lastmod>2025-01-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

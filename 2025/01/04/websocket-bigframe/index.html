@@ -22,7 +22,7 @@
     <meta name="description" content="问题背景需求背景我们有个业务场景，需要通过 WebSocket 发送图片，根据同事反馈，目前发送一个image数据大概140kb，会出现发送的数据被截断的情况，连接也会被断开 初步猜测：数据帧过大导致发送失败看了一下代码，我们没有对发送数据包的大小做限制。但是从实际的测试表现来看，发送数据大小超过 140kb 的包，就很容易出现这个问题，初步猜测跟包大小有关。还需要进一步通过 Log 或者抓包确定">
 <meta property="og:type" content="article">
 <meta property="og:title" content="WebSocket 数据传输中的大数据帧发送问题">
-<meta property="og:url" content="https://ustcqidi.github.io/2025/01/04/websocket-bigframe/index.html">
+<meta property="og:url" content="https://ustcqidi.github.io/2025/01/04/websocket-bigframe/">
 <meta property="og:site_name" content="祁迪的博客">
 <meta property="og:description" content="问题背景需求背景我们有个业务场景，需要通过 WebSocket 发送图片，根据同事反馈，目前发送一个image数据大概140kb，会出现发送的数据被截断的情况，连接也会被断开 初步猜测：数据帧过大导致发送失败看了一下代码，我们没有对发送数据包的大小做限制。但是从实际的测试表现来看，发送数据大小超过 140kb 的包，就很容易出现这个问题，初步猜测跟包大小有关。还需要进一步通过 Log 或者抓包确定">
 <meta property="og:locale">
@@ -82,6 +82,7 @@
       <p class="site-title">祁迪的博客</p>
       <i class="logo-line"></i>
     </a>
+      <p class="site-subtitle" itemprop="description">企业级客户端技术探索：架构设计·性能优化·效能提升</p>
   </div>
 
   <div class="site-nav-right">
@@ -125,7 +126,7 @@
         <div class="site-overview-wrap sidebar-panel">
           <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
   <p class="site-author-name" itemprop="name">祁迪</p>
-  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+  <div class="site-description" itemprop="description">专注企业级客户端应用基础架构设计与性能优化，分享网络通信、数据库、APM等底层技术实践。记录 Troubleshooting、工程效能提升等实战经验，探讨大型应用开发的技术创新。</div>
 </div>
 <div class="site-state-wrap animated">
   <nav class="site-state">
@@ -178,7 +179,7 @@
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="祁迪的博客">
-      <meta itemprop="description" content="不忘初心，方得始终">
+      <meta itemprop="description" content="专注企业级客户端应用基础架构设计与性能优化，分享网络通信、数据库、APM等底层技术实践。记录 Troubleshooting、工程效能提升等实战经验，探讨大型应用开发的技术创新。">
     </span>
 
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
