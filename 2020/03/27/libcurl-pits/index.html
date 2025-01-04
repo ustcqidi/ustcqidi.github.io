@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="记录项目使用 libcurl 时遇到的一些坑，持续更新！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="libcurl 陷阱">
+<meta property="og:url" content="http://yoursite.com/2020/03/27/libcurl-pits/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="记录项目使用 libcurl 时遇到的一些坑，持续更新！">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2020/03/27/libcurl-pits/ntlm.png">
+<meta property="article:published_time" content="2020-03-27T15:09:58.000Z">
+<meta property="article:modified_time" content="2025-01-04T02:21:58.732Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="网络">
+<meta property="article:tag" content="cURL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/03/27/libcurl-pits/ntlm.png">
+
+
+<link rel="canonical" href="http://yoursite.com/2020/03/27/libcurl-pits/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2020/03/27/libcurl-pits/","path":"2020/03/27/libcurl-pits/","title":"libcurl 陷阱"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>libcurl 陷阱 | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%8D%B8%E8%BD%BD-Crash"><span class="nav-number">1.</span> <span class="nav-text">动态库卸载 Crash</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Connection-Cache-%E5%A4%8D%E7%94%A8%E9%97%AE%E9%A2%98"><span class="nav-number">2.</span> <span class="nav-text">Connection Cache 复用问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebSocket-%E6%94%AF%E6%8C%81"><span class="nav-number">3.</span> <span class="nav-text">WebSocket 支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NTLM-%E8%AE%A4%E8%AF%81"><span class="nav-number">4.</span> <span class="nav-text">NTLM 认证</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection"><span class="nav-number">4.1.</span> <span class="nav-text">Could not re-use the connection for NTLM challenge, and always create a new connection</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Root-Cause"><span class="nav-number">4.1.1.</span> <span class="nav-text">Root Cause</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Solution"><span class="nav-number">4.1.2.</span> <span class="nav-text">Solution</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#abnormal-logs"><span class="nav-number">4.1.3.</span> <span class="nav-text">abnormal logs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#normal-logs"><span class="nav-number">4.1.4.</span> <span class="nav-text">normal logs</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge"><span class="nav-number">4.2.</span> <span class="nav-text">Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Root-Cause-1"><span class="nav-number">4.2.1.</span> <span class="nav-text">Root Cause</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#abnormal-logs-1"><span class="nav-number">4.2.2.</span> <span class="nav-text">abnormal logs</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password"><span class="nav-number">4.3.</span> <span class="nav-text">NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#abnormal-logs-2"><span class="nav-number">4.3.1.</span> <span class="nav-text">abnormal logs</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/03/27/libcurl-pits/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="不忘初心，方得始终">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="libcurl 陷阱 | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          libcurl 陷阱
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-03-27 23:09:58" itemprop="dateCreated datePublished" datetime="2020-03-27T23:09:58+08:00">2020-03-27</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-04 10:21:58" itemprop="dateModified" datetime="2025-01-04T10:21:58+08:00">2025-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>记录项目使用 libcurl 时遇到的一些坑，持续更新！</p>
+<span id="more"></span>
+<h2 id="动态库卸载-Crash"><a href="#动态库卸载-Crash" class="headerlink" title="动态库卸载 Crash"></a>动态库卸载 Crash</h2><p>libcurl 作为动态库一部分，在动态库卸载时如果有 pending 的 dns 解析请求可能会导致 Crash。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/997">相关issue</a></li>
+<li><a target="_blank" rel="noopener" href="https://curl.haxx.se/libcurl/c/curl_global_cleanup.html">官方文档说明</a></li>
+</ul>
+<blockquote>
+<p>curl_global_cleanup does not block waiting for any libcurl-created threads to terminate (such as threads used for name resolving). If a module containing libcurl is dynamically unloaded while libcurl-created threads are still running then your program may crash or other corruption may occur. We recommend you do not run libcurl from any module that may be unloaded dynamically. This behavior may be addressed in the future.</p>
+</blockquote>
+<h2 id="Connection-Cache-复用问题"><a href="#Connection-Cache-复用问题" class="headerlink" title="Connection Cache 复用问题"></a>Connection Cache 复用问题</h2><p>网络切换/中断、App前后台切换，可能会导致 Connection Cache 的 socket 连接实例失效，但是 libcurl 没有针对这种情况做 Connection Cache 的及时清理，导致连接复用时可能会出现连接失败。这个问题在 iOS, Mac 平台上很容易出现。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://curl.haxx.se/mail/lib-2016-07/0032.html">相关讨论</a></li>
+</ul>
+<blockquote>
+<p>I’ve got a situation where connection cache is kept through internet connection change (Wifi -&gt; 3G for example). After network change cURL will try to reuse the connection from cache and will fail and open a new connection. The problem is that it takes ~20 seconds to understand that the connection was dead.</p>
+</blockquote>
+<h2 id="WebSocket-支持"><a href="#WebSocket-支持" class="headerlink" title="WebSocket 支持"></a>WebSocket 支持</h2><p>主要思路是使用 libcurl 作 https 通信，具体的 websocket 协议解析与封装需要自己实现。但是有个问题，libcurl 官方是不支持 websocket，因此 websocket 请求实例拿到 response 以后。这个实例可能会被 re-use。当然，民间也有一些基于 libcurl 支持 websocket 的讨论。</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://curl.haxx.se/video/curlup-2017/2017-03-19_05_Michael_Kaufmann_Websocket_support_for_curl.mp4">https://curl.haxx.se/video/curlup-2017/2017-03-19_05_Michael_Kaufmann_Websocket_support_for_curl.mp4</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/bagder/curl/pull/86">https://github.com/bagder/curl/pull/86</a></li>
+<li><a target="_blank" rel="noopener" href="https://gist.github.com/mkauf/5ce3574ce821b2cf02986d4d701bfa86">https://gist.github.com/mkauf/5ce3574ce821b2cf02986d4d701bfa86</a></li>
+</ul>
+<h2 id="NTLM-认证"><a href="#NTLM-认证" class="headerlink" title="NTLM 认证"></a>NTLM 认证</h2><p>这次升级 libcurl 到 7.71.1 版本后，NTLM 认证在 Android 和 iOS 上认证都会失败。之前升级 libcurl 到 7.55.1 时也遇到过 NTLM 认证的问题。</p>
+<p>相比其他认证方式，NTLM 认证过程更为复杂，整体流程如下图：</p>
+<p><img src="/2020/03/27/libcurl-pits/ntlm.png" alt></p>
+<p>Client 和 Server 需要几次“握手”交换认证信息，并且要求这几次“握手”的连接实例是同一个。http(s) 是无状态连接，libcurl 本身也有 connection reuse 机制，所以可能有各种原因会导致，交换 NTLM 认证信息的几次连接可能使用的不是同一个实例，这就会导致认证失败。</p>
+<p>我提交过几个 issue 给 libcurl，5911 这个 issue 是官方其中一个版本引入的 regression，我提了一个 PR Fix 了</p>
+<p>Issues:</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/3647">https://github.com/curl/curl/issues/3647</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/5693">https://github.com/curl/curl/issues/5693</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/issues/5911">https://github.com/curl/curl/issues/5911</a></li>
+</ul>
+<p>Pull Request: </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/curl/curl/pull/5914">https://github.com/curl/curl/pull/5914</a></li>
+</ul>
+<p>这些使用上的坑也具有指导意义。</p>
+<h3 id="Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection"><a href="#Could-not-re-use-the-connection-for-NTLM-challenge-and-always-create-a-new-connection" class="headerlink" title="Could not re-use the connection for NTLM challenge, and always create a new connection"></a>Could not re-use the connection for NTLM challenge, and always create a new connection</h3><h4 id="Root-Cause"><a href="#Root-Cause" class="headerlink" title="Root Cause"></a>Root Cause</h4><p>Connection 42 is still name resolving, can’t reuse. So create a new connection 43, which cause NTLM challenge failed, and cause once more redirect. It’s very wired because Connection 42 have left intact just now.</p>
+<h4 id="Solution"><a href="#Solution" class="headerlink" title="Solution"></a>Solution</h4><p>define the macro HAVE_GETPEERNAME</p>
+<h4 id="abnormal-logs"><a href="#abnormal-logs" class="headerlink" title="abnormal logs"></a>abnormal logs</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #42 to host exchange2016.com left intact</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Issue another request to this URL: &#x27;https://exchange2016.com/EWS/Exchange.asmx&#x27;</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Found bundle for host exchange2016.com: 0x7a72130c30 [serially]</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #11 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #23 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #24 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #25 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #26 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #29 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #31 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connection #42 is still name resolving, can&#x27;t reuse</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Hostname exchange2016.com was found in DNS cache</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :  Trying 10.100.87.8:443...</span><br><span class="line">[my_curl_debug_callback] This: 525811577016 TEXT :Connected to exchange2016.com () port 443 (#43)</span><br></pre></td></tr></table></figure>
+<h4 id="normal-logs"><a href="#normal-logs" class="headerlink" title="normal logs"></a>normal logs</h4><p>Re-using existing connection! (43) for NTLM challenge</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Connection #43 to host exchange2013.com left intact</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Issue another request to this URL: &#x27;https://exchange2013.com/EWS/Exchange.asmx&#x27;</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Found bundle for host exchange2013.com: 0x2823928e0 [serially]</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Re-using existing connection! (#43) with host exchange2013.com</span><br><span class="line">[my_curl_debug_callback] This: 5412312248 TEXT :Connected to exchange2013.com () port 443 (#43)</span><br></pre></td></tr></table></figure>
+<h3 id="Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge"><a href="#Connection-cache-is-full-closing-the-oldest-one-Which-cause-could-not-re-use-the-connection-for-NTLM-challenge" class="headerlink" title="Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge"></a>Connection cache is full, closing the oldest one. Which cause could not re-use the connection for NTLM challenge</h3><h4 id="Root-Cause-1"><a href="#Root-Cause-1" class="headerlink" title="Root Cause"></a>Root Cause</h4><ul>
+<li><p>Connection cache is full, closing the oldest one. So create a new connection 50, which cause NTLM challenge failed, and cause once more redirect. But why Closing connection 49, it seems to the latest one not oldest one.</p>
+</li>
+<li><p>websocket connections make the connection cache full, and can not be closed</p>
+</li>
+</ul>
+<p>As following code snippet, for websocket connection we will set the connect_only as true, which will never be candidate connection for close.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">// conncache.c</span><br><span class="line">struct connectdata *</span><br><span class="line">Curl_conncache_extract_oldest(struct Curl_easy *data) &#123;</span><br><span class="line">    </span><br><span class="line">    ....</span><br><span class="line">    </span><br><span class="line">    while(curr) &#123;</span><br><span class="line">      conn = curr-&gt;ptr;</span><br><span class="line"></span><br><span class="line">      if(!CONN_INUSE(conn) &amp;&amp; !conn-&gt;data &amp;&amp; !conn-&gt;bits.close &amp;&amp;</span><br><span class="line">         !conn-&gt;bits.connect_only) &#123;</span><br><span class="line">        /* Set higher score for the age passed since the connection was used */</span><br><span class="line">        score = Curl_timediff(now, conn-&gt;lastused);</span><br><span class="line"></span><br><span class="line">        if(score &gt; highscore) &#123;</span><br><span class="line">          highscore = score;</span><br><span class="line">          conn_candidate = conn;</span><br><span class="line">          bundle_candidate = bundle;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      curr = curr-&gt;next;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ....</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="abnormal-logs-1"><a href="#abnormal-logs-1" class="headerlink" title="abnormal logs"></a>abnormal logs</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Connected to exchange2013.com () port 443 (#49)</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :ALPN, offering http/1.1</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.3 (OUT), TLS handshake, Client hello (1):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.3 (IN), TLS handshake, Server hello (2):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (IN), TLS handshake, Certificate (11):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (IN), TLS handshake, Server key exchange (12):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (IN), TLS handshake, Server finished (14):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (OUT), TLS handshake, Client key exchange (16):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (OUT), TLS change cipher, Change cipher spec (1):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (OUT), TLS handshake, Finished (20):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (IN), TLS handshake, Finished (20):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :SSL connection using TLSv1.2 / ECDHE-RSA-AES256-SHA384</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :ALPN, server did not agree to a protocol</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Server certificate:</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT : subject: CN=*.com</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT : start date: Apr 22 00:00:00 2020 GMT</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT : expire date: Apr 22 23:59:59 2022 GMT</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT : subjectAltName: host &quot;exchange2013.com&quot; matched cert&#x27;s &quot;*.com&quot;</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT : issuer: C=GB; ST=Greater Manchester; L=Salford; O=Sectigo Limited; CN=Sectigo RSA Domain Validation Secure Server CA</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT : SSL certificate verify ok.</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Server auth using NTLM with user &#x27;foo-bar&#x27;</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_OUT :POST /EWS/Exchange.asmx HTTP/1.1</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Mark bundle as not supporting multiuse</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :HTTP/1.1 401 Unauthorized</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :Server: Microsoft-IIS/7.5</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :request-id: 9811034b-32e4-45e5-b300-5be1efb8d8f3</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :WWW-Authenticate: balabalabalabalabalabalabalabalabalabala</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :WWW-Authenticate: Negotiate</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :X-Powered-By: ASP.NET</span><br><span class="line">my_curl_debug_callback] This: 5412314808 HEADER_IN :X-FEServer: WIN-1TRC9B5MS6A</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :Date: Thu, 16 Jul 2020 19:02:54 GMT</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :Content-Length: 0</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 HEADER_IN :</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Connection cache is full, closing the oldest one.</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Closing connection 49</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :TLSv1.2 (OUT), TLS alert, close notify (256):</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Issue another request to this URL: &#x27;https://exchange2013.com/EWS/Exchange.asmx&#x27;</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Found bundle for host exchange2013.com: 0x2823b9680 [serially]</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Hostname exchange2013.com was found in DNS cache</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :  Trying 10.100.87.7:443...</span><br><span class="line">[my_curl_debug_callback] This: 5412314808 TEXT :Connected to exchange2013.com () port 443 (#50)</span><br></pre></td></tr></table></figure>
+<h3 id="NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password"><a href="#NTLM-Authenticate-always-failed-in-curl-7-71-1-if-Use-proxy-without-username-and-password" class="headerlink" title="NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password"></a>NTLM Authenticate always failed in curl 7.71.1 if Use proxy without username and password</h3><p>开启抓包工具使用没有用户名或密码的代理服务器，NTLM 就认证就会失败。</p>
+<p>分析如下：</p>
+<p>this code snippet seems to the condition alway as true if i have config proxy server without password, which maybe cause failed to reuse the connections for NTLM challenge.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#ifndef CURL_DISABLE_PROXY</span><br><span class="line">        /* Same for Proxy NTLM authentication */</span><br><span class="line">        if(wantProxyNTLMhttp) &#123;</span><br><span class="line">          /* Both check-&gt;http_proxy.user and check-&gt;http_proxy.passwd can be</span><br><span class="line">           * NULL */</span><br><span class="line">          if(!check-&gt;http_proxy.user || !check-&gt;http_proxy.passwd)</span><br><span class="line">            continue;</span><br><span class="line"></span><br><span class="line">          if(strcmp(needle-&gt;http_proxy.user, check-&gt;http_proxy.user) ||</span><br><span class="line">             strcmp(needle-&gt;http_proxy.passwd, check-&gt;http_proxy.passwd))</span><br><span class="line">            continue;</span><br><span class="line">        &#125;</span><br><span class="line">        else if(check-&gt;proxy_ntlm_state != NTLMSTATE_NONE) &#123;</span><br><span class="line">          /* Proxy connection is using NTLM auth but we don&#x27;t want NTLM */</span><br><span class="line">          continue;</span><br><span class="line">        &#125;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<h4 id="abnormal-logs-2"><a href="#abnormal-logs-2" class="headerlink" title="abnormal logs"></a>abnormal logs</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">Line 6374: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Found bundle for host xxx.com: 0xf781740 [serially]</span><br><span class="line">Line 6376: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Re-using existing connection! (#8) with proxy 127.0.0.1</span><br><span class="line">Line 6378: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Connected to 127.0.0.1 (127.0.0.1) port 8888 (#8)</span><br><span class="line">Line 6380: [18048:16268:09-04/10:49:34.941:INFO:(389)]TEXT :Server auth using NTLM with user &#x27;balabala&#x27;</span><br><span class="line">Line 6382: [18048:16268:09-04/10:49:34.941:INFO:(389)]HEADER_OUT :POST /EWS/Exchange.asmx HTTP/1.1</span><br><span class="line">Line 6385: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Mark bundle as not supporting multiuse</span><br><span class="line">Line 6387: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :HTTP/1.1 401 Unauthorized</span><br><span class="line">Line 6391: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Server: Microsoft-IIS/8.5</span><br><span class="line">Line 6395: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :request-id: 8ae68c1b-25f1-449f-b911-0808b135cb44</span><br><span class="line">Line 6399: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :WWW-Authenticate: NTLM TlRMTVNTUAACAAAAGAAYADgAAAAFgomiPXW5AdNSBywAAAAAAAAAAAoBCgFQAAAABgOAJQAAAA9FAFgAQwBIAEEATgBHAEUAMgAwADEANgACABgARQBYAEMASABBAE4ARwBFADIAMAAxADYAAQAeAFcASQBOAC0ARgA2AEYAMgBOAEkATQBOAFMASABNAAQAMABlAHgAYwBoAGEAbgBnAGUAMgAwADEANgAuAHMAdQB6AGgAbwB1AC4AegBvAG8AbQADAFAAVwBJAE4ALQBGADYARgAyAE4ASQBNAE4AUwBIAE0ALgBlAHgAYwBoAGEAbgBnAGUAMgAwADEANgAuAHMAdQB6AGgAbwB1AC4AegBvAG8AbQAFADAAZQB4AGMAaABhAG4AZwBlADIAMAAxADYALgBzAHUAegBoAG8AdQAuAHoAbwBvAG0ABwAIAEvkOQZmgtYBAAAAAA==</span><br><span class="line">Line 6403: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :WWW-Authenticate: Negotiate</span><br><span class="line">Line 6407: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :X-Powered-By: ASP.NET</span><br><span class="line">Line 6411: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :X-FEServer: WIN-F6F2NIMNSHM</span><br><span class="line">Line 6415: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Date: Fri, 04 Sep 2020 02:49:35 GMT</span><br><span class="line">Line 6419: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Content-Length: 0</span><br><span class="line">Line 6423: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :Proxy-Support: Session-Based-Authentication</span><br><span class="line">Line 6427: [18048:16268:09-04/10:49:35.018:DEBUG:(362)]HEADER_IN :</span><br><span class="line">Line 6429: [18048:16268:09-04/10:49:35.018:INFO:(389)]HEADER_IN :</span><br><span class="line">Line 6431: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Connection #8 to host 127.0.0.1 left intact</span><br><span class="line">Line 6433: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Issue another request to this URL: &#x27;https://xxx.com/EWS/Exchange.asmx&#x27;</span><br><span class="line">Line 6435: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Found bundle for host xxx.com: 0xf781740 [serially]</span><br><span class="line">Line 6437: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :NTLM-proxy picked AND auth done set, clear picked!</span><br><span class="line">Line 6439: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :Hostname 127.0.0.1 was found in DNS cache</span><br><span class="line">Line 6441: [18048:16268:09-04/10:49:35.018:INFO:(389)]TEXT :  Trying 127.0.0.1:8888...</span><br><span class="line">Line 6445: [18048:16268:09-04/10:49:35.029:INFO:(389)]TEXT :Connected to 127.0.0.1 (127.0.0.1) port 8888 (#13)</span><br><span class="line">Line 6447: [18048:16268:09-04/10:49:35.029:INFO:(389)]TEXT :allocate connect buffer!</span><br><span class="line">Line 6449: [18048:16268:09-04/10:49:35.029:INFO:(389)]TEXT :Establish HTTP proxy tunnel to xxx.com:443</span><br></pre></td></tr></table></figure>
+<p>出来混早晚是要还的，技术债务也是如此。少一些 Workaround，多一点 Root Cause。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+              <a href="/tags/cURL/" rel="tag"># cURL</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/03/27/work-perf-tools/" rel="prev" title="提高效率的工具集">
+                  <i class="fa fa-angle-left"></i> 提高效率的工具集
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/05/01/basic-func-test/" rel="next" title="开发基础库需要注意什么">
+                  开发基础库需要注意什么 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"ustcqidi","repo":"blog_comments","client_id":"a38f91d96fd5ab0945a4","client_secret":"c00ee19eb655ce8cdf6b74655ddcd7f1eb574585","admin_user":"ustcqidi","labels":["Gitalk"],"createIssueManually":false,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"8af8fbfa52068ab9c21474125fa408a0"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

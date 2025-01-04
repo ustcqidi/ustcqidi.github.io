@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Objective-C Runtime">
+<meta property="og:url" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="背景Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/oc_runtime.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/forward.png">
+<meta property="article:published_time" content="2018-06-25T03:02:00.000Z">
+<meta property="article:modified_time" content="2025-01-04T02:21:58.738Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="Runtime">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/oc_runtime.png">
+
+
+<link rel="canonical" href="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/","path":"2018/06/25/oc-runtime-dynamic-invocation/","title":"Objective-C Runtime"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Objective-C Runtime | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81"><span class="nav-number">2.</span> <span class="nav-text">消息发送</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%88%E6%81%AF%E8%BD%AC%E5%8F%91"><span class="nav-number">3.</span> <span class="nav-text">消息转发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8"><span class="nav-number">4.</span> <span class="nav-text">动态方法调用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E4%BE%8B%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%E6%B5%81%E7%A8%8B"><span class="nav-number">4.1.</span> <span class="nav-text">实例方法调用流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%AE%E6%94%B9%E5%8E%86%E5%8F%B2"><span class="nav-number">5.</span> <span class="nav-text">修改历史</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E8%B5%84%E6%96%99"><span class="nav-number">6.</span> <span class="nav-text">更多资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/25/oc-runtime-dynamic-invocation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="不忘初心，方得始终">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Objective-C Runtime | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Objective-C Runtime
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2018-06-25 11:02:00" itemprop="dateCreated datePublished" datetime="2018-06-25T11:02:00+08:00">2018-06-25</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-04 10:21:58" itemprop="dateModified" datetime="2025-01-04T10:21:58+08:00">2025-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><p>Runtime 是 Objective-C 特有的机制，iOS 进阶必须要掌握的知识点，面试过程中也会经常问。实际上也有很多开源库中，大量地使用 Runtime 来实现各种需求，比如大名鼎鼎的 JSPatch，YYModel 等。本文是我学习的笔记或随笔，内容可能比较散杂，由于 OC Runtime 内容很多，所以本文会不间断更新。先上一张思维导图，感受一下 OC Runtime 大体包含了哪些知识点。</p>
+<p><img src="/2018/06/25/oc-runtime-dynamic-invocation/oc_runtime.png" alt></p>
+<span id="more"></span>
+<h2 id="消息发送"><a href="#消息发送" class="headerlink" title="消息发送"></a>消息发送</h2><p>消息发送是OC作为动态类型语言的一个核心特性，OC方法调用并不是编译期间就确定的，而且是运行期间动态地决定调用哪个方法。看一个OC消息发送的例子：初始化了一个Person实例，然后直接调用Person类的eat方法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Person *p = [[Person alloc] init];</span><br><span class="line">[p eat];</span><br></pre></td></tr></table></figure>
+<p>再看一下对应的底层实现:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objc_msgSend(p, @selector(eat));</span><br></pre></td></tr></table></figure>
+<p>主要流程：</p>
+<ul>
+<li>查找selector的实现IMP</li>
+<li>消息发送 objc_msgSend</li>
+</ul>
+<p>本质上OC方法调用是通过objc_msgSend给target发送消息，如果这个消息没有对应的实现，就回进入消息转发流程。</p>
+<h2 id="消息转发"><a href="#消息转发" class="headerlink" title="消息转发"></a>消息转发</h2><p>在发消息的时候，如果 selector 有对应的 IMP ,则直接执行；如果没有，这时就要进入到消息转发流程。依次有 resolveInstanceMethod 、forwardingTargetForSelector、forwardInvocation，如果消息转发流程中3个步骤任然没有找到对应的selector的IMP，就会抛出 <em>**</em> unrecognized selector sent to instance 这样的异常，表明你曾向某个对象发送了一条无法解读的消息。整体流程如下图：</p>
+<p><img src="/2018/06/25/oc-runtime-dynamic-invocation/forward.png" alt></p>
+<h2 id="动态方法调用"><a href="#动态方法调用" class="headerlink" title="动态方法调用"></a>动态方法调用</h2><p>实际项目开发时，或多或少都会需要用到动态方法调用。我在项目开发中有两个场景使用了动态方法调用：</p>
+<ul>
+<li>想使用某个基础库的功能，但是改库并没有暴露头文件</li>
+<li>使用某个基础库，但是不希望在编译期间引入对这个库的依赖</li>
+</ul>
+<p>动态方法调用的适用场景还有更多，比如我们想要使用系统的私有方法，也可以通过动态方法调用的机制。不过这样有审核风险，所以一般不推荐使用。</p>
+<h3 id="实例方法调用流程"><a href="#实例方法调用流程" class="headerlink" title="实例方法调用流程"></a>实例方法调用流程</h3><p>代码片段:<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Class Person =NSClassFromString(@&quot;Person&quot;);</span><br><span class="line">if (Person) &#123;    </span><br><span class="line">    id person = [[Person alloc] init];</span><br><span class="line">    if (person == nil) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;    </span><br><span class="line">    NSMethodSignature *eat = [person methodSignatureForSelector:NSSelectorFromString(@&quot;eat:&quot;)];</span><br><span class="line">    NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:eat];</span><br><span class="line">    int cnt = 10;</span><br><span class="line">    [invocation setArgument:&amp;(cnt) atIndex:2];</span><br><span class="line">    invocation.selector = NSSelectorFromString(@&quot;eat:&quot;)</span><br><span class="line">    invocation.target = person;</span><br><span class="line">    [invocation invoke];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>流程总结:</p>
+<ul>
+<li>获取 Class 定义 (NSClassFromString)</li>
+<li>实例化 Class</li>
+<li>定义实例方法签名 (methodSignatureForSelector)</li>
+<li>创建 NSInvocation (invocationWithMethodSignature)</li>
+<li>设置 invocation 参数 (setArgument，index从2开始)</li>
+<li>获取待调用方法 selector (NSSelectorFromString)</li>
+<li>设置 invocation 的 selector</li>
+<li>设置 invocation 的 target (Class 实例)</li>
+</ul>
+<h2 id="修改历史"><a href="#修改历史" class="headerlink" title="修改历史"></a>修改历史</h2><table>
+<thead>
+<tr>
+<th>修改时间</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2018-06-25</td>
+<td>创建文档</td>
+</tr>
+<tr>
+<td>2018-06-26</td>
+<td>增加思维导图</td>
+</tr>
+<tr>
+<td>2018-06-27</td>
+<td>增加消息转发部分</td>
+</tr>
+</tbody>
+</table>
+<h2 id="更多资料"><a href="#更多资料" class="headerlink" title="更多资料"></a>更多资料</h2><ul>
+<li><a target="_blank" rel="noopener" href="http://blog.devtang.com/2013/10/15/objective-c-object-model/">Objective-C对象模型及应用</a></li>
+<li><a target="_blank" rel="noopener" href="http://wereadteam.github.io/2016/06/30/Aspects/">面向切面编程之 Aspects 源码解析及应用</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5a30c6fdf265da4319564272">iOS 消息转发流程</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.tuicool.com/articles/Av63EfJ">iOS开发教程之Objc Runtime笔记</a></li>
+<li><a target="_blank" rel="noopener" href="https://lision.me/aspects/">从 Aspects 源码中我学到了什么？</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+              <a href="/tags/Runtime/" rel="tag"># Runtime</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/21/interview-ios/" rel="prev" title="Interview Notebook">
+                  <i class="fa fa-angle-left"></i> Interview Notebook
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/12/14/chromium-base-thread/" rel="next" title="Chromium 跨平台基础库：多线程">
+                  Chromium 跨平台基础库：多线程 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"ustcqidi","repo":"blog_comments","client_id":"a38f91d96fd5ab0945a4","client_secret":"c00ee19eb655ce8cdf6b74655ddcd7f1eb574585","admin_user":"ustcqidi","labels":["Gitalk"],"createIssueManually":false,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"32d88c2ea3be7e946bc89fa99bbe0885"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

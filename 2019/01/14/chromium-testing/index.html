@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="Chromium 这样庞大的工程，涉及超多的模块依赖，如何保证代码质量？源码中随处可见 xxx_unittest.cc 和 xxx_fuzzer.cc 这样的文件，它们是如何组织的呢？项目的每一个 Commit 需要执行哪些测试，流程是什么？Chromium 做了哪些基础的工作支持繁琐又重要的测试工作，我们是否可以借鉴用到自己的项目中？">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chromium 工程源码是如何测试的">
+<meta property="og:url" content="http://yoursite.com/2019/01/14/chromium-testing/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="Chromium 这样庞大的工程，涉及超多的模块依赖，如何保证代码质量？源码中随处可见 xxx_unittest.cc 和 xxx_fuzzer.cc 这样的文件，它们是如何组织的呢？项目的每一个 Commit 需要执行哪些测试，流程是什么？Chromium 做了哪些基础的工作支持繁琐又重要的测试工作，我们是否可以借鉴用到自己的项目中？">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_testing_overview.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_testing_unittest.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_testing_dns_fuzz.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_testing_fuzz_target.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_testing_fuzz_dict.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_testing_fuzz_result.png">
+<meta property="og:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_perf_profile.png">
+<meta property="article:published_time" content="2019-01-14T02:31:15.000Z">
+<meta property="article:modified_time" content="2025-01-04T02:21:58.678Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="单元测试">
+<meta property="article:tag" content="性能测试">
+<meta property="article:tag" content="Chromium">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2019/01/14/chromium-testing/chromium_testing_overview.png">
+
+
+<link rel="canonical" href="http://yoursite.com/2019/01/14/chromium-testing/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2019/01/14/chromium-testing/","path":"2019/01/14/chromium-testing/","title":"Chromium 工程源码是如何测试的"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Chromium 工程源码是如何测试的 | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95"><span class="nav-number">1.</span> <span class="nav-text">单元测试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#fuzz-testing"><span class="nav-number">2.</span> <span class="nav-text">fuzz testing</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Dr-Memory-Dr-Fuzz"><span class="nav-number">2.1.</span> <span class="nav-text">Dr.Memory &#x2F; Dr.Fuzz</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fuzz-testing-%E7%AE%A1%E7%90%86"><span class="nav-number">2.2.</span> <span class="nav-text">fuzz testing 管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fuzz-testing-%E7%BC%96%E8%AF%91%E3%80%81%E8%BF%90%E8%A1%8C"><span class="nav-number">2.3.</span> <span class="nav-text">fuzz testing 编译、运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95"><span class="nav-number">3.</span> <span class="nav-text">性能测试</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Telemetry"><span class="nav-number">3.1.</span> <span class="nav-text">Telemetry</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/14/chromium-testing/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="不忘初心，方得始终">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Chromium 工程源码是如何测试的 | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Chromium 工程源码是如何测试的
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2019-01-14 10:31:15" itemprop="dateCreated datePublished" datetime="2019-01-14T10:31:15+08:00">2019-01-14</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-04 10:21:58" itemprop="dateModified" datetime="2025-01-04T10:21:58+08:00">2025-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>Chromium 这样庞大的工程，涉及超多的模块依赖，如何保证代码质量？源码中随处可见 xxx_unittest.cc 和 xxx_fuzzer.cc 这样的文件，它们是如何组织的呢？项目的每一个 Commit 需要执行哪些测试，流程是什么？Chromium 做了哪些基础的工作支持繁琐又重要的测试工作，我们是否可以借鉴用到自己的项目中？</p>
+<span id="more"></span>
+<p>带着这些问题，开始阅读源码~ 先看一下 src 目录下有个 testing 的文件夹，里面存放了测试相关的基础代码和脚本:</p>
+<p><img src="/2019/01/14/chromium-testing/chromium_testing_overview.png" alt></p>
+<p>Chromium 工程做了哪些测试呢？这里列举一下我从源码看到的，可能不全面。</p>
+<h2 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h2><p>项目中所有模块都有大量的单元测试，命名规则为 xxx_unitest.cc, 每个模块的单元测试文件会放到一个 target 里编译, 比如下图就是 net 模块的单元测试 target。C/C++ 部分的单元测试是基于 gtest/gmock 这个框架的，可以看出来 Chromium 的 committer 花费了大量的时间保证大部分代码都是经过单元测试的。这个值得我们学习，我在 <a target="_blank" rel="noopener" href="https://ustcqidi.github.io/2018/12/14/chromium-base-thread/#more">Chromium 跨平台基础库：多线程</a> 中提到过，单元测试一方面保证代码质量，另一方面单元测试是很好的 code example，方便别人了解如何使用我们的代码。</p>
+<p><img src="/2019/01/14/chromium-testing/chromium_testing_unittest.png" alt></p>
+<h2 id="fuzz-testing"><a href="#fuzz-testing" class="headerlink" title="fuzz testing"></a>fuzz testing</h2><p>以前完全没听过，所以查了一下，这是原文解释：”Fuzzing, which is simply providing potentially invalid, unexpected, or random data as an input to a program, is an extremely effective way of finding bugs in large software systems, and is an important part of the software development life cycle.”</p>
+<p>大体意思是随机输入大量无效、随机数据进行测试。对于 C/C++ 工程来说，可能会测出来潜在的内存越界，栈溢出等问题。一般大型的项目都需要 fuzz testing。</p>
+<p>Chromium 的 fuzz test 是基于 <a target="_blank" rel="noopener" href="https://llvm.org/docs/LibFuzzer.html">libFuzzer</a> 这个库；具体的 fuzz test 只需要 fuzz target 这个函数就行了，实际上就是一个入口函数：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// fuzz_target.cc</span></span><br><span class="line"><span class="keyword">extern</span> <span class="string">&quot;C&quot;</span> <span class="type">int</span> <span class="title function_">LLVMFuzzerTestOneInput</span><span class="params">(<span class="type">const</span> <span class="type">uint8_t</span> *Data, <span class="type">size_t</span> Size)</span> &#123;</span><br><span class="line">  DoSomethingInterestingWithMyAPI(Data, Size);</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;  <span class="comment">// Non-zero return values are reserved for future use.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Chromium 的 fuzz test 文件命名规则为 xxx_fuzzer.cc, 因为只需要在 fuzz target 中把随机数据输入到待测试的接口中就行了，所以代码比单元测试少的多，下图是 dns_hosts_parse 的 fuzz testing</p>
+<p><img src="/2019/01/14/chromium-testing/chromium_testing_dns_fuzz.png" alt></p>
+<h3 id="Dr-Memory-Dr-Fuzz"><a href="#Dr-Memory-Dr-Fuzz" class="headerlink" title="Dr.Memory / Dr.Fuzz"></a>Dr.Memory / Dr.Fuzz</h3><p>Dr.Fuzz 是 Dr.Memory 的一部分，Chromium 中的所有 fuzz testing 都是用 Dr.Fuzz 运行起来的；<a target="_blank" rel="noopener" href="http://drmemory.org/">Dr.Memory</a> 是一个内存分析工具，主要用于检测内存相关的错误，比如：</p>
+<ul>
+<li>读取未初始化内存</li>
+<li>访问无效内存区域（比如：buffer overflow/underflow, user-after-free）</li>
+<li>多次释放内存，内存泄漏</li>
+<li>handle 泄漏等</li>
+</ul>
+<p>无论我们自己的项目中是否有 fuzz testing, Dr.Memory 这个工具是非常有用的。</p>
+<h3 id="fuzz-testing-管理"><a href="#fuzz-testing-管理" class="headerlink" title="fuzz testing 管理"></a>fuzz testing 管理</h3><p>与单元测试类似，Chromium 中所有的 fuzz testing 文件都对应一个编译 target</p>
+<p><img src="/2019/01/14/chromium-testing/chromium_testing_fuzz_target.png" alt></p>
+<p>每次 fuzz test 都会从 net_dns_hosts_parse_fuzzer.dict 中选一个作为 data</p>
+<p><img src="/2019/01/14/chromium-testing/chromium_testing_fuzz_dict.png" alt></p>
+<h3 id="fuzz-testing-编译、运行"><a href="#fuzz-testing-编译、运行" class="headerlink" title="fuzz testing 编译、运行"></a>fuzz testing 编译、运行</h3><ol>
+<li>编译</li>
+</ol>
+<ul>
+<li>mkdir -p out/DrFuzz</li>
+<li>gn gen out/DrFuzz –args=use_drfuzz=true</li>
+<li>ninja -C out\DrFuzz net_dns_hosts_parse_fuzzer</li>
+</ul>
+<ol start="2">
+<li>运行</li>
+</ol>
+<ul>
+<li>bin/drmemory -fuzz_function LLVMFuzzerTestOneInput out/DrFuzz/net_dns_hosts_parse_fuzzer</li>
+</ul>
+<p><img src="/2019/01/14/chromium-testing/chromium_testing_fuzz_result.png" alt></p>
+<h2 id="性能测试"><a href="#性能测试" class="headerlink" title="性能测试"></a>性能测试</h2><p>单元测试和 fuzz testing 都是针对代码层面的白盒测试。下面再看看性能测试，Chromium 的开发者们开发了一套性能分析、测试、监控的工具集：</p>
+<ul>
+<li>Trace-view ：性能数据分析和可视化，支持 Chromium 的 trace_event 和 Linux 内核 trace (ftrace)</li>
+<li>Telemetry ：性能测试框架</li>
+<li>Performance Dashboard ：性能 Dashboard</li>
+<li>systrace ： Android systrace 解析</li>
+<li>Web Page Replay ：网页操作和录屏</li>
+</ul>
+<p>这套工具集被放在一个独立的工程中：<a target="_blank" rel="noopener" href="https://github.com/catapult-project/catapult">catapult</a>, 对于 Chromium 的开发者和前端开发者都非常有价值，比如你正在优化某个前端网页的加载时间，你可以把网络加载的过程 dump 出来，然后使用 Trace-View 加载分析；Trace-View 甚至可以解析 Android 平台 dump 出来的 systrace。<br>解析效果如下：</p>
+<p><img src="/2019/01/14/chromium-testing/chromium_perf_profile.png" alt></p>
+<p>catapult 是一套完整的解决方案，其设计思路对我们项目开发有指导意义，后面我会专门研究一下。这里我只关注 Telemetry 这个性能测试框架。</p>
+<h3 id="Telemetry"><a href="#Telemetry" class="headerlink" title="Telemetry"></a>Telemetry</h3><p>Telemetry 是 Chrome 浏览器的性能测试框架，它使用 <a target="_blank" rel="noopener" href="https://developer.chrome.com/devtools/docs/remote-debugging">DevTools Remote Debugging Protocol</a> 这个协议，实现了网页的自动化测试、获取性能数据以及生成性能数据报表。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/" rel="tag"># 单元测试</a>
+              <a href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/" rel="tag"># 性能测试</a>
+              <a href="/tags/Chromium/" rel="tag"># Chromium</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2019/01/06/how-to-read-source-code/" rel="prev" title="怎样阅读源代码">
+                  <i class="fa fa-angle-left"></i> 怎样阅读源代码
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2019/01/17/libcurl-dns/" rel="next" title="libcurl 域名解析分析">
+                  libcurl 域名解析分析 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"ustcqidi","repo":"blog_comments","client_id":"a38f91d96fd5ab0945a4","client_secret":"c00ee19eb655ce8cdf6b74655ddcd7f1eb574585","admin_user":"ustcqidi","labels":["Gitalk"],"createIssueManually":false,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"ff2df5425b5803386ee48ba48c487621"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

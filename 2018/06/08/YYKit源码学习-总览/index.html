@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="偶然翻到前同事博客的一篇文章：阅读源码的乐趣，这位老哥是iOS开发领域的网红，相信很多人都看过他的博客。文章中他通过一个栗子详细描述了自己是怎么看源码的，强调看源码对扩宽视野，提高品味，锻炼思维等等各方面的重要性，个人觉得他这篇文章还是挺有指导意义的。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YYKit源码学习-总览">
+<meta property="og:url" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="偶然翻到前同事博客的一篇文章：阅读源码的乐趣，这位老哥是iOS开发领域的网红，相信很多人都看过他的博客。文章中他通过一个栗子详细描述了自己是怎么看源码的，强调看源码对扩宽视野，提高品味，锻炼思维等等各方面的重要性，个人觉得他这篇文章还是挺有指导意义的。">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/yykit.png">
+<meta property="article:published_time" content="2018-06-08T02:53:38.000Z">
+<meta property="article:modified_time" content="2025-01-04T02:21:58.661Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/yykit.png">
+
+
+<link rel="canonical" href="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/","path":"2018/06/08/YYKit源码学习-总览/","title":"YYKit源码学习-总览"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>YYKit源码学习-总览 | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E5%95%A5%E8%A6%81%E7%9C%8BYYKit%E6%BA%90%E7%A0%81"><span class="nav-number">1.</span> <span class="nav-text">为啥要看YYKit源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%83%B3%E9%80%9A%E8%BF%87%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">想通过源码学习什么</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#YYModel"><span class="nav-number">2.1.</span> <span class="nav-text">YYModel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YYCache"><span class="nav-number">2.2.</span> <span class="nav-text">YYCache</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YYImage"><span class="nav-number">2.3.</span> <span class="nav-text">YYImage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YYWebImage"><span class="nav-number">2.4.</span> <span class="nav-text">YYWebImage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YYText"><span class="nav-number">2.5.</span> <span class="nav-text">YYText</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YYDispatchQueuePool"><span class="nav-number">2.6.</span> <span class="nav-text">YYDispatchQueuePool</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YYAsyncLayer"><span class="nav-number">2.7.</span> <span class="nav-text">YYAsyncLayer</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YYCategories"><span class="nav-number">2.8.</span> <span class="nav-text">YYCategories</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="不忘初心，方得始终">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="YYKit源码学习-总览 | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          YYKit源码学习-总览
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2018-06-08 10:53:38" itemprop="dateCreated datePublished" datetime="2018-06-08T10:53:38+08:00">2018-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-04 10:21:58" itemprop="dateModified" datetime="2025-01-04T10:21:58+08:00">2025-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>偶然翻到前同事博客的一篇文章：<a target="_blank" rel="noopener" href="http://limboy.me/tech/2014/12/17/the-pleasure-of-reading-source.html">阅读源码的乐趣</a>，这位老哥是iOS开发领域的网红，相信很多人都看过他的博客。文章中他通过一个栗子详细描述了自己是怎么看源码的，强调看源码对扩宽视野，提高品味，锻炼思维等等各方面的重要性，个人觉得他这篇文章还是挺有指导意义的。</p>
+<span id="more"></span>
+<h2 id="为啥要看YYKit源码"><a href="#为啥要看YYKit源码" class="headerlink" title="为啥要看YYKit源码"></a>为啥要看YYKit源码</h2><p>我的项目经历和技术栈比较杂，过去的5年左右，我做过Android平台音视频相关的项目，移植过Chromium内核到Android平台，定制和维护过iOS平台的React Native框架，也做过Android和iOS平台上的H5 Hybrid容器。虽然主要技术方向是移动端的相关开发，但是对Android或iOS的应用层开发都不怎么熟悉，甚至连中级工程师的水平都达不到。基于这个考虑，我决定开始研究一些优秀的开源项目，希望能对iOS开发有更深入的理解和认识。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYKit">YYKit</a>是一个非常优秀的开源项目，是一位大神在业余时间把工作中遇到的常见和通用的模块沉淀和积累出来的，里面包含了缓存、图片、Model、富文本组件、Category工具库、异步绘制和显示、并发队列等，基本涵盖了 iOS 实际项目开发中必须的基础功能组件，另外代码质量也非常高，在业界广受好评。</p>
+<h2 id="想通过源码学习什么"><a href="#想通过源码学习什么" class="headerlink" title="想通过源码学习什么"></a>想通过源码学习什么</h2><p>先看一下YYKit的源码结构，主要源码在YYKit目录下，每个模块都可以再项目中单独引用。这里先记录一下我目前能想到的每个模块我想了解的知识点。分析源码的主要路径是假定自己要设计类似的模块，我是怎么思考的，然后再对照大神的思路。</p>
+<p><img src="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/yykit.png" alt></p>
+<h3 id="YYModel"><a href="#YYModel" class="headerlink" title="YYModel"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYModel">YYModel</a></h3><p>YYModel是一个高性能的 iOS JSON 模型框架，类似的框架也有很多，我想从YYModel中学习的是：</p>
+<ul>
+<li>YYModel的优势在何处？性能更好还是支持的特性更多，亦或是接口对开发者更友好</li>
+<li>JSON或者Dictionary与Model的互相转换是怎么实现的，怎么保证类型安全的</li>
+<li>怎么设计性能测试的benchmark</li>
+<li>编码风格，使用了哪些语言特性</li>
+</ul>
+<h3 id="YYCache"><a href="#YYCache" class="headerlink" title="YYCache"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYCache">YYCache</a></h3><p>YYCache是一个缓存框架，支持磁盘和内存级别的缓存，类似的开源框架有：TMCache,PINCache，从benchmark的测试数据来看，YYCache的性能明显优于其他框架，我想学习的是：</p>
+<ul>
+<li>LRU算法的实现细节</li>
+<li>线程安全相关</li>
+<li>内存管理相关，比如内存缓存对象何时被释放</li>
+<li>缓存策略控制：磁盘缓存和内存缓存的使用场景</li>
+<li>缓存的数据结构设计</li>
+<li>如何设计性能测试的benchmark</li>
+<li>编码风格，使用了哪些语言特性</li>
+</ul>
+<h3 id="YYImage"><a href="#YYImage" class="headerlink" title="YYImage"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYImage">YYImage</a></h3><p>YYImage是一个功能强大的图像库，支持的格式比较全面、支持动画图像(比如GIF)和帧动画，另外还支持渐进式加载。图像是每个APP都必须包含的基础组件，但也是最容易出问题的，一旦使用不当很容易导致OOM或者Crash，通过这个项目我主要想学习：</p>
+<ul>
+<li>渐进式加载的技术原理是什么？作者是怎么实现的</li>
+<li>内存管理相关的知识点</li>
+<li>各种格式图像(比如WebP，TIFF等)解码是怎么实现的，是用系统接口还是第三方库</li>
+<li>帧动画是怎么实现的</li>
+</ul>
+<h3 id="YYWebImage"><a href="#YYWebImage" class="headerlink" title="YYWebImage"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYWebImage">YYWebImage</a></h3><p>YYWebImage是一个异步图片加载框架，类似的框架有大名鼎鼎的SDWebImage，平时项目开发中我基本也是使用SDWebImage的。但是作者在项目介绍中说YYWebImage的设计目的是试图替代 SDWebImage、PINRemoteImage、FLAnimatedImage 等开源框架，它支持这些开源框架的大部分功能，同时增加了大量新特性、并且有不小的性能提升。YYWebImage使用YYImage和YYCache处理图像、动画显示和缓存相关逻辑，所以YYWebImage应该只包含异步图像加载的逻辑了。通过这个项目我想了解：</p>
+<ul>
+<li>多线程相关知识点</li>
+<li>异步网络IO和文件IO</li>
+<li>UIImageView，UIButton，CALayer相关知识点，性能坑点</li>
+<li>编码风格</li>
+</ul>
+<h3 id="YYText"><a href="#YYText" class="headerlink" title="YYText"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYText">YYText</a></h3><p>YYText是一个富文本显示组件，支持丰富的文字排版熟悉，甚至还能解析markdown，所以学会了YYText的使用姿势基本可以应对产品的各种奇葩需求了，当然复杂的数学公式除外啦。通过学习YYText我想深入了解：</p>
+<ul>
+<li>UILable和UITextView的各种知识点</li>
+<li>如何优雅地封装一个UI组件，这个也是我最薄弱的技能点了</li>
+<li>字符串相关的知识点：解析、AttributedString</li>
+<li>UI渲染性能</li>
+</ul>
+<h3 id="YYDispatchQueuePool"><a href="#YYDispatchQueuePool" class="headerlink" title="YYDispatchQueuePool"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYDispatchQueuePool">YYDispatchQueuePool</a></h3><p>iOS 全局并发队列管理工具，主要解决concurrent queue创建大量线程导致主线程卡顿，可以解决UI卡顿的问题。iOS 并发编程这块我了解的很少，所以通过这个项目我最主要的是学习：</p>
+<ul>
+<li>concurrent编程的基础知识，比如GCD，NSOperationQueue等</li>
+</ul>
+<h3 id="YYAsyncLayer"><a href="#YYAsyncLayer" class="headerlink" title="YYAsyncLayer"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYAsyncLayer">YYAsyncLayer</a></h3><p>YYAsyncLayer是异步绘制与显示的工具类，怎么优化UI相关代码逻辑，保证APP流畅是非常重要的一个主题，这个模块的代码量虽然不大，但是需要一些背景知识才能看懂，比如UI卡顿的原因是什么，有啥通过的解决思路。为了演示YYAsyncLayer的使用姿势，作者还开发了一个微博feed流的Demo，这个Demo的代码也很有参考价值，通过这个项目我主要想学习：</p>
+<ul>
+<li>UI卡顿和优化的各种思路</li>
+<li>如何客观评测UI的流畅度</li>
+<li>Demo中实现的微博feed流代码风格，看看大神是怎么写类似的业务代码</li>
+</ul>
+<h3 id="YYCategories"><a href="#YYCategories" class="headerlink" title="YYCategories"></a><a target="_blank" rel="noopener" href="https://github.com/ibireme/YYCategories">YYCategories</a></h3><p>YYCategories是一系列Category工具类，基本涵盖了日常开发过程中常见的工具类。这一部分的知识点可能会比较零碎，可以学习一下作者的编码风格</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>简单地总结一下，因为最近意识到我对iOS应用开发层面了解不多，所以想系统地学习一下基础知识，研究源码是最高效直接方式，因此选择YYKit这个全面且优秀的开源项目开始。希望通过对YYKit各个模块源码的分析，能深入地了解iOS开发方方面面。当然优秀的开源项目还有很多很多，一步一步来吧~</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/" rel="next" title="YYKit源码学习-YYModel">
+                  YYKit源码学习-YYModel <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"ustcqidi","repo":"blog_comments","client_id":"a38f91d96fd5ab0945a4","client_secret":"c00ee19eb655ce8cdf6b74655ddcd7f1eb574585","admin_user":"ustcqidi","labels":["Gitalk"],"createIssueManually":false,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"357553e1963f879552429e55f0a53a04"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

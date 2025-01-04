@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="先知.兵圣人机对抗赛是军方组织的兵棋 AI 对抗赛，目前只是在军方内部开放，我们是从某个外包上市公司接到这个项目的，上游需求方是某地方军事院校，情况比较复杂。很显然这个项目最终没有谈成，但这个比赛本身以及谈项目过程中的一些经验教训值得记录并反思。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="先知.兵圣人机对抗赛">
+<meta property="og:url" content="http://yoursite.com/2020/01/19/war-game-ai/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="先知.兵圣人机对抗赛是军方组织的兵棋 AI 对抗赛，目前只是在军方内部开放，我们是从某个外包上市公司接到这个项目的，上游需求方是某地方军事院校，情况比较复杂。很显然这个项目最终没有谈成，但这个比赛本身以及谈项目过程中的一些经验教训值得记录并反思。">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2020/01/19/war-game-ai/flow.png">
+<meta property="article:published_time" content="2020-01-19T15:24:39.000Z">
+<meta property="article:modified_time" content="2025-01-04T02:21:58.770Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="兵棋">
+<meta property="article:tag" content="强化学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/01/19/war-game-ai/flow.png">
+
+
+<link rel="canonical" href="http://yoursite.com/2020/01/19/war-game-ai/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2020/01/19/war-game-ai/","path":"2020/01/19/war-game-ai/","title":"先知.兵圣人机对抗赛"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>先知.兵圣人机对抗赛 | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AF%94%E8%B5%9B%E7%9B%B8%E5%85%B3"><span class="nav-number">1.</span> <span class="nav-text">比赛相关</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%A6%BB%E7%BA%BF%E8%AE%AD%E7%BB%83%E5%BC%95%E6%93%8E"><span class="nav-number">1.1.</span> <span class="nav-text">离线训练引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E7%9B%98%E7%B3%BB%E7%BB%9F"><span class="nav-number">1.2.</span> <span class="nav-text">复盘系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%97%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Workflow"><span class="nav-number">1.4.</span> <span class="nav-text">Workflow</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E7%BB%8F%E9%AA%8C%E6%95%99%E8%AE%AD"><span class="nav-number">2.</span> <span class="nav-text">一些经验教训</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2020/01/19/war-game-ai/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="不忘初心，方得始终">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="先知.兵圣人机对抗赛 | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          先知.兵圣人机对抗赛
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2020-01-19 23:24:39" itemprop="dateCreated datePublished" datetime="2020-01-19T23:24:39+08:00">2020-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-04 10:21:58" itemprop="dateModified" datetime="2025-01-04T10:21:58+08:00">2025-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>先知.兵圣人机对抗赛是军方组织的兵棋 AI 对抗赛，目前只是在军方内部开放，我们是从某个外包上市公司接到这个项目的，上游需求方是某地方军事院校，情况比较复杂。很显然这个项目最终没有谈成，但这个比赛本身以及谈项目过程中的一些经验教训值得记录并反思。</p>
+<span id="more"></span>
+<h2 id="比赛相关"><a href="#比赛相关" class="headerlink" title="比赛相关"></a>比赛相关</h2><h3 id="离线训练引擎"><a href="#离线训练引擎" class="headerlink" title="离线训练引擎"></a>离线训练引擎</h3><p>主办方提供的离线训练环境，包括陆战和海战两部分，模拟实现真实比赛环境接口，比如获取态势信息，提交动作等，并提供了几个 Demo。参赛队伍只要专注 AI 算法就可以了，不得不说主办方提供的技术支持还是很到位的。</p>
+<h3 id="复盘系统"><a href="#复盘系统" class="headerlink" title="复盘系统"></a>复盘系统</h3><p>离线训练引擎不能实时展示作战细节，只是把作战过程的每一步数据都保存到一个 json 文件中。使用主办方提供的复盘系统，可以对这个 json 文件可视化，复盘系统是用 java 写的 web 服务，启动服务后用浏览器访问即可。</p>
+<h3 id="算法"><a href="#算法" class="headerlink" title="算法"></a>算法</h3><p>算法是这次比赛的核心点，我查阅了一些论文，以往的参赛队伍的算法是基于规则，顶多就是基于数据挖掘的方式。所谓基于规则，简单地说就是把兵棋规则用代码描述一遍，代码量会比较大，但是整体逻辑很容易被看出来，所以很难战胜人类选手。而主办方是希望参赛队伍基于 AI (深度强化学习) 实现并训练模型完成比赛，还特别强调最终胜出队伍中，优先对使用强化学习算法的队伍给予经费支持。</p>
+<h3 id="Workflow"><a href="#Workflow" class="headerlink" title="Workflow"></a>Workflow</h3><p>算法实现、离线训练、复盘、代码托管等整体流程大体如下：</p>
+<p><img src="/2020/01/19/war-game-ai/flow.png" alt></p>
+<h2 id="一些经验教训"><a href="#一些经验教训" class="headerlink" title="一些经验教训"></a>一些经验教训</h2><ul>
+<li>外包项目一定会有各种撕逼，包括但是不限于费用问题、合同细节、验收标准等等。所以接外包项目通常劳心劳力，投入产出比极低</li>
+<li>除非项目本身特别有意义，比如恰好可以用你刚学的新技术练练手，或者对你的公司各种资质提升有价值 （需求方是政府、军方等大粗腿）</li>
+<li>多方转包的项目坚决不能碰，单个需求方撕逼已经够累了，多方转包后撕逼难度和恶心度指数增长</li>
+<li>不是一类人，千万别往一起凑。跟需求方/合作方沟通 1-2 次基本就大体了解对方办事风格，觉得不合适就赶紧终止合作。比如这次合作过程中我们就被各种小细节上恶心，最终决定终止合作！</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%85%B5%E6%A3%8B/" rel="tag"># 兵棋</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2020/01/03/chromium-base-allocator/" rel="prev" title="Chromium 跨平台基础库：allocator">
+                  <i class="fa fa-angle-left"></i> Chromium 跨平台基础库：allocator
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2020/02/11/note/" rel="next" title="关于工作笔记">
+                  关于工作笔记 <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"ustcqidi","repo":"blog_comments","client_id":"a38f91d96fd5ab0945a4","client_secret":"c00ee19eb655ce8cdf6b74655ddcd7f1eb574585","admin_user":"ustcqidi","labels":["Gitalk"],"createIssueManually":false,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"dc0e1e09963ba85a61253878816f0f9d"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

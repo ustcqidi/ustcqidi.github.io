@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="YYModel是一个高性能的 iOS JSON 模型框架，如果让我设计类似的框架，我能考虑到的几个关键点或者需要解决的问题有这几个：  怎么实现JSON&#x2F;Dictionary与Model的互相转换 怎么保证类型安全 如何做到对Model代码无侵入 Model嵌套如何支持 如何设计性能测试benchmark 性能方面的坑点">
+<meta property="og:type" content="article">
+<meta property="og:title" content="YYKit源码学习-YYModel">
+<meta property="og:url" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="YYModel是一个高性能的 iOS JSON 模型框架，如果让我设计类似的框架，我能考虑到的几个关键点或者需要解决的问题有这几个：  怎么实现JSON&#x2F;Dictionary与Model的互相转换 怎么保证类型安全 如何做到对Model代码无侵入 Model嵌套如何支持 如何设计性能测试benchmark 性能方面的坑点">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/yymodel.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/modelwith.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/modelto.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/datastructure.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/runtime.png">
+<meta property="article:published_time" content="2018-06-08T03:03:25.000Z">
+<meta property="article:modified_time" content="2025-01-04T02:21:58.655Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="iOS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/yymodel.png">
+
+
+<link rel="canonical" href="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/","path":"2018/06/08/YYKit源码学习-YYModel/","title":"YYKit源码学习-YYModel"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>YYKit源码学习-YYModel | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">代码结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0JSON-Dictionary%E4%B8%8EModel%E7%9A%84%E4%BA%92%E7%9B%B8%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.</span> <span class="nav-text">怎么实现JSON&#x2F;Dictionary与Model的互相转换</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E6%B5%81%E7%A8%8B"><span class="nav-number">2.1.</span> <span class="nav-text">代码流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#JSON-Dictionary%E8%BD%AC%E6%88%90Model"><span class="nav-number">2.1.1.</span> <span class="nav-text">JSON&#x2F;Dictionary转成Model</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Model%E8%BD%AC%E6%88%90JSON-Dictionary"><span class="nav-number">2.1.2.</span> <span class="nav-text">Model转成JSON&#x2F;Dictionary</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%AE%9A%E4%B9%89"><span class="nav-number">2.2.</span> <span class="nav-text">数据结构定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#YYModelMeta"><span class="nav-number">2.2.1.</span> <span class="nav-text">_YYModelMeta</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#YYClassInfo"><span class="nav-number">2.2.2.</span> <span class="nav-text">YYClassInfo</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%81%9A%E5%88%B0%E5%AF%B9Model%E4%BB%A3%E7%A0%81%E6%97%A0%E4%BE%B5%E5%85%A5"><span class="nav-number">3.</span> <span class="nav-text">如何做到对Model代码无侵入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Model%E5%B5%8C%E5%A5%97%E5%A6%82%E4%BD%95%E6%94%AF%E6%8C%81"><span class="nav-number">4.</span> <span class="nav-text">Model嵌套如何支持</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95benchmark"><span class="nav-number">5.</span> <span class="nav-text">如何设计性能测试benchmark</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E5%88%B0%E4%BA%86%E5%93%AA%E4%BA%9B%E6%88%91%E4%B8%8D%E7%86%9F%E6%82%89%E7%9A%84%E8%AF%AD%E8%A8%80%E7%89%B9%E6%80%A7"><span class="nav-number">6.</span> <span class="nav-text">用到了哪些我不熟悉的语言特性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YYModel%E6%80%A7%E8%83%BD%E7%9B%B8%E5%85%B3%E7%9A%84Tips"><span class="nav-number">7.</span> <span class="nav-text">YYModel性能相关的Tips</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B0%BD%E9%87%8F%E7%94%A8%E7%BA%AF-C-%E5%87%BD%E6%95%B0%E3%80%81%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0"><span class="nav-number">7.1.</span> <span class="nav-text">尽量用纯 C 函数、内联函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D%E5%A4%9A%E4%BD%99%E7%9A%84%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E6%96%B9%E6%B3%95"><span class="nav-number">7.2.</span> <span class="nav-text">避免多余的内存管理方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%8D%E5%8E%86%E5%AE%B9%E5%99%A8%E7%B1%BB%E6%97%B6%EF%BC%8C%E9%80%89%E6%8B%A9%E6%9B%B4%E9%AB%98%E6%95%88%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">7.3.</span> <span class="nav-text">遍历容器类时，选择更高效的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D-KVC"><span class="nav-number">7.4.</span> <span class="nav-text">避免 KVC</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%81%BF%E5%85%8D-Getter-Setter-%E8%B0%83%E7%94%A8"><span class="nav-number">7.5.</span> <span class="nav-text">避免 Getter&#x2F;Setter 调用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">8.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="不忘初心，方得始终">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="YYKit源码学习-YYModel | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          YYKit源码学习-YYModel
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2018-06-08 11:03:25" itemprop="dateCreated datePublished" datetime="2018-06-08T11:03:25+08:00">2018-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-04 10:21:58" itemprop="dateModified" datetime="2025-01-04T10:21:58+08:00">2025-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>YYModel是一个高性能的 iOS JSON 模型框架，如果让我设计类似的框架，我能考虑到的几个关键点或者需要解决的问题有这几个：</p>
+<ul>
+<li>怎么实现JSON/Dictionary与Model的互相转换</li>
+<li>怎么保证类型安全</li>
+<li>如何做到对Model代码无侵入</li>
+<li>Model嵌套如何支持</li>
+<li>如何设计性能测试benchmark</li>
+<li>性能方面的坑点</li>
+</ul>
+<span id="more"></span>
+<p>目前我能想到的问题只有这几个，当然实际编码时一定有更多细节。带着这些问题，可以开始看一发源码了。</p>
+<h2 id="代码结构"><a href="#代码结构" class="headerlink" title="代码结构"></a>代码结构</h2><p>首先看一下代码结构，只有4个文件，代码量相对比较小。简单看一下源码，接口应该是在NSObject+YYModel里面定义和实现的，头文件中有大量的注释，包括接口的使用姿势、每个方法的详细解释，这点非常值得学习，YYClassInfo里面大量使用oc的runtime，获取class的method，SEL和IMP</p>
+<p><img src="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/yymodel.png" alt></p>
+<p>因为iOS基础比较薄弱，我先把源码中使用到的语言特性和知识点粗略地列出来，以备查阅：</p>
+<ul>
+<li>KVC</li>
+<li>Coding/Copying/hash/equal</li>
+<li>Category</li>
+<li>oc runtime</li>
+</ul>
+<h2 id="怎么实现JSON-Dictionary与Model的互相转换"><a href="#怎么实现JSON-Dictionary与Model的互相转换" class="headerlink" title="怎么实现JSON/Dictionary与Model的互相转换"></a>怎么实现JSON/Dictionary与Model的互相转换</h2><h3 id="代码流程"><a href="#代码流程" class="headerlink" title="代码流程"></a>代码流程</h3><h4 id="JSON-Dictionary转成Model"><a href="#JSON-Dictionary转成Model" class="headerlink" title="JSON/Dictionary转成Model"></a>JSON/Dictionary转成Model</h4><p>先看一下JSON/Dictionary怎么转成Model的，大概的流程如下图，橙色方框是对外部的接口。从流程图中可以看出来JSON是先转成Dictionary，然后复用modelWithDictionary的逻辑。</p>
+<p><img src="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/modelwith.png" alt></p>
+<h4 id="Model转成JSON-Dictionary"><a href="#Model转成JSON-Dictionary" class="headerlink" title="Model转成JSON/Dictionary"></a>Model转成JSON/Dictionary</h4><p>Model转成JSON/Dictionary的大体流程如下图，外部接口有三个，最后都是复用modelToJSONObject的逻辑。</p>
+<p><img src="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/modelto.png" alt></p>
+<p>大体流程理清了，现在开始看详细的实现细节。主要的转换逻辑在NSObject+YYModel里面，这个类有接近2000行代码，简单地总结一下，主要包括几点：</p>
+<ul>
+<li>数据结构定义</li>
+<li>类型定义与转换</li>
+<li>转换逻辑</li>
+</ul>
+<h3 id="数据结构定义"><a href="#数据结构定义" class="headerlink" title="数据结构定义"></a>数据结构定义</h3><p>YYModel的数据结构定义和依赖如下图：</p>
+<p><img src="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/datastructure.png" alt></p>
+<h4 id="YYModelMeta"><a href="#YYModelMeta" class="headerlink" title="_YYModelMeta"></a>_YYModelMeta</h4><p>_YYModelMeta是核心的数据结构，它主要记录了Model对象的相关信息，比如类信息(类名、方法列表、属性列表)、属性列表、key和key path的映射表等，依赖了YYClassInfo、_YYModelPropertyMeta、YYEncodingNSType等数据结构，代码段如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">/// A class info in object model.</span><br><span class="line">@interface _YYModelMeta : NSObject &#123;</span><br><span class="line">    @package</span><br><span class="line">    YYClassInfo *_classInfo;</span><br><span class="line">    /// Key:mapped key and key path, Value:_YYModelPropertyMeta.</span><br><span class="line">    NSDictionary *_mapper;</span><br><span class="line">    /// Array&lt;_YYModelPropertyMeta&gt;, all property meta of this model.</span><br><span class="line">    NSArray *_allPropertyMetas;</span><br><span class="line">    /// Array&lt;_YYModelPropertyMeta&gt;, property meta which is mapped to a key path.</span><br><span class="line">    NSArray *_keyPathPropertyMetas;</span><br><span class="line">    /// Array&lt;_YYModelPropertyMeta&gt;, property meta which is mapped to multi keys.</span><br><span class="line">    NSArray *_multiKeysPropertyMetas;</span><br><span class="line">    /// The number of mapped key (and key path), same to _mapper.count.</span><br><span class="line">    NSUInteger _keyMappedCount;</span><br><span class="line">    /// Model class type.</span><br><span class="line">    YYEncodingNSType _nsType;</span><br><span class="line">    </span><br><span class="line">    BOOL _hasCustomWillTransformFromDictionary;</span><br><span class="line">    BOOL _hasCustomTransformFromDictionary;</span><br><span class="line">    BOOL _hasCustomTransformToDictionary;</span><br><span class="line">    BOOL _hasCustomClassFromDictionary;</span><br><span class="line">&#125;</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h4 id="YYClassInfo"><a href="#YYClassInfo" class="headerlink" title="YYClassInfo"></a>YYClassInfo</h4><p>再看一下YYClassInfo，它主要用来表示model class的基本信息：model类对象、父类对象、类名、属性列表、方法列表等等，定义了对应的子类型：YYClassIvarInfo，YYClassMethodInfo和YYClassPropertyInfo，作者使用oc runtime的接口来初始化YYClassInfo里面的各个属性，如上图橙色部分所示。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@interface YYClassInfo : NSObject</span><br><span class="line">@property (nonatomic, assign, readonly) Class cls; ///&lt; class object</span><br><span class="line">@property (nullable, nonatomic, assign, readonly) Class superCls; ///&lt; super class object</span><br><span class="line">@property (nullable, nonatomic, assign, readonly) Class metaCls;  ///&lt; class&#x27;s meta class object</span><br><span class="line">@property (nonatomic, readonly) BOOL isMeta; ///&lt; whether this class is meta class</span><br><span class="line">@property (nonatomic, strong, readonly) NSString *name; ///&lt; class name</span><br><span class="line">@property (nullable, nonatomic, strong, readonly) YYClassInfo *superClassInfo; ///&lt; super class&#x27;s class info</span><br><span class="line">@property (nullable, nonatomic, strong, readonly) NSDictionary&lt;NSString *, YYClassIvarInfo *&gt; *ivarInfos; ///&lt; ivars</span><br><span class="line">@property (nullable, nonatomic, strong, readonly) NSDictionary&lt;NSString *, YYClassMethodInfo *&gt; *methodInfos; ///&lt; methods</span><br><span class="line">@property (nullable, nonatomic, strong, readonly) NSDictionary&lt;NSString *, YYClassPropertyInfo *&gt; *propertyInfos; ///&lt; properties</span><br><span class="line">...</span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>YYClassInfo实例化的过程，可以理解成对上述属性赋值的过程，可以大概分为以下几类：</p>
+<ul>
+<li>class基础信息</li>
+<li>ivars列表</li>
+<li>methods列表</li>
+<li>properties列表</li>
+</ul>
+<p>class基础信息主要是描述继承关系的，比如父类信息、meta class，使用了runtime的接口获取到对应的属性值<br><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">- (instancetype)initWithClass:(Class)cls &#123;</span><br><span class="line">    if (!cls) return nil;</span><br><span class="line">    self = [super init];</span><br><span class="line">    _cls = cls;</span><br><span class="line">    _superCls = class_getSuperclass(cls);</span><br><span class="line">    _isMeta = class_isMetaClass(cls);</span><br><span class="line">    if (!_isMeta) &#123;</span><br><span class="line">        _metaCls = objc_getMetaClass(class_getName(cls));</span><br><span class="line">    &#125;</span><br><span class="line">    _name = NSStringFromClass(cls);</span><br><span class="line">    [self _update];</span><br><span class="line"></span><br><span class="line">    _superClassInfo = [self.class classInfoWithClass:_superCls];</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>_update方法里面包含了ivars列表、methods列表、properties列表的初始化，分别使用了class_copyIvarList,class_copyMethodList,class_copyPropertyList获取到了当前类的ivars，方法和属性，这里代码比较多，就不贴出来了。这块主要的知识点是runtime，作者定义的描述class的几个数据结构基本与runtime的结构对应，可以理解成对runtime class的封装。</p>
+<p><img src="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-YYModel/runtime.png" alt></p>
+<p>YYClassInfo实例化过程也有很多值得学习的地方，涉及了线程安全和实例缓存相关知识，代码片段如下，总结一下主要流程：</p>
+<ul>
+<li>创建单例的类缓存和元类缓存</li>
+<li>创建dispatch_semaphore_t锁，保证缓存线程安全</li>
+<li>如果查找到缓存对象，则判断缓存对象是否需要更新并执行相关操作</li>
+<li>如果没找到缓存对象，则创建并初始化YYClassInfo，并写入缓存</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">+ (instancetype)classInfoWithClass:(Class)cls &#123;</span><br><span class="line">    if (!cls) return nil;</span><br><span class="line">    static CFMutableDictionaryRef classCache;</span><br><span class="line">    static CFMutableDictionaryRef metaCache;</span><br><span class="line">    static dispatch_once_t onceToken;</span><br><span class="line">    static dispatch_semaphore_t lock;</span><br><span class="line">    dispatch_once(&amp;onceToken, ^&#123;</span><br><span class="line">        classCache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &amp;kCFTypeDictionaryKeyCallBacks, &amp;kCFTypeDictionaryValueCallBacks);</span><br><span class="line">        metaCache = CFDictionaryCreateMutable(CFAllocatorGetDefault(), 0, &amp;kCFTypeDictionaryKeyCallBacks, &amp;kCFTypeDictionaryValueCallBacks);</span><br><span class="line">        lock = dispatch_semaphore_create(1);</span><br><span class="line">    &#125;);</span><br><span class="line">    dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);</span><br><span class="line">    YYClassInfo *info = CFDictionaryGetValue(class_isMetaClass(cls) ? metaCache : classCache, (__bridge const void *)(cls));</span><br><span class="line">    if (info &amp;&amp; info-&gt;_needUpdate) &#123;</span><br><span class="line">        [info _update];</span><br><span class="line">    &#125;</span><br><span class="line">    dispatch_semaphore_signal(lock);</span><br><span class="line">    if (!info) &#123;</span><br><span class="line">        info = [[YYClassInfo alloc] initWithClass:cls];</span><br><span class="line">        if (info) &#123;</span><br><span class="line">            dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER);</span><br><span class="line">            CFDictionarySetValue(info.isMeta ? metaCache : classCache, (__bridge const void *)(cls), (__bridge const void *)(info));</span><br><span class="line">            dispatch_semaphore_signal(lock);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return info;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用缓存可以保证不用每次都创建YYClassInfo对象，提高性能。这里有两个知识点需要mark一下：</p>
+<ul>
+<li><p>使用GCD的信号量保证线程安全，多线程和并发这块非常重要，所以这里复习一下。iOS上实现多线程一般有pthread,NSThread,GCD和NSOperationQueue四种方式。</p>
+</li>
+<li><p>使用Core Foundation的CFMutableDictionaryRef来作为缓存容器。这里必须提一下Core Foundation了，记得有次面试被问Core Foundation和Foundation的关系，我当时是一脸懵逼的，就瞎说一通啦。其实可以很简单地理解为，Core Foundation是C语言版本的Foundation，功能基本与Foundation对应，前缀是CFxxx的Core Foundation里面的方法，Foundation里面的函数前缀一般是NSxxx。CoreFoundation的方法有更高的性能，所以这里使用CFMutableDictionRef而不是NSMutableDiction来实现缓存。</p>
+</li>
+</ul>
+<h2 id="如何做到对Model代码无侵入"><a href="#如何做到对Model代码无侵入" class="headerlink" title="如何做到对Model代码无侵入"></a>如何做到对Model代码无侵入</h2><p>使用Category方式，定义的NSObject的category</p>
+<h2 id="Model嵌套如何支持"><a href="#Model嵌套如何支持" class="headerlink" title="Model嵌套如何支持"></a>Model嵌套如何支持</h2><p>Model转换过程有类型判断，如果是自定义类型，会递归调用Model转换逻辑。</p>
+<h2 id="如何设计性能测试benchmark"><a href="#如何设计性能测试benchmark" class="headerlink" title="如何设计性能测试benchmark"></a>如何设计性能测试benchmark</h2><p>作者对比了现有的几个比较常用的Model库：JSONModel, Mantle, MJExtension等，对比的维度包括性能、功能、侵入性和容错性。</p>
+<h2 id="用到了哪些我不熟悉的语言特性"><a href="#用到了哪些我不熟悉的语言特性" class="headerlink" title="用到了哪些我不熟悉的语言特性"></a>用到了哪些我不熟悉的语言特性</h2><ol>
+<li>Type Encodings 和 Declared Properties</li>
+<li>ptrdiff_t</li>
+<li>Dispatch Semaphore</li>
+<li>CoreFoundation中的CFMutableDictionaryRef</li>
+<li>Objective-C Runtime</li>
+<li>@package</li>
+<li><strong>unsafe_unretained<br>在 ARC 条件下，默认声明的对象是 </strong>strong 类型的，赋值时有可能会产生 retain/release 调用，如果一个变量在其生命周期内不会被释放，则使用 __unsafe_unretained 会节省很大的开销</li>
+<li>__bridge<br>Foundation 对象和 Core Foundation对象间的转换，ARC只支持管理Objective-C对象，不支持Core Foundation对象，必须使用CFRetain和CFRelease来进行内存管理。那么当使用Objective-C 和 Core Foundation 对象相互转换的时候，必须让编译器知道，到底由谁来负责释放对象，是否交给ARC处理。<ul>
+<li>__bridge （不改变对象所有权）</li>
+<li>__bridge_retained 或者 CFBridgingRetain()（解除 ARC 所有权）</li>
+<li>__bridge_transfer 或者 CFBridgingRelease(）（给予 ARC 所有权）</li>
+</ul>
+</li>
+</ol>
+<h2 id="YYModel性能相关的Tips"><a href="#YYModel性能相关的Tips" class="headerlink" title="YYModel性能相关的Tips"></a>YYModel性能相关的Tips</h2><h3 id="尽量用纯-C-函数、内联函数"><a href="#尽量用纯-C-函数、内联函数" class="headerlink" title="尽量用纯 C 函数、内联函数"></a>尽量用纯 C 函数、内联函数</h3><p>使用纯 C 函数可以避免 ObjC 的消息发送带来的开销。如果 C 函数比较小，使用 inline 可以避免一部分压栈弹栈等函数调用的开销。NSObject+YYModel中作者定义了一个force_inline宏，很多函数都是定义成内联的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#define force_inline __inline__ __attribute__((always_inline))</span><br><span class="line">...</span><br><span class="line">static force_inline YYEncodingNSType YYClassGetNSType(Class cls);</span><br><span class="line">static force_inline NSNumber *YYNSNumberCreateFromID(__unsafe_unretained id value);</span><br><span class="line">static force_inline NSDate *YYNSDateFromString(__unsafe_unretained NSString *string);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="避免多余的内存管理方法"><a href="#避免多余的内存管理方法" class="headerlink" title="避免多余的内存管理方法"></a>避免多余的内存管理方法</h3><p>在 ARC 条件下，默认声明的对象是 <strong>strong 类型的，赋值时有可能会产生 retain/release 调用，如果一个变量在其生命周期内不会被释放，则使用 </strong>unsafe_unretained 会节省很大的开销。</p>
+<p>访问具有 <strong>weak 属性的变量时，实际上会调用 objc_loadWeak() 和 objc_storeWeak() 来完成，这也会带来很大的开销，所以要避免使用 </strong>weak 属性。</p>
+<p>创建和使用对象时，要尽量避免对象进入 autoreleasepool，以避免额外的资源开销。</p>
+<h3 id="遍历容器类时，选择更高效的方法"><a href="#遍历容器类时，选择更高效的方法" class="headerlink" title="遍历容器类时，选择更高效的方法"></a>遍历容器类时，选择更高效的方法</h3><p>相对于 Foundation 的方法来说，CoreFoundation 的方法有更高的性能，用 CFArrayApplyFunction() 和 CFDictionaryApplyFunction() 方法来遍历容器类能带来不少性能提升，但代码写起来会非常麻烦。</p>
+<h3 id="避免-KVC"><a href="#避免-KVC" class="headerlink" title="避免 KVC"></a>避免 KVC</h3><p>Key-Value Coding 使用起来非常方便，但性能上要差于直接调用 Getter/Setter，所以如果能避免 KVC 而用 Getter/Setter 代替，性能会有较大提升。</p>
+<h3 id="避免-Getter-Setter-调用"><a href="#避免-Getter-Setter-调用" class="headerlink" title="避免 Getter/Setter 调用"></a>避免 Getter/Setter 调用</h3><p>如果能直接访问 ivar，则尽量使用 ivar 而不要使用 Getter/Setter 这样也能节省一部分开销。</p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://blog.ibireme.com/2015/10/23/ios_model_framework_benchmark">iOS JSON 模型转换库评测</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5a097435f265da431769a49c">揭秘 YYModel 的魔法（上）</a></li>
+<li><a target="_blank" rel="noopener" href="https://juejin.im/post/5a1296e36fb9a044fb075d5e">揭秘 YYModel 的魔法（下）</a></li>
+<li><a target="_blank" rel="noopener" href="https://tech.meituan.com/DiveIntoCategory.html">深入理解Objective-C：Category</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/yiyaaixuexi/article/details/8553659">Objective-C 和 Core Foundation 对象相互转换的内存管理总结</a></li>
+<li><a target="_blank" rel="noopener" href="https://yq.aliyun.com/articles/58964">深入理解__bridge - OC对象与C++对象的引用转换</a></li>
+<li><a target="_blank" rel="noopener" href="http://www.samirchen.com/ios-arc/">iOS ARC 内存管理要点</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/08/YYKit%E6%BA%90%E7%A0%81%E5%AD%A6%E4%B9%A0-%E6%80%BB%E8%A7%88/" rel="prev" title="YYKit源码学习-总览">
+                  <i class="fa fa-angle-left"></i> YYKit源码学习-总览
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/" rel="next" title="WWDC 2018-Understanding Crashes and Crash Logs">
+                  WWDC 2018-Understanding Crashes and Crash Logs <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"ustcqidi","repo":"blog_comments","client_id":"a38f91d96fd5ab0945a4","client_secret":"c00ee19eb655ce8cdf6b74655ddcd7f1eb574585","admin_user":"ustcqidi","labels":["Gitalk"],"createIssueManually":false,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"eaac19887b13aab09a7b1b77d8c23006"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>

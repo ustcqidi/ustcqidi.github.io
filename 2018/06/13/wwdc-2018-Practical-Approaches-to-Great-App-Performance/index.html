@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"yoursite.com","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文内容基于 Practical Approaches to Great App Performance 整理，这个Session主要介绍App 性能优化相关的问题，包括如何使用 Instruments 和其他工具解决性能问题，另外作者还介绍了他们对Xcode和Photos性能调优的一些实践经验。  All apps benefit from a focus on performance and">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WWDC 2018-Practical Approaches to Great App Performance">
+<meta property="og:url" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/index.html">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="本文内容基于 Practical Approaches to Great App Performance 整理，这个Session主要介绍App 性能优化相关的问题，包括如何使用 Instruments 和其他工具解决性能问题，另外作者还介绍了他们对Xcode和Photos性能调优的一些实践经验。  All apps benefit from a focus on performance and">
+<meta property="og:locale">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/instrument.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/callstack.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/photo.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/issue.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/launch.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/startup.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/breakdown.png">
+<meta property="og:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/basic.png">
+<meta property="article:published_time" content="2018-06-13T01:34:53.000Z">
+<meta property="article:modified_time" content="2025-01-04T02:21:58.772Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="iOS">
+<meta property="article:tag" content="Performance">
+<meta property="article:tag" content="WWDC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/instrument.png">
+
+
+<link rel="canonical" href="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/","path":"2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/","title":"WWDC 2018-Practical Approaches to Great App Performance"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>WWDC 2018-Practical Approaches to Great App Performance | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Measure"><span class="nav-number">1.</span> <span class="nav-text">Measure</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Bug%E4%BF%AE%E5%A4%8D"><span class="nav-number">1.1.</span> <span class="nav-text">Bug修复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98%E4%BF%AE%E5%A4%8D"><span class="nav-number">1.2.</span> <span class="nav-text">性能问题修复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Types-of-Performance-Work"><span class="nav-number">1.3.</span> <span class="nav-text">Types of Performance Work</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Test"><span class="nav-number">2.</span> <span class="nav-text">Test</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Unit"><span class="nav-number">2.1.</span> <span class="nav-text">Unit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Integration"><span class="nav-number">2.2.</span> <span class="nav-text">Integration</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Profile"><span class="nav-number">3.</span> <span class="nav-text">Profile</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Instrument"><span class="nav-number">3.1.</span> <span class="nav-text">Instrument</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Common-Solutions"><span class="nav-number">4.</span> <span class="nav-text">Common Solutions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Photos-App%E7%9A%84%E6%80%A7%E8%83%BD%E9%97%AE%E9%A2%98"><span class="nav-number">5.</span> <span class="nav-text">Photos App的性能问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Great-User-Experience"><span class="nav-number">6.</span> <span class="nav-text">Great User Experience</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E7%BB%8F%E9%AA%8C"><span class="nav-number">7.</span> <span class="nav-text">实践经验</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#App%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96"><span class="nav-number">7.1.</span> <span class="nav-text">App启动优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Building-Collections-Years"><span class="nav-number">7.2.</span> <span class="nav-text">Building Collections&#x2F;Years</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">不忘初心，方得始终</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="不忘初心，方得始终">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="WWDC 2018-Practical Approaches to Great App Performance | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          WWDC 2018-Practical Approaches to Great App Performance
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+
+      <time title="Created: 2018-06-13 09:34:53" itemprop="dateCreated datePublished" datetime="2018-06-13T09:34:53+08:00">2018-06-13</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">Edited on</span>
+      <time title="Modified: 2025-01-04 10:21:58" itemprop="dateModified" datetime="2025-01-04T10:21:58+08:00">2025-01-04</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文内容基于 <a target="_blank" rel="noopener" href="https://developer.apple.com/videos/play/wwdc2018/407/">Practical Approaches to Great App Performance</a> 整理，这个Session主要介绍App 性能优化相关的问题，包括如何使用 Instruments 和其他工具解决性能问题，另外作者还介绍了他们对Xcode和Photos性能调优的一些实践经验。</p>
+<blockquote>
+<p>All apps benefit from a focus on performance and an increase in overall responsiveness. This information packed session gives you strategies for fixing performance problems using Instruments and other tools. Additionally, get practical advice based on experience in tuning Apple’s own apps including Xcode and Photos on iOS.</p>
+</blockquote>
+<span id="more"></span>
+<p>整个Presentation分为两个部分，第一部分是一位开发Xcode的老哥，主题是Approaching Performance A framework for getting started，其实就是介绍了性能调优的一些基本套路。</p>
+<h2 id="Measure"><a href="#Measure" class="headerlink" title="Measure"></a>Measure</h2><p>首先性能调优最重要的是Measure。在解决具体的性能问题前，你需要基于baseline标准来Measure，问题解决后也需要根据这个标准来确定问题是否已经修复。</p>
+<p>解决性能问题的具体流程是什么呢？先看一下我们是怎么修复传统的功能性bug的：</p>
+<h3 id="Bug修复"><a href="#Bug修复" class="headerlink" title="Bug修复"></a>Bug修复</h3><ul>
+<li>重现问题</li>
+<li>Debug</li>
+<li>修改代码</li>
+<li>重复上述过程</li>
+</ul>
+<h3 id="性能问题修复"><a href="#性能问题修复" class="headerlink" title="性能问题修复"></a>性能问题修复</h3><ul>
+<li>重现问题</li>
+<li>Profile， 使用工具找到性能瓶颈</li>
+<li>修改代码</li>
+<li>重复上述过程</li>
+</ul>
+<h3 id="Types-of-Performance-Work"><a href="#Types-of-Performance-Work" class="headerlink" title="Types of Performance Work"></a>Types of Performance Work</h3><ul>
+<li>Major Regression，推荐使用自动化性能测试脚本，检测每个版本的性能问题，防止Regression</li>
+<li>Off Target</li>
+<li>设计缺陷，Review核心模块的设计，必要时重新设计实现</li>
+</ul>
+<p>性能测试和功能测试同样重要，项目开发中需要制定性能指标。</p>
+<h2 id="Test"><a href="#Test" class="headerlink" title="Test"></a>Test</h2><h3 id="Unit"><a href="#Unit" class="headerlink" title="Unit"></a>Unit</h3><ul>
+<li>Benchmark</li>
+<li>Isolate issues</li>
+<li>Pinpoints regressions</li>
+</ul>
+<h3 id="Integration"><a href="#Integration" class="headerlink" title="Integration"></a>Integration</h3><ul>
+<li>用户体验</li>
+<li>dependencies</li>
+<li>side effects</li>
+</ul>
+<h2 id="Profile"><a href="#Profile" class="headerlink" title="Profile"></a>Profile</h2><h3 id="Instrument"><a href="#Instrument" class="headerlink" title="Instrument"></a>Instrument</h3><p>作者演示了怎么使用Instrument profiling并解决Xcode启动时的一个问题。</p>
+<p><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/instrument.png" alt></p>
+<p>Instrument中有很多工具，其中最重要的是Time Profiler。Time Profiler attach到进程后，会收集该进程相关的性能数据并动态展示，比如调用栈。</p>
+<p><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/callstack.png" alt></p>
+<h2 id="Common-Solutions"><a href="#Common-Solutions" class="headerlink" title="Common Solutions"></a>Common Solutions</h2><ul>
+<li>Defer，比如延迟加载</li>
+<li>Batch</li>
+<li>Share results</li>
+<li>Fewer views</li>
+<li>direct observation</li>
+<li>prefer records to dictionaries</li>
+</ul>
+<p>第一部分就到这里了，简单总结一下，老哥他通过对比修复常规bug的流程，说明了解决性能问题的流程是啥样。然后从Measure，Test，Profiling几个角度介绍了性能优化的思路，最后给出了几个Common的Best Practice，另外整个Presentation夹杂了很多作者本人对性能优化的理解和看法，很多点没有写在PPT里面，所以我没有记下来了。</p>
+<hr>
+<p>下面是第二部分，这位老哥分享Photos中的一些性能问题案例，这部分应该挺有实际的参考价值。</p>
+<h2 id="Photos-App的性能问题"><a href="#Photos-App的性能问题" class="headerlink" title="Photos App的性能问题"></a>Photos App的性能问题</h2><p>先看一下Photos这个APP长啥样，照片可以按照拍摄地点，时间等维度排列。</p>
+<p><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/photo.png" alt></p>
+<p>当照片数量很多，加载照片时等待时间可能很长。</p>
+<p><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/issue.png" alt></p>
+<h2 id="Great-User-Experience"><a href="#Great-User-Experience" class="headerlink" title="Great User Experience"></a>Great User Experience</h2><ul>
+<li>Responsiveness</li>
+<li>Smooth animations</li>
+</ul>
+<h2 id="实践经验"><a href="#实践经验" class="headerlink" title="实践经验"></a>实践经验</h2><h3 id="App启动优化"><a href="#App启动优化" class="headerlink" title="App启动优化"></a>App启动优化</h3><ul>
+<li><p>目标</p>
+<ul>
+<li>即时</li>
+<li>No spinner</li>
+<li>No placeholders</li>
+</ul>
+</li>
+<li><p>三种启动方式</p>
+<ul>
+<li>Cold: 首次启动</li>
+<li>Warm: 杀进程后重启</li>
+<li>Hot: Resume<br><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/launch.png" alt></li>
+</ul>
+</li>
+<li><p>启动时间测量<br>点击App图标到可以正常操作(交互)之间的时间段，主要包括dyld和main/UIApplicationMain启动时间</p>
+</li>
+</ul>
+<p><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/startup.png" alt></p>
+<ul>
+<li>流程优化<ul>
+<li>数据预加载</li>
+<li>Prepare View Controller</li>
+<li>Configure Datasource</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/breakdown.png" alt></p>
+<h3 id="Building-Collections-Years"><a href="#Building-Collections-Years" class="headerlink" title="Building Collections/Years"></a>Building Collections/Years</h3><ul>
+<li><p>非常复杂的View</p>
+<ul>
+<li>Thousands of pictures displayed </li>
+<li>Live updates</li>
+<li>Animations</li>
+<li>Gestures</li>
+</ul>
+</li>
+<li><p>Principles</p>
+<ul>
+<li>Be Lazy</li>
+<li>Be proactive</li>
+<li>Be constant</li>
+<li>Be timely</li>
+</ul>
+</li>
+<li><p>常规方法使用UICollectionView的问题</p>
+<ul>
+<li>view/layer过多</li>
+<li>布局复杂</li>
+<li>内存消耗过大</li>
+</ul>
+</li>
+<li><p>优化方案</p>
+<ul>
+<li>Rendered strips</li>
+<li>display as a single image</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2018/06/13/wwdc-2018-Practical-Approaches-to-Great-App-Performance/basic.png" alt></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iOS/" rel="tag"># iOS</a>
+              <a href="/tags/Performance/" rel="tag"># Performance</a>
+              <a href="/tags/WWDC/" rel="tag"># WWDC</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/" rel="prev" title="WWDC 2018-Understanding Crashes and Crash Logs">
+                  <i class="fa fa-angle-left"></i> WWDC 2018-Understanding Crashes and Crash Logs
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/" rel="next" title="WWDC-Advanced Graphics and Animations for iOS Apps">
+                  WWDC-Advanced Graphics and Animations for iOS Apps <i class="fa fa-angle-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"ustcqidi","repo":"blog_comments","client_id":"a38f91d96fd5ab0945a4","client_secret":"c00ee19eb655ce8cdf6b74655ddcd7f1eb574585","admin_user":"ustcqidi","labels":["Gitalk"],"createIssueManually":false,"distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":null,"js":{"url":"https://cdnjs.cloudflare.com/ajax/libs/gitalk/1.8.0/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"bbf536dcf1f4c1ec5100f615063f5cb3"}</script>
+<script src="/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
