@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222"><meta name="generator" content="Hexo 6.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"ustcqidi.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
+
+    <meta name="description" content="本文介绍了一个用于客户端的通用限流框架设计与实践。该框架通过多种限流策略（计数器、滑动窗口、令牌桶）解决了HTTP请求并发、reCAPTCHA验证、日志写入等场景的限流需求。框架采用模块化设计，支持灵活配置和扩展，并集成了开发环境实时告警和生产环境Telemetry监控功能，有效提升了系统稳定性和用户体验。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="构建高效的客户端 Rate Limit 框架：设计与应用场景">
+<meta property="og:url" content="https://ustcqidi.github.io/2025/01/24/rate-limit/">
+<meta property="og:site_name" content="祁迪的博客">
+<meta property="og:description" content="本文介绍了一个用于客户端的通用限流框架设计与实践。该框架通过多种限流策略（计数器、滑动窗口、令牌桶）解决了HTTP请求并发、reCAPTCHA验证、日志写入等场景的限流需求。框架采用模块化设计，支持灵活配置和扩展，并集成了开发环境实时告警和生产环境Telemetry监控功能，有效提升了系统稳定性和用户体验。">
+<meta property="og:locale">
+<meta property="og:image" content="https://ustcqidi.github.io/2025/01/24/rate-limit/arch.png">
+<meta property="og:image" content="https://ustcqidi.github.io/2025/01/24/rate-limit/class.png">
+<meta property="og:image" content="https://ustcqidi.github.io/2025/01/24/rate-limit/warning.png">
+<meta property="og:image" content="https://ustcqidi.github.io/2025/01/24/rate-limit/telemetry.png">
+<meta property="article:published_time" content="2025-01-24T05:26:47.000Z">
+<meta property="article:modified_time" content="2025-01-24T06:46:12.258Z">
+<meta property="article:author" content="祁迪">
+<meta property="article:tag" content="Rate Limit">
+<meta property="article:tag" content="Telemetry 监控">
+<meta property="article:tag" content="实时告警">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://ustcqidi.github.io/2025/01/24/rate-limit/arch.png">
+
+
+<link rel="canonical" href="https://ustcqidi.github.io/2025/01/24/rate-limit/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-Hans","comments":true,"permalink":"https://ustcqidi.github.io/2025/01/24/rate-limit/","path":"2025/01/24/rate-limit/","title":"构建高效的客户端 Rate Limit 框架：设计与应用场景"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>构建高效的客户端 Rate Limit 框架：设计与应用场景 | 祁迪的博客</title>
+  
+
+  <script src="/js/third-party/analytics/baidu-analytics.js"></script>
+  <script async src="https://hm.baidu.com/hm.js?b4fa680bcca71536a4ad2a1ce53cf441"></script>
+
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+<link rel="alternate" href="/atom.xml" title="祁迪的博客" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">祁迪的博客</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">企业级客户端技术探索：架构设计·性能优化·效能提升</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="Search" role="button">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a></li>
+  </ul>
+</nav>
+
+
+
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#1-%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF%E4%B8%8E%E9%9C%80%E6%B1%82"><span class="nav-number">1.</span> <span class="nav-text">1. 问题背景与需求</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#2-%E6%A1%86%E6%9E%B6%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">2. 框架设计思路</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3-%E6%A1%86%E6%9E%B6%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1"><span class="nav-number">3.</span> <span class="nav-text">3. 框架结构设计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#3-1-%E6%A0%B8%E5%BF%83%E7%BB%84%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">3.1 核心组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-2-%E6%9E%B6%E6%9E%84%E5%9B%BE"><span class="nav-number">3.2.</span> <span class="nav-text">3.2 架构图</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-3-%E6%A0%B8%E5%BF%83%E7%B1%BB%E5%9B%BE"><span class="nav-number">3.3.</span> <span class="nav-text">3.3 核心类图</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#4-%E5%AE%9E%E7%8E%B0%E7%BB%86%E8%8A%82"><span class="nav-number">4.</span> <span class="nav-text">4. 实现细节</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#4-1-%E6%A0%B8%E5%BF%83%E6%A8%A1%E5%9D%97%E4%BB%A3%E7%A0%81"><span class="nav-number">4.1.</span> <span class="nav-text">4.1 核心模块代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RateLimitTypes-h"><span class="nav-number">4.1.1.</span> <span class="nav-text">RateLimitTypes.h</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DataCollector"><span class="nav-number">4.1.2.</span> <span class="nav-text">DataCollector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RateLimiter"><span class="nav-number">4.1.3.</span> <span class="nav-text">RateLimiter</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-2-%E6%B5%8B%E8%AF%95%E7%A8%8B%E5%BA%8F"><span class="nav-number">4.2.</span> <span class="nav-text">4.2 测试程序</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#5-%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="nav-number">5.</span> <span class="nav-text">5. 实际应用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E9%9B%86%E6%88%90"><span class="nav-number">5.1.</span> <span class="nav-text">开发环境集成</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E7%9B%91%E6%8E%A7"><span class="nav-number">5.2.</span> <span class="nav-text">生产环境监控</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#6-%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">6. 总结</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">祁迪</p>
+  <div class="site-description" itemprop="description">专注企业级客户端应用基础架构设计与性能优化，分享网络通信、数据库、APM等底层技术实践。记录 Troubleshooting、工程效能提升等实战经验，探讨大型应用开发的技术创新。</div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">35</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">34</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ustcqidi" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ustcqidi" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-Hans">
+    <link itemprop="mainEntityOfPage" href="https://ustcqidi.github.io/2025/01/24/rate-limit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="祁迪">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="祁迪的博客">
+      <meta itemprop="description" content="专注企业级客户端应用基础架构设计与性能优化，分享网络通信、数据库、APM等底层技术实践。记录 Troubleshooting、工程效能提升等实战经验，探讨大型应用开发的技术创新。">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="构建高效的客户端 Rate Limit 框架：设计与应用场景 | 祁迪的博客">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          构建高效的客户端 Rate Limit 框架：设计与应用场景
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">Posted on</span>
+      
+
+      <time title="Created: 2025-01-24 13:26:47 / Modified: 14:46:12" itemprop="dateCreated datePublished" datetime="2025-01-24T13:26:47+08:00">2025-01-24</time>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><p>本文介绍了一个用于客户端的通用限流框架设计与实践。该框架通过多种限流策略（计数器、滑动窗口、令牌桶）解决了HTTP请求并发、reCAPTCHA验证、日志写入等场景的限流需求。框架采用模块化设计，支持灵活配置和扩展，并集成了开发环境实时告警和生产环境Telemetry监控功能，有效提升了系统稳定性和用户体验。</p>
+<span id="more"></span>
+<h1 id="1-问题背景与需求"><a href="#1-问题背景与需求" class="headerlink" title="1. 问题背景与需求"></a><strong>1. 问题背景与需求</strong></h1><p>在现代客户端开发中，资源管理和系统稳定性至关重要。然而，在实际业务中，我们发现了以下问题：</p>
+<ol>
+<li><strong>HTTP 请求无约束</strong>：短时间内可能触发大量并发 HTTP 请求，缺乏全局限制，容易导致服务端压力激增。</li>
+<li><strong>不合理的 reCaptcha 错误处理</strong>：当服务负载较高时，频繁弹出 reCaptcha 提示框，极大地影响用户体验。</li>
+<li><strong>日志系统重复记录</strong>：大量重复 MemLog 日志可能掩盖关键问题，影响诊断效率。</li>
+<li><strong>重复 Telemetry 数据</strong>：Telemetry 系统被重复数据淹没，导致分析困难。</li>
+<li><strong>频繁文件操作</strong>：频繁打开文件可能导致系统资源耗尽。</li>
+<li><strong>频繁数据库读写</strong>：短时间内的高频数据库操作影响性能并降低系统响应速度。</li>
+</ol>
+<p><strong>解决目标</strong>：<br>为了解决以上问题，我们设计了一个通用的 <strong>Rate Limit 框架</strong>，以实现以下目标：</p>
+<ul>
+<li>统一管理各类操作的限流规则（如 HTTP 请求、日志记录、文件操作等）。</li>
+<li>提供灵活可配置的限流策略以适应不同业务场景。</li>
+<li>优化用户体验，减少无效操作对用户的干扰。</li>
+<li>提供扩展性，适配未来可能的需求变化。</li>
+</ul>
+<h1 id="2-框架设计思路"><a href="#2-框架设计思路" class="headerlink" title="2. 框架设计思路"></a><strong>2. 框架设计思路</strong></h1><p>根据需求，我们将 Rate Limit 框架的设计分为以下几个关键模块：</p>
+<ol>
+<li><strong>统一管理模块</strong>：提供统一的限流机制，支持跨业务模块的限流需求。</li>
+<li><strong>策略定义与配置</strong>：允许开发者为不同场景灵活配置限流策略，包括阈值、时间窗口等。</li>
+<li><strong>数据采集与监控</strong>：实时采集操作数据并监控限流执行状态。</li>
+<li><strong>限流执行与反馈</strong>：根据策略结果进行限流操作，同时提供友好的反馈机制，如开发阶段的对话框提示和线上日志上报。</li>
+</ol>
+<h1 id="3-框架结构设计"><a href="#3-框架结构设计" class="headerlink" title="3. 框架结构设计"></a><strong>3. 框架结构设计</strong></h1><h2 id="3-1-核心组件"><a href="#3-1-核心组件" class="headerlink" title="3.1 核心组件"></a><strong>3.1 核心组件</strong></h2><ol>
+<li><strong>RateLimiter</strong>：限流核心模块，负责执行限流策略。</li>
+<li><strong>RateLimitStrategy</strong>：策略配置模块，用于定义场景的限流规则和算法。可以为不同的业务场景（如HTTP请求、文件操作、数据库操作）设置不同的限流策略和配置。</li>
+<li><strong>DataCollector</strong>：数据采集模块，负责实时记录操作数据。通过DataCollector接口，可以实现自定义的数据收集逻辑，适应不同的监控需求。</li>
+<li><strong>RateLimitHandler</strong>：限流处理模块，根据策略执行反馈操作（如弹窗或日志上报）。</li>
+</ol>
+<h2 id="3-2-架构图"><a href="#3-2-架构图" class="headerlink" title="3.2 架构图"></a><strong>3.2 架构图</strong></h2><p>以下是框架的核心架构图：</p>
+<p><img src="/2025/01/24/rate-limit/arch.png" alt="image.png"></p>
+<h2 id="3-3-核心类图"><a href="#3-3-核心类图" class="headerlink" title="3.3 核心类图"></a><strong>3.3 核心类图</strong></h2><p>以下是核心类的 UML 类图：</p>
+<p><img src="/2025/01/24/rate-limit/class.png" alt="image.png"></p>
+<h1 id="4-实现细节"><a href="#4-实现细节" class="headerlink" title="4. 实现细节"></a><strong>4. 实现细节</strong></h1><h2 id="4-1-核心模块代码"><a href="#4-1-核心模块代码" class="headerlink" title="4.1 核心模块代码"></a><strong>4.1 核心模块代码</strong></h2><h3 id="RateLimitTypes-h"><a href="#RateLimitTypes-h" class="headerlink" title="RateLimitTypes.h"></a><strong>RateLimitTypes.h</strong></h3><p>定义限流策略的核心数据结构：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// RateLimitTypes.h</span></span><br><span class="line"><span class="meta">#<span class="keyword">ifndef</span> RATE_LIMIT_TYPES_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RATE_LIMIT_TYPES_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> RateLimitFramework &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">RateLimitAlgorithm</span> &#123;</span><br><span class="line">    SIMPLE_COUNTER,</span><br><span class="line">    SLIDING_WINDOW,</span><br><span class="line">    TOKEN_BUCKET</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">StrategyType</span> &#123;</span><br><span class="line">	Request,</span><br><span class="line">    Recapcha,</span><br><span class="line">    MEMLOG,</span><br><span class="line">    DB_IO</span><br><span class="line">	<span class="comment">// Add more strategy types as needed</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">RateLimitStrategy</span> &#123;</span><br><span class="line">    StrategyType strategyType;</span><br><span class="line">	<span class="type">int</span> threshold;</span><br><span class="line">	std::chrono::milliseconds timeWindow;</span><br><span class="line">	RateLimitAlgorithm algorithm;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// namespace RateLimitFramework</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// RATE_LIMIT_TYPES_H</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="DataCollector"><a href="#DataCollector" class="headerlink" title="DataCollector"></a><strong>DataCollector</strong></h3><p>负责记录和查询操作时间戳：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> DATA_COLLECTOR_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> DATA_COLLECTOR_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cmmlib/CmmBase.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;RateLimitTypes.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;deque&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std::chrono;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> RateLimitFramework &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CMM_API</span> DataCollector &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    std::map&lt;std::string, std::deque&lt;std::chrono::steady_clock::time_point&gt;&gt; timestamps;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">record</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">const</span> RateLimitStrategy&amp; strategy)</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="type">int</span> <span class="title">getData</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">const</span> RateLimitStrategy&amp; strategy)</span> <span class="type">const</span></span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">DataCollector</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// namespace RateLimitFramework</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// DATA_COLLECTOR_H</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cmmlib/ratelimit/DataCollector.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std::chrono;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> RateLimitFramework;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">DataCollector::record</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">const</span> RateLimitStrategy&amp; strategy)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">auto</span> now = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">	<span class="keyword">auto</span>&amp; timePoints = timestamps[key];</span><br><span class="line">	timePoints.<span class="built_in">push_back</span>(now);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">auto</span> startTime = now - strategy.timeWindow;</span><br><span class="line">	<span class="keyword">while</span> (!timePoints.<span class="built_in">empty</span>() &amp;&amp; timePoints.<span class="built_in">front</span>() &lt; startTime) &#123;</span><br><span class="line">		timePoints.<span class="built_in">pop_front</span>();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">DataCollector::getData</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">const</span> RateLimitStrategy&amp; strategy)</span> <span class="type">const</span> </span>&#123;</span><br><span class="line">	<span class="keyword">auto</span> it = timestamps.<span class="built_in">find</span>(key);</span><br><span class="line">	<span class="keyword">if</span> (it == timestamps.<span class="built_in">end</span>()) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">auto</span> now = std::chrono::steady_clock::<span class="built_in">now</span>();</span><br><span class="line">	<span class="keyword">auto</span> startTime = now - strategy.timeWindow;</span><br><span class="line">	<span class="keyword">return</span> std::<span class="built_in">count_if</span>(it-&gt;second.<span class="built_in">begin</span>(), it-&gt;second.<span class="built_in">end</span>(),</span><br><span class="line">		[startTime](<span class="type">const</span> <span class="keyword">auto</span>&amp; tp) &#123; <span class="keyword">return</span> tp &gt;= startTime; &#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="RateLimiter"><a href="#RateLimiter" class="headerlink" title="RateLimiter"></a><strong>RateLimiter</strong></h3><p>根据不同的限流算法执行限流逻辑：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">ifndef</span> RATE_LIMITER_H</span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> RATE_LIMITER_H</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;DataCollector.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cmmlib/CmmBase.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;memory&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> RateLimitFramework &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CMM_API</span> RateLimitHandler &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="type">void</span> <span class="title">handle</span><span class="params">(<span class="type">const</span> std::string&amp; key, <span class="type">const</span> std::map&lt;std::string, std::string&gt;&amp; context)</span> </span>= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">virtual</span> ~<span class="built_in">RateLimitHandler</span>() = <span class="keyword">default</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">CMM_API</span> RateLimiter &#123;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">struct</span> <span class="title class_">Strategy</span> &#123;</span><br><span class="line">        RateLimitStrategy config;</span><br><span class="line">        std::shared_ptr&lt;DataCollector&gt; dataCollector;</span><br><span class="line">        std::shared_ptr&lt;RateLimitHandler&gt; handler;</span><br><span class="line">        std::chrono::steady_clock::time_point lastExecutionTime;</span><br><span class="line">        <span class="type">double</span> tokens;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">Strategy</span>(<span class="type">const</span> RateLimitStrategy&amp; cfg, std::shared_ptr&lt;DataCollector&gt; dc, std::shared_ptr&lt;RateLimitHandler&gt; rh)</span><br><span class="line">			: <span class="built_in">config</span>(cfg), <span class="built_in">dataCollector</span>(dc), <span class="built_in">handler</span>(rh), <span class="built_in">lastExecutionTime</span>(std::chrono::steady_clock::<span class="built_in">now</span>()), <span class="built_in">tokens</span>(cfg.threshold) &#123;&#125;</span><br><span class="line"></span><br><span class="line">		<span class="built_in">Strategy</span>()</span><br><span class="line">			: config&#123;&#125;, <span class="built_in">dataCollector</span>(<span class="literal">nullptr</span>), <span class="built_in">handler</span>(<span class="literal">nullptr</span>), <span class="built_in">lastExecutionTime</span>(std::chrono::steady_clock::<span class="built_in">now</span>()), <span class="built_in">tokens</span>(<span class="number">0.0</span>) &#123;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    std::map&lt;StrategyType, Strategy&gt; strategies;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addStrategy</span><span class="params">(<span class="type">const</span> RateLimitStrategy&amp; strategy, std::shared_ptr&lt;DataCollector&gt; dataCollector, std::shared_ptr&lt;RateLimitHandler&gt; handler)</span></span>;</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">checkLimit</span><span class="params">(StrategyType strategyType, <span class="type">const</span> std::string&amp; key)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">checkSimpleCounter</span><span class="params">(<span class="type">const</span> Strategy&amp; strategy, <span class="type">const</span> std::string&amp; key)</span></span>;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">checkSlidingWindow</span><span class="params">(<span class="type">const</span> Strategy&amp; strategy, <span class="type">const</span> std::string&amp; key)</span></span>;</span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">checkTokenBucket</span><span class="params">(Strategy&amp; strategy, <span class="type">const</span> std::string&amp; key)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// namespace RateLimitFramework</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">endif</span> <span class="comment">// RATE_LIMITER_H</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cmmlib/ratelimit/RateLimit.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std::chrono;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> RateLimitFramework;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> RateLimitFramework &#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">RateLimiter::addStrategy</span><span class="params">(<span class="type">const</span> RateLimitStrategy&amp; strategy, shared_ptr&lt;DataCollector&gt; dataCollector, shared_ptr&lt;RateLimitHandler&gt; handler)</span> </span>&#123;</span><br><span class="line">        strategies[strategy.strategyType] = <span class="built_in">Strategy</span>(strategy, dataCollector, handler);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">RateLimiter::checkLimit</span><span class="params">(StrategyType strategyType, <span class="type">const</span> std::string&amp; key)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">auto</span> strategyIt = strategies.<span class="built_in">find</span>(strategyType);</span><br><span class="line">        <span class="keyword">if</span> (strategyIt == strategies.<span class="built_in">end</span>()) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>; <span class="comment">// If strategy doesn&#x27;t exist, allow the request</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">auto</span>&amp; strategy = strategyIt-&gt;second;</span><br><span class="line">        strategy.dataCollector-&gt;<span class="built_in">record</span>(key, strategy.config);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (strategy.config.algorithm) &#123;</span><br><span class="line">        <span class="keyword">case</span> RateLimitAlgorithm::SIMPLE_COUNTER:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">checkSimpleCounter</span>(strategy, key);</span><br><span class="line">        <span class="keyword">case</span> RateLimitAlgorithm::SLIDING_WINDOW:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">checkSlidingWindow</span>(strategy, key);</span><br><span class="line">        <span class="keyword">case</span> RateLimitAlgorithm::TOKEN_BUCKET:</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">checkTokenBucket</span>(strategy, key);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">RateLimiter::checkSimpleCounter</span><span class="params">(<span class="type">const</span> Strategy&amp; strategy, <span class="type">const</span> std::string&amp; key)</span> </span>&#123;</span><br><span class="line">		<span class="type">int</span> count = strategy.dataCollector-&gt;<span class="built_in">getData</span>(key, strategy.config);</span><br><span class="line">		<span class="keyword">if</span> (count &gt; strategy.config.threshold) &#123;</span><br><span class="line">			std::map&lt;std::string, std::string&gt; context;</span><br><span class="line">			strategy.handler-&gt;<span class="built_in">handle</span>(key, context);</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">RateLimiter::checkSlidingWindow</span><span class="params">(<span class="type">const</span> Strategy&amp; strategy, <span class="type">const</span> std::string&amp; key)</span> </span>&#123;</span><br><span class="line">		<span class="type">int</span> count = strategy.dataCollector-&gt;<span class="built_in">getData</span>(key, strategy.config);</span><br><span class="line">		<span class="keyword">if</span> (count &gt; strategy.config.threshold) &#123;</span><br><span class="line">			std::map&lt;std::string, std::string&gt; context;</span><br><span class="line">			strategy.handler-&gt;<span class="built_in">handle</span>(key, context);</span><br><span class="line">			<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">bool</span> <span class="title">RateLimiter::checkTokenBucket</span><span class="params">(Strategy&amp; strategy, <span class="type">const</span> std::string&amp; key)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">auto</span> now = steady_clock::<span class="built_in">now</span>();</span><br><span class="line">        <span class="keyword">auto</span> timePassed = chrono::<span class="built_in">duration_cast</span>&lt;chrono::milliseconds&gt;(now - strategy.lastExecutionTime).<span class="built_in">count</span>();</span><br><span class="line">        strategy.tokens += timePassed * (strategy.config.threshold / <span class="built_in">static_cast</span>&lt;<span class="type">double</span>&gt;(strategy.config.timeWindow.<span class="built_in">count</span>()));</span><br><span class="line">        strategy.tokens = (std::min)(strategy.tokens, <span class="built_in">static_cast</span>&lt;<span class="type">double</span>&gt;(strategy.config.threshold));</span><br><span class="line">        strategy.lastExecutionTime = now;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (strategy.tokens &lt; <span class="number">1.0</span>) &#123;</span><br><span class="line">            std::map&lt;std::string, std::string&gt; context;</span><br><span class="line">            strategy.handler-&gt;<span class="built_in">handle</span>(key, context);</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            strategy.tokens -= <span class="number">1.0</span>;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="4-2-测试程序"><a href="#4-2-测试程序" class="headerlink" title="4.2 测试程序"></a><strong>4.2 测试程序</strong></h2><p>示例测试用例展示了简单计数限流算法的应用：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cmmlib/ratelimit/RateLimit.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;cmmlib/ratelimit/DataCollector.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;ConsoleHandler.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&quot;EmitRequestDataCollector.h&quot;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std::chrono;</span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> RateLimitFramework;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">RateLimitTest</span> : <span class="keyword">public</span> ::testing::Test &#123;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">	RateLimiter rateLimit;</span><br><span class="line">	shared_ptr&lt;DataCollector&gt; collector;</span><br><span class="line">	shared_ptr&lt;RateLimitHandler&gt; handler;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="type">void</span> <span class="title">SetUp</span><span class="params">()</span> <span class="keyword">override</span> </span>&#123;</span><br><span class="line">		collector = <span class="built_in">make_shared</span>&lt;EmitRequestDataCollector&gt;();</span><br><span class="line">		handler = <span class="built_in">make_shared</span>&lt;ConsoleHandler&gt;();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST_F</span>(RateLimitTest, SimpleCounterTest) &#123;</span><br><span class="line">	RateLimitStrategy strategy = &#123; StrategyType::Request, <span class="number">5</span>, <span class="built_in">milliseconds</span>(<span class="number">1000</span>), RateLimitAlgorithm::SIMPLE_COUNTER &#125;;</span><br><span class="line">	rateLimit.<span class="built_in">addStrategy</span>(strategy, collector, handler);</span><br><span class="line"></span><br><span class="line">	string key = <span class="string">&quot;example.com/api&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Test within limit</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, key));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Test exceeding limit</span></span><br><span class="line">	<span class="built_in">EXPECT_FALSE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, key));</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Wait for the window to pass</span></span><br><span class="line">	this_thread::<span class="built_in">sleep_for</span>(<span class="built_in">milliseconds</span>(<span class="number">1100</span>));</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Test reset after window</span></span><br><span class="line">	<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, key));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST_F</span>(RateLimitTest, DifferentKeysTest) &#123;</span><br><span class="line">	RateLimitStrategy strategy = &#123; StrategyType::Request, <span class="number">3</span>, <span class="built_in">milliseconds</span>(<span class="number">1000</span>), RateLimitAlgorithm::SIMPLE_COUNTER &#125;;</span><br><span class="line">	rateLimit.<span class="built_in">addStrategy</span>(strategy, collector, handler);</span><br><span class="line"></span><br><span class="line">	string key1 = <span class="string">&quot;example.com/api1&quot;</span>;</span><br><span class="line">	string key2 = <span class="string">&quot;example.com/api2&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Test key1</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, key1));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">EXPECT_FALSE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, key1));</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Test key2 (should not be affected by key1&#x27;s limit)</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, key2));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">EXPECT_FALSE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, key2));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST_F</span>(RateLimitTest, NonExistentStrategyTest) &#123;</span><br><span class="line">	string key = <span class="string">&quot;test&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Should allow requests for non-existent strategies</span></span><br><span class="line">	<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(<span class="built_in">static_cast</span>&lt;StrategyType&gt;(<span class="number">999</span>), key));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">TEST_F</span>(RateLimitTest, MultipleStrategiesTest) &#123;</span><br><span class="line">	RateLimitStrategy apiStrategy = &#123; StrategyType::Request, <span class="number">5</span>, <span class="built_in">milliseconds</span>(<span class="number">1000</span>), RateLimitAlgorithm::SIMPLE_COUNTER &#125;;</span><br><span class="line">	RateLimitStrategy recapchaStrategy = &#123; StrategyType::Recapcha, <span class="number">3</span>, <span class="built_in">milliseconds</span>(<span class="number">2000</span>), RateLimitAlgorithm::SLIDING_WINDOW &#125;;</span><br><span class="line"></span><br><span class="line">	rateLimit.<span class="built_in">addStrategy</span>(apiStrategy, <span class="built_in">make_shared</span>&lt;EmitRequestDataCollector&gt;(), handler);</span><br><span class="line">	rateLimit.<span class="built_in">addStrategy</span>(recapchaStrategy, <span class="built_in">make_shared</span>&lt;EmitRequestDataCollector&gt;(), handler);</span><br><span class="line"></span><br><span class="line">	string request_url = <span class="string">&quot;example.com/api&quot;</span>;</span><br><span class="line">	string recapcha_url = <span class="string">&quot;user123&quot;</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Test Request strategy</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">5</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, request_url));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">EXPECT_FALSE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, request_url));</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Test Recapcha strategy</span></span><br><span class="line">	<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; i++) &#123;</span><br><span class="line">		<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Recapcha, recapcha_url));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="built_in">EXPECT_FALSE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Recapcha, recapcha_url));</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Wait for API strategy to reset</span></span><br><span class="line">	this_thread::<span class="built_in">sleep_for</span>(<span class="built_in">milliseconds</span>(<span class="number">1100</span>));</span><br><span class="line"></span><br><span class="line">	<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Request, request_url));</span><br><span class="line">	<span class="built_in">EXPECT_FALSE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Recapcha, recapcha_url));  <span class="comment">// Login strategy should still be blocked</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">// Wait for Login strategy to reset</span></span><br><span class="line">	this_thread::<span class="built_in">sleep_for</span>(<span class="built_in">milliseconds</span>(<span class="number">1000</span>));</span><br><span class="line"></span><br><span class="line">	<span class="built_in">EXPECT_TRUE</span>(rateLimit.<span class="built_in">checkLimit</span>(StrategyType::Recapcha, recapcha_url));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="5-实际应用场景"><a href="#5-实际应用场景" class="headerlink" title="5. 实际应用场景"></a><strong>5. 实际应用场景</strong></h1><h2 id="开发环境集成"><a href="#开发环境集成" class="headerlink" title="开发环境集成"></a>开发环境集成</h2><p>在开发阶段,我们实现了实时告警机制:</p>
+<ul>
+<li>当检测到限流事件时,立即弹出对话框提醒开发者</li>
+<li>包含具体的限流原因和相关上下文信息</li>
+<li>帮助开发者及早发现和解决潜在问题</li>
+</ul>
+<p>比如下面的截图就是某个 HTTP Request 触发了 Ratelimit 规则的 Warning 提示</p>
+<p><img src="/2025/01/24/rate-limit/warning.png" alt="image.png"></p>
+<h2 id="生产环境监控"><a href="#生产环境监控" class="headerlink" title="生产环境监控"></a>生产环境监控</h2><p>在生产环境中:</p>
+<ul>
+<li>通过Telemetry系统上报限流事件</li>
+<li>收集用户行为数据进行分析</li>
+<li>持续优化限流策略和阈值</li>
+</ul>
+<p>下图是线上触发 Ratelimit 规则的数据情况</p>
+<p><img src="/2025/01/24/rate-limit/telemetry.png" alt="image.png"></p>
+<h1 id="6-总结"><a href="#6-总结" class="headerlink" title="6. 总结"></a><strong>6. 总结</strong></h1><p>Rate Limit 框架的设计与实现为客户端提供了统一、灵活、可扩展的限流解决方案，不仅提升了系统稳定性，还优化了用户体验。</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Rate-Limit/" rel="tag"><i class="fa fa-tag"></i> Rate Limit</a>
+              <a href="/tags/Telemetry-%E7%9B%91%E6%8E%A7/" rel="tag"><i class="fa fa-tag"></i> Telemetry 监控</a>
+              <a href="/tags/%E5%AE%9E%E6%97%B6%E5%91%8A%E8%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 实时告警</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/01/04/websocket-bigframe/" rel="prev" title="WebSocket 数据传输中的大数据帧发送问题">
+                  <i class="fa fa-angle-left"></i> WebSocket 数据传输中的大数据帧发送问题
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments utterances-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">祁迪</span>
+  </div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/pisces/" rel="noopener" target="_blank">NexT.Pisces</a>
+  </div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="Back to top">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/sidebar.js"></script><script src="/js/next-boot.js"></script>
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+<script class="next-config" data-name="utterances" type="application/json">{"enable":true,"repo":"ustcqidi/blog-comments","issue_term":"pathname","theme":"github-light","cdn":"https://utteranc.es/client.js"}</script>
+<script src="/js/third-party/comments/utterances.js"></script>
+
+</body>
+</html>
