@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1983pt" height="729pt" viewBox="0.00 0.00 1982.59 729.00">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 725)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-725 1978.59,-725 1978.59,4 -4,4"/>
+<g id="clust1" class="cluster">
+<title>cluster_early</title>
+<polygon fill="#e6eef8" stroke="#e6eef8" stroke-width="2" points="8,-424 8,-587 583.81,-587 583.81,-424 8,-424"/>
+<text text-anchor="start" x="225.47" y="-571.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">Early Era (1969-1993)</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_foundation</title>
+<polygon fill="#e8f4ea" stroke="#e8f4ea" stroke-width="2" points="625.81,-392 625.81,-713 953.7,-713 953.7,-392 625.81,-392"/>
+<text text-anchor="start" x="687.85" y="-697.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">Foundation Period (1994-1999)</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_modern</title>
+<polygon fill="#fff4e6" stroke="#fff4e6" stroke-width="2" points="995.7,-392 995.7,-555 1364.21,-555 1364.21,-392 995.7,-392"/>
+<text text-anchor="start" x="1068.7" y="-539.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">Modern Development (2000-2011)</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_recent</title>
+<polygon fill="#ffe6e6" stroke="#ffe6e6" stroke-width="2" points="1406.21,-392 1406.21,-555 1966.59,-555 1966.59,-392 1406.21,-392"/>
+<text text-anchor="start" x="1575.54" y="-539.4" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="14.00">Recent Innovation (2012-Present)</text>
+</g>
+<!-- arpanet -->
+<g id="node1" class="node">
+<title>arpanet</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M150.69,-554C150.69,-554 28,-554 28,-554 22,-554 16,-548 16,-542 16,-542 16,-444 16,-444 16,-438 22,-432 28,-432 28,-432 150.69,-432 150.69,-432 156.69,-432 162.69,-438 162.69,-444 162.69,-444 162.69,-542 162.69,-542 162.69,-548 156.69,-554 150.69,-554"/>
+<text text-anchor="start" x="76" y="-515.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">1969</text>
+<text text-anchor="start" x="61.01" y="-488.2" font-family="Helvetica,sans-Serif" font-size="12.00">ARPANET</text>
+<text text-anchor="start" x="44.6" y="-463.6" font-family="Helvetica,sans-Serif" font-size="10.00">Network Foundation</text>
+</g>
+<!-- tcp_ip -->
+<g id="node2" class="node">
+<title>tcp_ip</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M363.56,-554C363.56,-554 239.65,-554 239.65,-554 233.65,-554 227.65,-548 227.65,-542 227.65,-542 227.65,-444 227.65,-444 227.65,-438 233.65,-432 239.65,-432 239.65,-432 363.56,-432 363.56,-432 369.56,-432 375.56,-438 375.56,-444 375.56,-444 375.56,-542 375.56,-542 375.56,-548 369.56,-554 363.56,-554"/>
+<text text-anchor="start" x="288.26" y="-515.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">1987</text>
+<text text-anchor="start" x="256.25" y="-488.2" font-family="Helvetica,sans-Serif" font-size="12.00">TCP/IP Standard</text>
+<text text-anchor="start" x="256.85" y="-463.6" font-family="Helvetica,sans-Serif" font-size="10.00">Protocol Foundation</text>
+</g>
+<!-- arpanet&#45;&gt;tcp_ip -->
+<g id="edge1" class="edge">
+<title>arpanet-&gt;tcp_ip</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M162.99,-493C162.99,-493 217.91,-493 217.91,-493"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="225.91,-493 217.91,-496.6 223.37,-493.1 217.91,-493.1 217.91,-493 217.91,-492.9 223.37,-492.9 217.91,-489.4 225.91,-493"/>
+</g>
+<!-- early_vpn -->
+<g id="node3" class="node">
+<title>early_vpn</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M563.81,-554C563.81,-554 445.56,-554 445.56,-554 439.56,-554 433.56,-548 433.56,-542 433.56,-542 433.56,-444 433.56,-444 433.56,-438 439.56,-432 445.56,-432 445.56,-432 563.81,-432 563.81,-432 569.81,-432 575.81,-438 575.81,-444 575.81,-444 575.81,-542 575.81,-542 575.81,-548 569.81,-554 563.81,-554"/>
+<text text-anchor="start" x="491.34" y="-515.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">1993</text>
+<text text-anchor="start" x="477.01" y="-488.2" font-family="Helvetica,sans-Serif" font-size="12.00">Early VPN</text>
+<text text-anchor="start" x="462.16" y="-463.6" font-family="Helvetica,sans-Serif" font-size="10.00">Tunnel Technology</text>
+</g>
+<!-- tcp_ip&#45;&gt;early_vpn -->
+<g id="edge2" class="edge">
+<title>tcp_ip-&gt;early_vpn</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M375.78,-493C375.78,-493 423.61,-493 423.61,-493"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="431.61,-493 423.61,-496.6 429.08,-493.1 423.61,-493.1 423.61,-493 423.61,-492.9 429.08,-492.9 423.61,-489.4 431.61,-493"/>
+</g>
+<!-- ssl -->
+<g id="node4" class="node">
+<title>ssl</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M742.93,-554C742.93,-554 645.81,-554 645.81,-554 639.81,-554 633.81,-548 633.81,-542 633.81,-542 633.81,-444 633.81,-444 633.81,-438 639.81,-432 645.81,-432 645.81,-432 742.93,-432 742.93,-432 748.93,-432 754.93,-438 754.93,-444 754.93,-444 754.93,-542 754.93,-542 754.93,-548 748.93,-554 742.93,-554"/>
+<text text-anchor="start" x="681.02" y="-515.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">1994</text>
+<text text-anchor="start" x="673.02" y="-488.2" font-family="Helvetica,sans-Serif" font-size="12.00">SSL 1.0</text>
+<text text-anchor="start" x="662.41" y="-463.6" font-family="Helvetica,sans-Serif" font-size="10.00">Security Layer</text>
+</g>
+<!-- early_vpn&#45;&gt;ssl -->
+<g id="edge3" class="edge">
+<title>early_vpn-&gt;ssl</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M576.13,-493C576.13,-493 624.08,-493 624.08,-493"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="632.08,-493 624.08,-496.6 629.54,-493.1 624.08,-493.1 624.08,-493 624.08,-492.9 629.54,-492.9 624.08,-489.4 632.08,-493"/>
+</g>
+<!-- pptp -->
+<g id="node5" class="node">
+<title>pptp</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M926.21,-522C926.21,-522 832.42,-522 832.42,-522 826.42,-522 820.42,-516 820.42,-510 820.42,-510 820.42,-412 820.42,-412 820.42,-406 826.42,-400 832.42,-400 832.42,-400 926.21,-400 926.21,-400 932.21,-400 938.21,-406 938.21,-412 938.21,-412 938.21,-510 938.21,-510 938.21,-516 932.21,-522 926.21,-522"/>
+<text text-anchor="start" x="865.97" y="-483.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">1996</text>
+<text text-anchor="start" x="863.64" y="-456.2" font-family="Helvetica,sans-Serif" font-size="12.00">PPTP</text>
+<text text-anchor="start" x="849.02" y="-431.6" font-family="Helvetica,sans-Serif" font-size="10.00">Point-to-Point</text>
+</g>
+<!-- ssl&#45;&gt;pptp -->
+<g id="edge4" class="edge">
+<title>ssl-&gt;pptp</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M755.18,-477C755.18,-477 810.58,-477 810.58,-477"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="818.58,-477 810.58,-480.6 816.04,-477.1 810.58,-477.1 810.58,-477 810.58,-476.9 816.04,-476.9 810.58,-473.4 818.58,-477"/>
+</g>
+<!-- ipsec -->
+<g id="node6" class="node">
+<title>ipsec</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M933.7,-680C933.7,-680 824.93,-680 824.93,-680 818.93,-680 812.93,-674 812.93,-668 812.93,-668 812.93,-570 812.93,-570 812.93,-564 818.93,-558 824.93,-558 824.93,-558 933.7,-558 933.7,-558 939.7,-558 945.7,-564 945.7,-570 945.7,-570 945.7,-668 945.7,-668 945.7,-674 939.7,-680 933.7,-680"/>
+<text text-anchor="start" x="865.97" y="-641.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">1995</text>
+<text text-anchor="start" x="863.31" y="-614.2" font-family="Helvetica,sans-Serif" font-size="12.00">IPSec</text>
+<text text-anchor="start" x="841.53" y="-589.6" font-family="Helvetica,sans-Serif" font-size="10.00">Network Security</text>
+</g>
+<!-- ssl&#45;&gt;ipsec -->
+<g id="edge5" class="edge">
+<title>ssl-&gt;ipsec</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M755.16,-538C785.86,-538 816.67,-538 816.67,-538 816.67,-538 816.67,-548.15 816.67,-548.15"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="816.67,-556.15 813.07,-548.15 816.57,-553.61 816.57,-548.15 816.67,-548.15 816.77,-548.15 816.77,-553.61 820.27,-548.15 816.67,-556.15"/>
+</g>
+<!-- openvpn -->
+<g id="node7" class="node">
+<title>openvpn</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M1146.74,-522C1146.74,-522 1015.7,-522 1015.7,-522 1009.7,-522 1003.7,-516 1003.7,-510 1003.7,-510 1003.7,-412 1003.7,-412 1003.7,-406 1009.7,-400 1015.7,-400 1015.7,-400 1146.74,-400 1146.74,-400 1152.74,-400 1158.74,-406 1158.74,-412 1158.74,-412 1158.74,-510 1158.74,-510 1158.74,-516 1152.74,-522 1146.74,-522"/>
+<text text-anchor="start" x="1067.88" y="-483.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">2001</text>
+<text text-anchor="start" x="1054.21" y="-456.2" font-family="Helvetica,sans-Serif" font-size="12.00">OpenVPN</text>
+<text text-anchor="start" x="1032.3" y="-431.6" font-family="Helvetica,sans-Serif" font-size="10.00">Open Source Solution</text>
+</g>
+<!-- pptp&#45;&gt;openvpn -->
+<g id="edge6" class="edge">
+<title>pptp-&gt;openvpn</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M938.53,-440.67C938.53,-440.67 993.78,-440.67 993.78,-440.67"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="1001.78,-440.67 993.78,-444.27 999.24,-440.77 993.78,-440.77 993.78,-440.67 993.78,-440.57 999.24,-440.57 993.78,-437.07 1001.78,-440.67"/>
+</g>
+<!-- ipsec&#45;&gt;openvpn -->
+<g id="edge7" class="edge">
+<title>ipsec-&gt;openvpn</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M941.96,-557.82C941.96,-521.05 941.96,-481.33 941.96,-481.33 941.96,-481.33 993.98,-481.33 993.98,-481.33"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="1001.98,-481.33 993.98,-484.93 999.45,-481.43 993.98,-481.43 993.98,-481.33 993.98,-481.23 999.45,-481.23 993.98,-477.73 1001.98,-481.33"/>
+</g>
+<!-- ssl_vpn -->
+<g id="node8" class="node">
+<title>ssl_vpn</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M1344.21,-522C1344.21,-522 1228.74,-522 1228.74,-522 1222.74,-522 1216.74,-516 1216.74,-510 1216.74,-510 1216.74,-412 1216.74,-412 1216.74,-406 1222.74,-400 1228.74,-400 1228.74,-400 1344.21,-400 1344.21,-400 1350.21,-400 1356.21,-406 1356.21,-412 1356.21,-412 1356.21,-510 1356.21,-510 1356.21,-516 1350.21,-522 1344.21,-522"/>
+<text text-anchor="start" x="1273.13" y="-483.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">2003</text>
+<text text-anchor="start" x="1261.13" y="-456.2" font-family="Helvetica,sans-Serif" font-size="12.00">SSL VPN</text>
+<text text-anchor="start" x="1245.34" y="-431.6" font-family="Helvetica,sans-Serif" font-size="10.00">Clientless Solution</text>
+</g>
+<!-- openvpn&#45;&gt;ssl_vpn -->
+<g id="edge8" class="edge">
+<title>openvpn-&gt;ssl_vpn</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M1159.11,-461C1159.11,-461 1206.93,-461 1206.93,-461"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="1214.93,-461 1206.93,-464.6 1212.39,-461.1 1206.93,-461.1 1206.93,-461 1206.93,-460.9 1212.39,-460.9 1206.93,-457.4 1214.93,-461"/>
+</g>
+<!-- cloud_vpn -->
+<g id="node9" class="node">
+<title>cloud_vpn</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M1541.68,-522C1541.68,-522 1426.21,-522 1426.21,-522 1420.21,-522 1414.21,-516 1414.21,-510 1414.21,-510 1414.21,-412 1414.21,-412 1414.21,-406 1420.21,-400 1426.21,-400 1426.21,-400 1541.68,-400 1541.68,-400 1547.68,-400 1553.68,-406 1553.68,-412 1553.68,-412 1553.68,-510 1553.68,-510 1553.68,-516 1547.68,-522 1541.68,-522"/>
+<text text-anchor="start" x="1470.6" y="-483.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">2012</text>
+<text text-anchor="start" x="1454.26" y="-456.2" font-family="Helvetica,sans-Serif" font-size="12.00">Cloud VPN</text>
+<text text-anchor="start" x="1442.81" y="-431.6" font-family="Helvetica,sans-Serif" font-size="10.00">Cloud Deployment</text>
+</g>
+<!-- ssl_vpn&#45;&gt;cloud_vpn -->
+<g id="edge9" class="edge">
+<title>ssl_vpn-&gt;cloud_vpn</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M1356.65,-461C1356.65,-461 1404.53,-461 1404.53,-461"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="1412.53,-461 1404.53,-464.6 1409.99,-461.1 1404.53,-461.1 1404.53,-461 1404.53,-460.9 1409.99,-460.9 1404.53,-457.4 1412.53,-461"/>
+</g>
+<!-- wireguard -->
+<g id="node10" class="node">
+<title>wireguard</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M1739.13,-522C1739.13,-522 1623.68,-522 1623.68,-522 1617.68,-522 1611.68,-516 1611.68,-510 1611.68,-510 1611.68,-412 1611.68,-412 1611.68,-406 1617.68,-400 1623.68,-400 1623.68,-400 1739.13,-400 1739.13,-400 1745.13,-400 1751.13,-406 1751.13,-412 1751.13,-412 1751.13,-510 1751.13,-510 1751.13,-516 1745.13,-522 1739.13,-522"/>
+<text text-anchor="start" x="1668.06" y="-483.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">2016</text>
+<text text-anchor="start" x="1652.4" y="-456.2" font-family="Helvetica,sans-Serif" font-size="12.00">WireGuard</text>
+<text text-anchor="start" x="1640.28" y="-431.6" font-family="Helvetica,sans-Serif" font-size="10.00">Next-Gen Protocol</text>
+</g>
+<!-- cloud_vpn&#45;&gt;wireguard -->
+<g id="edge10" class="edge">
+<title>cloud_vpn-&gt;wireguard</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M1554.12,-461C1554.12,-461 1601.99,-461 1601.99,-461"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="1609.99,-461 1601.99,-464.6 1607.46,-461.1 1601.99,-461.1 1601.99,-461 1601.99,-460.9 1607.46,-460.9 1601.99,-457.4 1609.99,-461"/>
+</g>
+<!-- zero_trust -->
+<g id="node11" class="node">
+<title>zero_trust</title>
+<path fill="#ffffff" stroke="black" stroke-width="1.5" d="M1946.59,-522C1946.59,-522 1821.13,-522 1821.13,-522 1815.13,-522 1809.13,-516 1809.13,-510 1809.13,-510 1809.13,-412 1809.13,-412 1809.13,-406 1815.13,-400 1821.13,-400 1821.13,-400 1946.59,-400 1946.59,-400 1952.59,-400 1958.59,-406 1958.59,-412 1958.59,-412 1958.59,-510 1958.59,-510 1958.59,-516 1952.59,-522 1946.59,-522"/>
+<text text-anchor="start" x="1870.51" y="-483.6" font-family="Helvetica,sans-Serif" font-weight="bold" font-size="12.00">2020</text>
+<text text-anchor="start" x="1842.19" y="-456.2" font-family="Helvetica,sans-Serif" font-size="12.00">Zero Trust VPN</text>
+<text text-anchor="start" x="1837.73" y="-431.6" font-family="Helvetica,sans-Serif" font-size="10.00">Security Architecture</text>
+</g>
+<!-- wireguard&#45;&gt;zero_trust -->
+<g id="edge11" class="edge">
+<title>wireguard-&gt;zero_trust</title>
+<path fill="none" stroke="#2f4f4f" stroke-width="1.2" d="M1751.36,-461C1751.36,-461 1799.26,-461 1799.26,-461"/>
+<polygon fill="#2f4f4f" stroke="#2f4f4f" stroke-width="1.2" points="1807.26,-461 1799.26,-464.6 1804.72,-461.1 1799.26,-461.1 1799.26,-461 1799.26,-460.9 1804.72,-460.9 1799.26,-457.4 1807.26,-461"/>
+</g>
+<!-- note1 -->
+<g id="node12" class="node">
+<title>note1</title>
+<polygon fill="#fffff0" stroke="#d4d4d4" stroke-width="1.5" points="156.96,-72 15.73,-72 15.73,0 162.96,0 162.96,-66 156.96,-72"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="156.96,-72 156.96,-66"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="162.96,-66 156.96,-66"/>
+<text text-anchor="middle" x="89.35" y="-39.6" font-family="Helvetica,sans-Serif" font-size="12.00">Military &amp; Research</text>
+<text text-anchor="middle" x="89.35" y="-25.2" font-family="Helvetica,sans-Serif" font-size="12.00">Driving Encryption</text>
+</g>
+<!-- note1&#45;&gt;early_vpn -->
+<g id="edge12" class="edge">
+<title>note1-&gt;early_vpn</title>
+<path fill="none" stroke="#666666" stroke-width="1.2" stroke-dasharray="1,5" d="M163.12,-36C282.47,-36 504.68,-36 504.68,-36 504.68,-36 504.68,-422.38 504.68,-422.38"/>
+<polygon fill="#666666" stroke="#666666" stroke-width="1.2" points="504.68,-430.38 501.08,-422.38 504.58,-427.84 504.58,-422.38 504.68,-422.38 504.78,-422.38 504.78,-427.84 508.28,-422.38 504.68,-430.38"/>
+</g>
+<!-- note2 -->
+<g id="node13" class="node">
+<title>note2</title>
+<polygon fill="#fffff0" stroke="#d4d4d4" stroke-width="1.5" points="153.3,-180 19.39,-180 19.39,-108 159.3,-108 159.3,-174 153.3,-180"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="153.3,-180 153.3,-174"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="159.3,-174 153.3,-174"/>
+<text text-anchor="middle" x="89.35" y="-147.6" font-family="Helvetica,sans-Serif" font-size="12.00">Commercial Apps</text>
+<text text-anchor="middle" x="89.35" y="-133.2" font-family="Helvetica,sans-Serif" font-size="12.00">Enterprise Growth</text>
+</g>
+<!-- note2&#45;&gt;pptp -->
+<g id="edge13" class="edge">
+<title>note2-&gt;pptp</title>
+<path fill="none" stroke="#666666" stroke-width="1.2" stroke-dasharray="1,5" d="M159.45,-144C352.79,-144 879.32,-144 879.32,-144 879.32,-144 879.32,-390.04 879.32,-390.04"/>
+<polygon fill="#666666" stroke="#666666" stroke-width="1.2" points="879.32,-398.04 875.72,-390.04 879.22,-395.5 879.22,-390.04 879.32,-390.04 879.42,-390.04 879.42,-395.5 882.92,-390.04 879.32,-398.04"/>
+</g>
+<!-- note3 -->
+<g id="node14" class="node">
+<title>note3</title>
+<polygon fill="#fffff0" stroke="#d4d4d4" stroke-width="1.5" points="155.64,-288 17.05,-288 17.05,-216 161.64,-216 161.64,-282 155.64,-288"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="155.64,-288 155.64,-282"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="161.64,-282 155.64,-282"/>
+<text text-anchor="middle" x="89.35" y="-255.6" font-family="Helvetica,sans-Serif" font-size="12.00">Mobile Internet Era</text>
+<text text-anchor="middle" x="89.35" y="-241.2" font-family="Helvetica,sans-Serif" font-size="12.00">Security Demands</text>
+</g>
+<!-- note3&#45;&gt;ssl_vpn -->
+<g id="edge14" class="edge">
+<title>note3-&gt;ssl_vpn</title>
+<path fill="none" stroke="#666666" stroke-width="1.2" stroke-dasharray="1,5" d="M161.98,-252C421.35,-252 1286.48,-252 1286.48,-252 1286.48,-252 1295.94,-252 1295.94,-252"/>
+<polygon fill="#666666" stroke="#666666" stroke-width="1.2" points="1286.57,-398.25 1283.49,-390.03 1286.63,-395.71 1286.98,-390.26 1287.08,-390.26 1287.18,-390.27 1286.83,-395.72 1290.68,-390.49 1286.57,-398.25"/>
+</g>
+<!-- note4 -->
+<g id="node15" class="node">
+<title>note4</title>
+<polygon fill="#fffff0" stroke="#d4d4d4" stroke-width="1.5" points="163.65,-396 9.04,-396 9.04,-324 169.65,-324 169.65,-390 163.65,-396"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="163.65,-396 163.65,-390"/>
+<polyline fill="none" stroke="#d4d4d4" stroke-width="1.5" points="169.65,-390 163.65,-390"/>
+<text text-anchor="middle" x="89.35" y="-363.6" font-family="Helvetica,sans-Serif" font-size="12.00">Cloud &amp; AI Integration</text>
+<text text-anchor="middle" x="89.35" y="-349.2" font-family="Helvetica,sans-Serif" font-size="12.00">Smart Security</text>
+</g>
+<!-- note4&#45;&gt;zero_trust -->
+<g id="edge15" class="edge">
+<title>note4-&gt;zero_trust</title>
+<path fill="none" stroke="#666666" stroke-width="1.2" stroke-dasharray="1,5" d="M169.94,-360C519.12,-360 1883.86,-360 1883.86,-360 1883.86,-360 1893.32,-360 1893.32,-360"/>
+<polygon fill="#666666" stroke="#666666" stroke-width="1.2" points="1884.2,-398.21 1882.56,-389.59 1884.69,-395.71 1885.96,-390.4 1886.06,-390.42 1886.15,-390.45 1884.89,-395.76 1889.56,-391.26 1884.2,-398.21"/>
+</g>
+</g>
+</svg>

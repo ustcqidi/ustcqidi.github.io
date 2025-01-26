@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="700pt" height="613pt" viewBox="0.00 0.00 700.00 613.10">
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 609.1)">
+<title>G</title>
+<polygon fill="white" stroke="none" points="-4,4 -4,-609.1 696,-609.1 696,4 -4,4"/>
+<g id="clust1" class="cluster">
+<title>cluster_protocol</title>
+<polygon fill="#f8f8f8" stroke="black" points="8,-8 8,-597.1 684,-597.1 684,-8 8,-8"/>
+<text text-anchor="middle" x="346" y="-580.5" font-family="Times,serif" font-size="14.00">WireGuard Protocol Architecture</text>
+</g>
+<g id="clust2" class="cluster">
+<title>cluster_crypto</title>
+<polygon fill="#e3f2fd" stroke="black" points="282,-279.5 282,-445.3 666,-445.3 666,-279.5 282,-279.5"/>
+<text text-anchor="middle" x="474" y="-428.7" font-family="Times,serif" font-size="14.00">Cryptographic Components</text>
+</g>
+<g id="clust3" class="cluster">
+<title>cluster_handshake</title>
+<polygon fill="#fff3e0" stroke="black" points="218,-158.1 218,-249.5 676,-249.5 676,-158.1 218,-158.1"/>
+<text text-anchor="middle" x="447" y="-232.9" font-family="Times,serif" font-size="14.00">1-RTT Handshake</text>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_transport</title>
+<polygon fill="#e8f5e9" stroke="black" points="120,-16 120,-107.4 566,-107.4 566,-16 120,-16"/>
+<text text-anchor="middle" x="343" y="-90.8" font-family="Times,serif" font-size="14.00">Transport Protocol</text>
+</g>
+<!-- crypto -->
+<g id="node1" class="node">
+<title>crypto</title>
+<path fill="white" stroke="black" d="M302.49,-288C302.49,-288 645.51,-288 645.51,-288 651.51,-288 657.51,-294 657.51,-300 657.51,-300 657.51,-400 657.51,-400 657.51,-406 651.51,-412 645.51,-412 645.51,-412 302.49,-412 302.49,-412 296.49,-412 290.49,-406 290.49,-400 290.49,-400 290.49,-300 290.49,-300 290.49,-294 296.49,-288 302.49,-288"/>
+<text text-anchor="middle" x="374.34" y="-345.8" font-family="Helvetica,sans-Serif" font-size="14.00">Cryptographic Primitives</text>
+<polyline fill="none" stroke="black" points="458.2,-288 458.2,-412"/>
+<text text-anchor="middle" x="504.33" y="-395.4" font-family="Helvetica,sans-Serif" font-size="14.00">ChaCha20</text>
+<polyline fill="none" stroke="black" points="458.2,-387.2 550.47,-387.2"/>
+<text text-anchor="middle" x="504.33" y="-370.6" font-family="Helvetica,sans-Serif" font-size="14.00">Poly1305</text>
+<polyline fill="none" stroke="black" points="458.2,-362.4 550.47,-362.4"/>
+<text text-anchor="middle" x="504.33" y="-345.8" font-family="Helvetica,sans-Serif" font-size="14.00">Curve25519</text>
+<polyline fill="none" stroke="black" points="458.2,-337.6 550.47,-337.6"/>
+<text text-anchor="middle" x="504.33" y="-321" font-family="Helvetica,sans-Serif" font-size="14.00">BLAKE2s</text>
+<polyline fill="none" stroke="black" points="458.2,-312.8 550.47,-312.8"/>
+<text text-anchor="middle" x="504.33" y="-296.2" font-family="Helvetica,sans-Serif" font-size="14.00">HKDF</text>
+<polyline fill="none" stroke="black" points="550.47,-288 550.47,-412"/>
+<text text-anchor="middle" x="603.99" y="-395.4" font-family="Helvetica,sans-Serif" font-size="14.00">Stream Cipher</text>
+<polyline fill="none" stroke="black" points="550.47,-387.2 657.51,-387.2"/>
+<text text-anchor="middle" x="603.99" y="-370.6" font-family="Helvetica,sans-Serif" font-size="14.00">MAC</text>
+<polyline fill="none" stroke="black" points="550.47,-362.4 657.51,-362.4"/>
+<text text-anchor="middle" x="603.99" y="-345.8" font-family="Helvetica,sans-Serif" font-size="14.00">Key Exchange</text>
+<polyline fill="none" stroke="black" points="550.47,-337.6 657.51,-337.6"/>
+<text text-anchor="middle" x="603.99" y="-321" font-family="Helvetica,sans-Serif" font-size="14.00">Hash</text>
+<polyline fill="none" stroke="black" points="550.47,-312.8 657.51,-312.8"/>
+<text text-anchor="middle" x="603.99" y="-296.2" font-family="Helvetica,sans-Serif" font-size="14.00">Key Derivation</text>
+</g>
+<!-- handshake -->
+<g id="node2" class="node">
+<title>handshake</title>
+<path fill="white" stroke="black" d="M238.11,-166.6C238.11,-166.6 655.89,-166.6 655.89,-166.6 661.89,-166.6 667.89,-172.6 667.89,-178.6 667.89,-178.6 667.89,-204.2 667.89,-204.2 667.89,-210.2 661.89,-216.2 655.89,-216.2 655.89,-216.2 238.11,-216.2 238.11,-216.2 232.11,-216.2 226.11,-210.2 226.11,-204.2 226.11,-204.2 226.11,-178.6 226.11,-178.6 226.11,-172.6 232.11,-166.6 238.11,-166.6"/>
+<text text-anchor="middle" x="297.15" y="-187.2" font-family="Helvetica,sans-Serif" font-size="14.00">Handshake Protocol</text>
+<polyline fill="none" stroke="black" points="368.19,-166.6 368.19,-216.2"/>
+<text text-anchor="middle" x="443.11" y="-199.6" font-family="Helvetica,sans-Serif" font-size="14.00">Initiator → Responder</text>
+<polyline fill="none" stroke="black" points="368.19,-191.4 518.04,-191.4"/>
+<text text-anchor="middle" x="443.11" y="-174.8" font-family="Helvetica,sans-Serif" font-size="14.00">Ephemeral Keys</text>
+<polyline fill="none" stroke="black" points="518.04,-166.6 518.04,-216.2"/>
+<text text-anchor="middle" x="592.96" y="-199.6" font-family="Helvetica,sans-Serif" font-size="14.00">Responder → Initiator</text>
+<polyline fill="none" stroke="black" points="518.04,-191.4 667.89,-191.4"/>
+<text text-anchor="middle" x="592.96" y="-174.8" font-family="Helvetica,sans-Serif" font-size="14.00">Session Established</text>
+</g>
+<!-- crypto&#45;&gt;handshake -->
+<g id="edge1" class="edge">
+<title>crypto-&gt;handshake</title>
+<path fill="none" stroke="black" d="M463.41,-287.56C459.91,-267.27 456.14,-245.4 453.09,-227.74"/>
+<polygon fill="black" stroke="black" points="456.57,-227.29 451.42,-218.03 449.67,-228.48 456.57,-227.29"/>
+<text text-anchor="middle" x="502.2" y="-260.5" font-family="Helvetica,sans-Serif" font-size="10.00">Provides Primitives</text>
+</g>
+<!-- transport -->
+<g id="node3" class="node">
+<title>transport</title>
+<path fill="white" stroke="black" d="M139.95,-24.5C139.95,-24.5 546.05,-24.5 546.05,-24.5 552.05,-24.5 558.05,-30.5 558.05,-36.5 558.05,-36.5 558.05,-62.1 558.05,-62.1 558.05,-68.1 552.05,-74.1 546.05,-74.1 546.05,-74.1 139.95,-74.1 139.95,-74.1 133.95,-74.1 127.95,-68.1 127.95,-62.1 127.95,-62.1 127.95,-36.5 127.95,-36.5 127.95,-30.5 133.95,-24.5 139.95,-24.5"/>
+<text text-anchor="middle" x="182.64" y="-45.1" font-family="Helvetica,sans-Serif" font-size="14.00">Data Transport</text>
+<polyline fill="none" stroke="black" points="237.32,-24.5 237.32,-74.1"/>
+<text text-anchor="middle" x="311.86" y="-57.5" font-family="Helvetica,sans-Serif" font-size="14.00">Encapsulated in UDP</text>
+<polyline fill="none" stroke="black" points="237.32,-49.3 386.4,-49.3"/>
+<text text-anchor="middle" x="311.86" y="-32.7" font-family="Helvetica,sans-Serif" font-size="14.00">Port 51820</text>
+<polyline fill="none" stroke="black" points="386.4,-24.5 386.4,-74.1"/>
+<text text-anchor="middle" x="472.22" y="-57.5" font-family="Helvetica,sans-Serif" font-size="14.00">Authenticated Encryption</text>
+<polyline fill="none" stroke="black" points="386.4,-49.3 558.05,-49.3"/>
+<text text-anchor="middle" x="472.22" y="-32.7" font-family="Helvetica,sans-Serif" font-size="14.00">Perfect Forward Secrecy</text>
+</g>
+<!-- handshake&#45;&gt;transport -->
+<g id="edge2" class="edge">
+<title>handshake-&gt;transport</title>
+<path fill="none" stroke="black" d="M429.12,-166.32C412.16,-143.46 386.51,-108.92 367.62,-83.47"/>
+<polygon fill="black" stroke="black" points="370.67,-81.7 361.9,-75.75 365.05,-85.87 370.67,-81.7"/>
+<text text-anchor="middle" x="436.19" y="-118.4" font-family="Helvetica,sans-Serif" font-size="10.00">Establishes Keys</text>
+</g>
+<!-- feature1 -->
+<g id="node4" class="node">
+<title>feature1</title>
+<polygon fill="white" stroke="black" points="201.92,-237.4 16.08,-237.4 16.08,-145.4 207.92,-145.4 207.92,-231.4 201.92,-237.4"/>
+<polyline fill="none" stroke="black" points="201.92,-237.4 201.92,-231.4"/>
+<polyline fill="none" stroke="black" points="207.92,-231.4 201.92,-231.4"/>
+<text text-anchor="middle" x="112" y="-220.8" font-family="Helvetica,sans-Serif" font-size="14.00">Performance Features:</text>
+<text text-anchor="middle" x="112" y="-204" font-family="Helvetica,sans-Serif" font-size="14.00">• Minimal Packet Overhead</text>
+<text text-anchor="middle" x="112" y="-187.2" font-family="Helvetica,sans-Serif" font-size="14.00">• UDP-based Transport</text>
+<text text-anchor="middle" x="112" y="-170.4" font-family="Helvetica,sans-Serif" font-size="14.00">• Connectionless Design</text>
+<text text-anchor="middle" x="112" y="-153.6" font-family="Helvetica,sans-Serif" font-size="14.00">• Stateless Operation</text>
+</g>
+<!-- feature1&#45;&gt;transport -->
+<g id="edge3" class="edge">
+<title>feature1-&gt;transport</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M187,-144.91C225.6,-121.5 271.11,-93.9 302.98,-74.57"/>
+</g>
+<!-- feature2 -->
+<g id="node5" class="node">
+<title>feature2</title>
+<polygon fill="white" stroke="black" points="266.8,-396 87.2,-396 87.2,-304 272.8,-304 272.8,-390 266.8,-396"/>
+<polyline fill="none" stroke="black" points="266.8,-396 266.8,-390"/>
+<polyline fill="none" stroke="black" points="272.8,-390 266.8,-390"/>
+<text text-anchor="middle" x="180" y="-379.4" font-family="Helvetica,sans-Serif" font-size="14.00">Security Features:</text>
+<text text-anchor="middle" x="180" y="-362.6" font-family="Helvetica,sans-Serif" font-size="14.00">• Identity-based Routing</text>
+<text text-anchor="middle" x="180" y="-345.8" font-family="Helvetica,sans-Serif" font-size="14.00">• DoS Mitigation</text>
+<text text-anchor="middle" x="180" y="-329" font-family="Helvetica,sans-Serif" font-size="14.00">• Perfect Forward Secrecy</text>
+<text text-anchor="middle" x="180" y="-312.2" font-family="Helvetica,sans-Serif" font-size="14.00">• Key Rotation</text>
+</g>
+<!-- feature2&#45;&gt;handshake -->
+<g id="edge4" class="edge">
+<title>feature2-&gt;handshake</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M241.32,-303.53C253.29,-295.23 265.88,-286.87 278,-279.5 316.21,-256.26 361.32,-233.22 395.32,-216.68"/>
+</g>
+<!-- feature3 -->
+<g id="node6" class="node">
+<title>feature3</title>
+<polygon fill="white" stroke="black" points="569.57,-564.3 372.43,-564.3 372.43,-472.3 575.57,-472.3 575.57,-558.3 569.57,-564.3"/>
+<polyline fill="none" stroke="black" points="569.57,-564.3 569.57,-558.3"/>
+<polyline fill="none" stroke="black" points="575.57,-558.3 569.57,-558.3"/>
+<text text-anchor="middle" x="474" y="-547.7" font-family="Helvetica,sans-Serif" font-size="14.00">Implementation:</text>
+<text text-anchor="middle" x="474" y="-530.9" font-family="Helvetica,sans-Serif" font-size="14.00">• Small Codebase (~4k LOC)</text>
+<text text-anchor="middle" x="474" y="-514.1" font-family="Helvetica,sans-Serif" font-size="14.00">• Kernel Implementation</text>
+<text text-anchor="middle" x="474" y="-497.3" font-family="Helvetica,sans-Serif" font-size="14.00">• Simple Configuration</text>
+<text text-anchor="middle" x="474" y="-480.5" font-family="Helvetica,sans-Serif" font-size="14.00">• Easy Key Management</text>
+</g>
+<!-- feature3&#45;&gt;crypto -->
+<g id="edge5" class="edge">
+<title>feature3-&gt;crypto</title>
+<path fill="none" stroke="black" stroke-dasharray="1,5" d="M474,-471.86C474,-453.49 474,-432.01 474,-412.29"/>
+</g>
+</g>
+</svg>
