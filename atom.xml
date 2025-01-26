@@ -149,6 +149,25 @@
   </entry>
   
   <entry>
+    <title>2023 年度总结</title>
+    <link href="https://ustcqidi.github.io/2024/01/01/summary-2023/"/>
+    <id>https://ustcqidi.github.io/2024/01/01/summary-2023/</id>
+    <published>2024-01-01T09:27:25.000Z</published>
+    <updated>2025-01-26T14:47:14.982Z</updated>
+    
+    <content type="html"><![CDATA[<p>2023总结与2024规划</p><span id="more"></span><p>2023年相较于2022年，我的生活经历了明显的进步和积极的变化。</p><p>在2022年，我处于低迷状态，生活杂乱无章，既没有专心读书也没有参与运动，时间仿佛溜走在无所作为中。工作只是机械的完成任务，缺乏激情。</p><p>然而，2023年是不同的……</p><h2 id="回顾-2023"><a href="#回顾-2023" class="headerlink" title="回顾 2023"></a>回顾 2023</h2><ol><li>工作方面我找到了明确的方向。我开始正式领导一个团队，我们一起完成了一系列有意义的项目，取得了一些显著的成就。团队的氛围很好，还给两位出色的同事升职。整体而言，我对团队的现状感到非常满意。</li><li>在技术方面，我也找到了自己的兴趣点，开始关注管理相关的知识，以及更宏观层面的技术规划和人才培养等，而不再局限于具体的技术细节。</li><li>我的阅读和运动量相较去年有了明显提升。我阅读了20多本书，尽管中间有一段时间没有跑步，但参加了马拉松比赛后重新点燃了我对运动的兴趣，最近一个月我按计划进行了良好的跑步训练。</li><li>2023年，我还参加了软考系统架构师的考试，尽管由于工作繁忙没有充分复习，考试成绩并不理想。但这次经历让我更深刻地认识到了自己的兴趣和发展方向。</li><li>2023年最大的收获之一，就是开始利用 ChatGPT 等大型模型工具来提高我的工作和学习效率。我发现借助这些工具，能够更快速、高效地解决常见问题，明显提升了我的个人效率。</li><li>当然，生活中也遇到了一些波折，家庭关系变得复杂。在家庭关系方面，让父母担心，让孩子感到不安。但是我在年底明确了未来的走向，决心慢慢来改善。</li><li>结清了保利的房贷，提前还了蜀山别院 60W 的房贷。再加上国家统一调整房贷利率，由原来的 5.5% 降到 4.2%，现在每个月还款从 2022 年的 14000+ 降到 6600 左右。</li><li>学会利用四象限管理我的工作及生活事务：紧急且重要的事情亲自做，重要不紧急的事情坚持做，紧急不重要的事情找人做</li><li>提交 &amp; 通过了一项专利</li><li>真正的开始注意自己的形象，学会整理发型，关注穿搭之类的</li></ol><h2 id="展望-2024"><a href="#展望-2024" class="headerlink" title="展望 2024"></a>展望 2024</h2><ol><li>我希望通过<strong>网络规划设计师考试</strong>来追求更符合我的兴趣的方向。我还计划<strong>认真撰写1-2篇专利</strong>，并在团队管理方面取得更大的进步，<strong>帮助新成员成长，维持团队的良好氛围</strong>。</li><li>在个人层面，我将致力于<strong>总结和深入挖掘之前处理过的 tickets 或问题</strong>，进一步提升自己在经验和知识上的水平。</li><li>我将努力<strong>维持家庭关系和家庭氛围的稳定</strong>。我要确保孩子和家人感到平稳和安全，不再有不必要的争吵，而是寻找自己内心的平静。</li><li>我设定了<strong>每月跑步10小时的健康目标</strong>。跑步有助于改善我的身体状态，也对健康有益。此外，我计划进行一次体检，因为已经有2-3年没有检查了。</li><li>在阅读方面，我的目标是<strong>每个月投入10小时来阅读</strong>。我不会设定太多限制，而是看当时的兴趣来选择阅读的内容。</li></ol><p>2023年是更深入了解自己的一年，而2024年将是在新的方向上持续努力和奋斗的一年。</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;2023总结与2024规划&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="年度总结" scheme="https://ustcqidi.github.io/tags/%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/"/>
+    
+  </entry>
+  
+  <entry>
     <title>2022 年度总结</title>
     <link href="https://ustcqidi.github.io/2023/01/02/summary-2022/"/>
     <id>https://ustcqidi.github.io/2023/01/02/summary-2022/</id>
@@ -447,29 +466,6 @@
     <category term="工作效率" scheme="https://ustcqidi.github.io/tags/%E5%B7%A5%E4%BD%9C%E6%95%88%E7%8E%87/"/>
     
     <category term="工具" scheme="https://ustcqidi.github.io/tags/%E5%B7%A5%E5%85%B7/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>用脚本把繁杂、重复的工作自动化</title>
-    <link href="https://ustcqidi.github.io/2020/03/14/work-perf/"/>
-    <id>https://ustcqidi.github.io/2020/03/14/work-perf/</id>
-    <published>2020-03-14T12:29:59.000Z</published>
-    <updated>2025-01-04T02:21:58.772Z</updated>
-    
-    <content type="html"><![CDATA[<p>用脚本把所有繁杂、重复的工作自动化，是提升工作效率和身心愉悦感的很棒的方法。还能大幅度地降低人为操作的失误。</p><span id="more"></span><h2 id="JNIGenerator"><a href="#JNIGenerator" class="headerlink" title="JNIGenerator"></a>JNIGenerator</h2><p>Chromium 项目中大量地用 Python 脚步实现了各种工作的自动化，比如自动生成 JNI 接口。人肉写 JNI 接口很容易出错，需要记大量的 JNI 数据类型，非常痛苦。我把 Chromium 中的 JNI 接口生成以及相关基础 JNI 封装抽出来了。参考 <a href="https://github.com/ustcqidi/JNIGenerator">JNIGenerator</a></p><h2 id="ZMBuildDownloader"><a href="#ZMBuildDownloader" class="headerlink" title="ZMBuildDownloader"></a>ZMBuildDownloader</h2><p>平时工作中每次更新项目代码，都要从4个仓库拉一遍，还得从我们的 Build FTP 上，取最新的 Binary 替换本地的。这个工作用脚本实现自动化最合适不过了。 除了更新代码，我还经常需要从 FTP 上取最新的 build 测试，或者取某个 build 的符号文件来分析一些 Crash 问题。</p><p>大体分析了一下需求以后，我写了一个简单的脚本，可以从 FTP 上获取最新或者指定版本的 build/bianry/symbols 文件，顺便写了个自动更新代码的脚本，两个脚本一搭配效率迅速提升。再也不用蛋疼地打开 FileZilla 眯着眼找 build 了。</p><h2 id="批量删除-git-仓库本地分支"><a href="#批量删除-git-仓库本地分支" class="headerlink" title="批量删除 git 仓库本地分支"></a>批量删除 git 仓库本地分支</h2><h3 id="删除所有包含-trunk的本地分支"><a href="#删除所有包含-trunk的本地分支" class="headerlink" title="删除所有包含_trunk的本地分支"></a>删除所有包含_trunk的本地分支</h3><p>git branch | grep “_trunk” | xargs git branch -D</p><h3 id="删除所有不包含trunk的本地分支"><a href="#删除所有不包含trunk的本地分支" class="headerlink" title="删除所有不包含trunk的本地分支"></a>删除所有不包含trunk的本地分支</h3><p>git branch | grep -v “trunk” | xargs git branch -D</p><h2 id="日志清理脚本"><a href="#日志清理脚本" class="headerlink" title="日志清理脚本"></a>日志清理脚本</h2><p>一键清理垃圾日志文件，释放磁盘空间</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;用脚本把所有繁杂、重复的工作自动化，是提升工作效率和身心愉悦感的很棒的方法。还能大幅度地降低人为操作的失误。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="工作效率" scheme="https://ustcqidi.github.io/tags/%E5%B7%A5%E4%BD%9C%E6%95%88%E7%8E%87/"/>
-    
-    <category term="Python" scheme="https://ustcqidi.github.io/tags/Python/"/>
-    
-    <category term="自动化" scheme="https://ustcqidi.github.io/tags/%E8%87%AA%E5%8A%A8%E5%8C%96/"/>
     
   </entry>
   
