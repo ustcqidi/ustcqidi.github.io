@@ -1,3 +1,4 @@
+https://ustcqidi.github.io/2025/01/27/dns/
 https://ustcqidi.github.io/2021/11/29/workflow/
 https://ustcqidi.github.io/2024/01/01/summary-2023/
 https://ustcqidi.github.io/2025/01/25/vpn/
@@ -93,3 +94,6 @@ https://ustcqidi.github.io/tags/%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86/
 https://ustcqidi.github.io/tags/%E9%98%B2%E7%81%AB%E5%A2%99/
 https://ustcqidi.github.io/tags/%E7%94%9F%E4%BA%A7%E5%8A%9B/
 https://ustcqidi.github.io/tags/%E6%95%88%E7%8E%87/
+https://ustcqidi.github.io/tags/%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/
+https://ustcqidi.github.io/tags/Troubleshooting/
+https://ustcqidi.github.io/tags/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%BD%91%E7%BB%9C/
