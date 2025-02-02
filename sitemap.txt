@@ -1,3 +1,4 @@
+https://ustcqidi.github.io/2025/02/02/webservice-refactor/
 https://ustcqidi.github.io/2025/01/27/dns/
 https://ustcqidi.github.io/2021/11/29/workflow/
 https://ustcqidi.github.io/2024/01/01/summary-2023/
@@ -97,3 +98,7 @@ https://ustcqidi.github.io/tags/%E6%95%88%E7%8E%87/
 https://ustcqidi.github.io/tags/%E7%BD%91%E7%BB%9C%E6%95%85%E9%9A%9C%E6%8E%92%E6%9F%A5/
 https://ustcqidi.github.io/tags/Troubleshooting/
 https://ustcqidi.github.io/tags/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%BD%91%E7%BB%9C/
+https://ustcqidi.github.io/tags/%E8%80%81%E6%A8%A1%E5%9D%97%E6%B2%BB%E7%90%86/
+https://ustcqidi.github.io/tags/%E6%9E%B6%E6%9E%84%E4%BC%98%E5%8C%96/
+https://ustcqidi.github.io/tags/API-%E8%AE%BE%E8%AE%A1/
+https://ustcqidi.github.io/tags/%E6%8A%80%E6%9C%AF%E5%80%BA%E5%8A%A1%E6%B2%BB%E7%90%86/

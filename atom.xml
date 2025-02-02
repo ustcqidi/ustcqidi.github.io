@@ -6,7 +6,7 @@
   <link href="https://ustcqidi.github.io/atom.xml" rel="self"/>
   
   <link href="https://ustcqidi.github.io/"/>
-  <updated>2025-01-27T14:48:44.289Z</updated>
+  <updated>2025-02-02T14:08:49.376Z</updated>
   <id>https://ustcqidi.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>优化老代码的渐进式方法：以网络模块治理为例</title>
+    <link href="https://ustcqidi.github.io/2025/02/02/webservice-refactor/"/>
+    <id>https://ustcqidi.github.io/2025/02/02/webservice-refactor/</id>
+    <published>2025-02-02T13:37:56.000Z</published>
+    <updated>2025-02-02T14:08:49.376Z</updated>
+    
+    <content type="html"><![CDATA[<p>在软件开发过程中，随着业务的不断演进，老模块往往会面临代码膨胀、耦合严重、维护成本高等问题。本文以网络模块的治理为例，探讨如何通过解耦、抽象和自动化手段优化架构，提高可维护性和扩展性。我们从网络层与业务层的分离入手，分析当前架构的问题，并提出动态库拆分、API 设计优化、自动化代码生成等解决方案。最终，我们通过实践验证了这些改进措施的有效性，为老模块的治理提供了一套可行的方法论。</p><span id="more"></span><p>在这篇文章中，我想分享一些关于治理老模块代码的经验和想法。  </p><p>我们负责的几个业务模块中，一个是与网络相关的，另一个是所有业务的中转站，类似于业务的“容器”，还有一个是数据库相关的模块。这篇文章主要聚焦在网络模块的治理。  </p><h3 id="早期设计的问题"><a href="#早期设计的问题" class="headerlink" title="早期设计的问题"></a>早期设计的问题</h3><p>最初设计这个网络模块时，用户量较小，业务场景也相对单一。当时的实现方式是将业务代码与网络层代码混在一起，每次新增一个业务请求，就需要修改大量接口、添加中转代码，并且网络请求的构造逻辑也都写在这个模块里。最开始这样做没有太大问题，但随着应用程序的发展，现在已有十几个业务，每个版本都会新增大量接口，导致这个模块逐渐演变成一个“公共模块”，甚至被我们戏称为“公交车”——所有人都在这里修改代码。  </p><p>由此引发了几个问题：  </p><ol><li><strong>频繁的构建错误</strong>：由于许多团队同时修改该模块，导致 build error 的情况时有发生。  </li><li><strong>代码膨胀</strong>：模块代码不断增长，大量业务逻辑与网络通信代码交织在一起，使得维护变得困难。  </li><li><strong>稳定性隐患</strong>：业务代码与核心网络代码混杂，任何改动都有可能影响其他业务，引发潜在的风险。  </li></ol><p>面对这些问题，我们意识到，首先需要做的就是<strong>分离业务代码和核心网络代码</strong>。其次，我们需要重新设计更合理的接口，使业务代码的编写更加轻松，同时在<strong>保持业务逻辑不变、尽量降低回归风险的前提下，完成模块重构</strong>。  </p><h3 id="分析问题与挑战"><a href="#分析问题与挑战" class="headerlink" title="分析问题与挑战"></a>分析问题与挑战</h3><p>这个网络模块最早的设计并没有考虑到今天的业务规模扩展，因此所有业务代码和网络核心库的代码都混合在一个公共模块里，并对外提供了一个庞大的“全量接口”。每当有新的业务API需要增加时，所有团队都必须修改这个公共接口文件。  </p><p>问题逐渐显现：  </p><ol><li><strong>代码耦合严重</strong>：业务代码与网络通信逻辑混在一起，影响了整体的稳定性。某些业务团队在新增请求API时，不慎修改了核心网络库代码，带来了安全隐患和回归风险。  </li><li><strong>包体积急剧增长</strong>：模块中充斥着重复的业务代码，比如网络请求的组装、解析等逻辑，导致整体代码量迅速膨胀。  </li><li><strong>维护困难</strong>：所有人都在修改同一个大接口文件，导致代码冲突频发，构建错误不断增加，甚至还可能引发资源冲突等问题。  </li></ol><h3 id="解决方案：逐步拆分与重构"><a href="#解决方案：逐步拆分与重构" class="headerlink" title="解决方案：逐步拆分与重构"></a>解决方案：逐步拆分与重构</h3><p>我们的目标很明确：  </p><ul><li><strong>解耦核心网络库代码与业务代码</strong>，让业务代码能够独立管理，避免相互干扰。  </li><li><strong>减少对公共模块的依赖</strong>，业务团队可以在自己的代码仓库中管理自己的网络请求逻辑。  </li><li><strong>优化模块复用方式</strong>，减少不必要的代码编译，降低包大小。  </li></ul><p>但直接从公共模块剥离业务代码的方式难度极大，因为<strong>对外的公共接口已经广泛被使用</strong>，如果直接修改，可能会影响多个业务的开发，同时带来巨大的回归风险。我们尝试了几种策略，但最初几次都失败了。  </p><p>最终，我们借助一个新的业务场景找到了突破口：<strong>某个独立 APP 需要一个轻量级的网络库</strong>。于是，我们采取了一种折中方案：<strong>保持现有模块不变，同时抽取核心网络库，形成一个新的独立模块</strong>。  </p><p>这个新的网络库（我们称之为 <code>zNet</code>）<strong>不包含任何业务请求逻辑</strong>，只有最纯粹的网络通信功能，并将其编译为一个独立的动态库供该 APP 使用。这种方式不仅满足了该 APP 的需求，同时也为我们提供了一个“试水”机会——先验证抽取出的网络库是否稳定，再逐步推广到现有模块的底层替换。这样做的好处是：  </p><ol><li><strong>不会影响现有业务开发</strong>：原有模块保持不变，业务团队不需要修改代码，避免了回归风险。  </li><li><strong>模块拆分的可行性验证</strong>：先在独立 APP 上验证 <code>zNet</code> 的稳定性，再逐步替换现有模块中的网络代码，实现平滑迁移。  </li></ol><h3 id="进一步优化：业务请求的抽象"><a href="#进一步优化：业务请求的抽象" class="headerlink" title="进一步优化：业务请求的抽象"></a>进一步优化：业务请求的抽象</h3><p>完成核心网络库的拆分后，我们又面临另一个问题：<strong>如何让业务代码更清晰地组织，并减少重复代码？</strong>  </p><p>原本的业务请求代码是所有人共用的，构造 HTTP 请求、处理响应的逻辑都写在一个大文件里，每个业务请求都得手写参数构造、请求封装、响应解析，导致大量重复代码。因此，我们对<strong>业务请求的方式进行了抽象</strong>：  </p><ul><li><strong>定义请求实体对象</strong>：每个 HTTP 请求都可以抽象为一个 <code>Request</code> 对象，它包含请求的参数（如 Headers、Body、Method 等）以及相关的安全以及连接策略等。  </li><li><strong>统一解析响应</strong>：构造请求和解析响应的逻辑被提取成通用的方法，业务方只需创建一个 <code>Request</code> 实例即可发起请求。  </li></ul><p>有了这个改进，我们可以进一步实现<strong>业务代码的自动生成</strong>：  </p><ul><li>与服务端团队定义好请求参数格式后，可以用脚本解析这些参数，<strong>自动生成请求代码</strong>，避免重复手写。  </li><li>代码生成时可以<strong>自动添加安全检查</strong>，例如：  <ul><li>域名检测，防止错误请求泄露敏感数据。  </li><li>统一的安全策略校验，减少人为失误。  </li><li>代码风格一致性检查，提升可维护性。  </li></ul></li></ul><p>这套自动化方案不仅提升了开发效率，还提升了安全性和代码质量，因此我们还为此申请了一项专利。  </p><h3 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h3><p>通过这次网络模块的重构，我们总结出了一套较为通用的老模块治理方法：  </p><ol><li><strong>先分析痛点，找到业务扩展遇到的核心问题</strong>。  </li><li><strong>制定渐进式的改造方案，避免影响现有业务，降低回归风险</strong>。  </li><li><strong>利用新的业务需求作为突破口，验证新的架构设计</strong>。  </li><li><strong>通过合理的抽象和自动化工具，减少重复代码，提高开发效率</strong>。  </li></ol><p>这次网络模块的拆分和优化，让我们的架构更加清晰、维护成本降低，同时也为未来的业务扩展做好了准备。希望这些经验能对大家有所启发！</p>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;在软件开发过程中，随着业务的不断演进，老模块往往会面临代码膨胀、耦合严重、维护成本高等问题。本文以网络模块的治理为例，探讨如何通过解耦、抽象和自动化手段优化架构，提高可维护性和扩展性。我们从网络层与业务层的分离入手，分析当前架构的问题，并提出动态库拆分、API 设计优化、自动化代码生成等解决方案。最终，我们通过实践验证了这些改进措施的有效性，为老模块的治理提供了一套可行的方法论。&lt;/p&gt;</summary>
+    
+    
+    
+    
+    <category term="老模块治理" scheme="https://ustcqidi.github.io/tags/%E8%80%81%E6%A8%A1%E5%9D%97%E6%B2%BB%E7%90%86/"/>
+    
+    <category term="架构优化" scheme="https://ustcqidi.github.io/tags/%E6%9E%B6%E6%9E%84%E4%BC%98%E5%8C%96/"/>
+    
+    <category term="API 设计" scheme="https://ustcqidi.github.io/tags/API-%E8%AE%BE%E8%AE%A1/"/>
+    
+    <category term="技术债务治理" scheme="https://ustcqidi.github.io/tags/%E6%8A%80%E6%9C%AF%E5%80%BA%E5%8A%A1%E6%B2%BB%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>域名污染引发的SSL证书验证问题</title>
@@ -447,31 +472,6 @@
     
     
     <category term="安全" scheme="https://ustcqidi.github.io/tags/%E5%AE%89%E5%85%A8/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>开发基础库需要注意什么</title>
-    <link href="https://ustcqidi.github.io/2020/05/01/basic-func-test/"/>
-    <id>https://ustcqidi.github.io/2020/05/01/basic-func-test/</id>
-    <published>2020-05-01T12:21:56.000Z</published>
-    <updated>2025-01-04T02:21:58.664Z</updated>
-    
-    <content type="html"><![CDATA[<p>最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。</p><span id="more"></span><p>实现这个基础方法，其实需要考虑的 case 还是挺多的，比如是否有多余的内存拷贝，针对无效输入做 buffer 越界保护，大小端以及各种异常情况下是否有内存泄漏等等。</p><p>这个基础方法并不复杂，但是考虑到所有产品线，所有客户端，甚至服务端都会调用这个接口做加解密，所以我们还是做了很多测试，以保证万无一失。</p><h3 id="文档文档文档"><a href="#文档文档文档" class="headerlink" title="文档文档文档"></a>文档文档文档</h3><p>文档非常非常重要，否则你每次都需要跟你的用户（基础库使用方）解释细节，直至暴走，怀疑人生。</p><h3 id="代码-Review"><a href="#代码-Review" class="headerlink" title="代码 Review"></a>代码 Review</h3><p>代码 Review 常常能发现一些低级手抖错误，我实现这个方法时没有仔细考虑内存拷贝的开销，Review 代码时同事指出来了，后来想了一下，大量数据加解密调用时，频繁地内存拷贝可能会导致内存碎片，影响性能。</p><h3 id="单元测试"><a href="#单元测试" class="headerlink" title="单元测试"></a>单元测试</h3><p>单元测试简直是 Common SDK 开发者的保命法宝。我在 <a href="https://ustcqidi.github.io/2019/01/14/chromium-testing/">Chromium 工程源码是如何测试的</a> 中提到过，Chromium 中所有基础库的代码都有大量的单元测试和性能测试。实现这个加解密方法时我写了大量的测试用例，测试了几波以后基本胸有成竹了。另外，如果产品源码编译时间很久的话，使用单元测试工程来开发会极大地提高效率。 </p><p>Daniel Stenberg 大哥有一个 <a href="https://www.youtube.com/watch?v=U572Hq8LiWw">curl development with Daniel</a> 系列，直播撸 curl 的 feature。围观了后，发现大哥也是写完代码后，用 testing 工程验证。</p><h3 id="Fuzzing-测试"><a href="#Fuzzing-测试" class="headerlink" title="Fuzzing 测试"></a>Fuzzing 测试</h3><p>Fuzzing 测试就是传入各种无效、随机、操蛋的参数，测试方法是否有异常，比如 Crash, 内存泄漏等等。通常需要写一些脚本随机生成脏数据，然后频繁地调用目标方法。</p>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;最新公司产品需要全面优化加密算法，使用 AES-GCM 代替原来的 AES-CBC，我需要实现封装这个新的加解密接口。&lt;/p&gt;</summary>
-    
-    
-    
-    
-    <category term="基础库" scheme="https://ustcqidi.github.io/tags/%E5%9F%BA%E7%A1%80%E5%BA%93/"/>
-    
-    <category term="单元测试" scheme="https://ustcqidi.github.io/tags/%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95/"/>
-    
-    <category term="性能测试" scheme="https://ustcqidi.github.io/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/"/>
-    
-    <category term="Fuzzing 测试" scheme="https://ustcqidi.github.io/tags/Fuzzing-%E6%B5%8B%E8%AF%95/"/>
     
   </entry>
   
