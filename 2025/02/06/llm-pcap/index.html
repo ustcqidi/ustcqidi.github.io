@@ -19,17 +19,17 @@
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"ustcqidi.github.io","root":"/","images":"/images","scheme":"Pisces","darkmode":false,"version":"8.22.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":false,"style":null},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"Searching...","empty":"We didn't find any results for the search: ${query}","hits_time":"${hits} results found in ${time} ms","hits":"${hits} results found"}}</script><script src="/js/config.js"></script>
 
-    <meta name="description" content="背景Wireshark 作为一款功能强大的网络数据包捕获与分析工具，在实际问题分析过程中，我主要遇到两个挑战：一是对数据包中异常信息或特定字段的含义理解不够深入，二是对过滤器（filter）的使用不够熟练，导致难以快速定位关键数据。   我希望能够利用大语言模型来辅助分析 Wireshark 网络数据包，从而加深对典型网络协议的理解，提升分析常见网络问题的能力，并进一步建立标准化的分析流程 Pro">
+    <meta name="description" content="利用大语言模型来辅助分析 Wireshark 网络数据包，从而加深对典型网络协议的理解，提升分析常见网络问题的能力，并进一步建立标准化的分析流程 Prompt，以提高问题排查的效率。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用大语言模型分析 Wireshark 抓包数据">
 <meta property="og:url" content="https://ustcqidi.github.io/2025/02/06/llm-pcap/">
 <meta property="og:site_name" content="祁迪的博客">
-<meta property="og:description" content="背景Wireshark 作为一款功能强大的网络数据包捕获与分析工具，在实际问题分析过程中，我主要遇到两个挑战：一是对数据包中异常信息或特定字段的含义理解不够深入，二是对过滤器（filter）的使用不够熟练，导致难以快速定位关键数据。   我希望能够利用大语言模型来辅助分析 Wireshark 网络数据包，从而加深对典型网络协议的理解，提升分析常见网络问题的能力，并进一步建立标准化的分析流程 Pro">
+<meta property="og:description" content="利用大语言模型来辅助分析 Wireshark 网络数据包，从而加深对典型网络协议的理解，提升分析常见网络问题的能力，并进一步建立标准化的分析流程 Prompt，以提高问题排查的效率。">
 <meta property="og:locale">
 <meta property="og:image" content="https://ustcqidi.github.io/2025/02/06/llm-pcap/export.jpg">
 <meta property="og:image" content="https://ustcqidi.github.io/2025/02/06/llm-pcap/flag.png">
 <meta property="article:published_time" content="2025-02-06T12:29:34.000Z">
-<meta property="article:modified_time" content="2025-02-06T13:50:02.855Z">
+<meta property="article:modified_time" content="2025-02-06T13:53:02.731Z">
 <meta property="article:author" content="祁迪">
 <meta property="article:tag" content="网络">
 <meta property="article:tag" content="Troubleshooting">
@@ -204,7 +204,7 @@
       <span class="post-meta-item-text">Posted on</span>
       
 
-      <time title="Created: 2025-02-06 20:29:34 / Modified: 21:50:02" itemprop="dateCreated datePublished" datetime="2025-02-06T20:29:34+08:00">2025-02-06</time>
+      <time title="Created: 2025-02-06 20:29:34 / Modified: 21:53:02" itemprop="dateCreated datePublished" datetime="2025-02-06T20:29:34+08:00">2025-02-06</time>
     </span>
 
   
@@ -216,7 +216,9 @@
     
     
     
-    <div class="post-body" itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>Wireshark 作为一款功能强大的网络数据包捕获与分析工具，在实际问题分析过程中，我主要遇到两个挑战：一是对数据包中异常信息或特定字段的含义理解不够深入，二是对过滤器（filter）的使用不够熟练，导致难以快速定位关键数据。  </p>
+    <div class="post-body" itemprop="articleBody"><p>利用大语言模型来辅助分析 Wireshark 网络数据包，从而加深对典型网络协议的理解，提升分析常见网络问题的能力，并进一步建立标准化的分析流程 Prompt，以提高问题排查的效率。</p>
+<span id="more"></span>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>Wireshark 作为一款功能强大的网络数据包捕获与分析工具，在实际问题分析过程中，我主要遇到两个挑战：一是对数据包中异常信息或特定字段的含义理解不够深入，二是对过滤器（filter）的使用不够熟练，导致难以快速定位关键数据。  </p>
 <p>我希望能够利用大语言模型来辅助分析 Wireshark 网络数据包，从而加深对典型网络协议的理解，提升分析常见网络问题的能力，并进一步建立标准化的分析流程 Prompt，以提高问题排查的效率。</p>
 <h1 id="如何开始"><a href="#如何开始" class="headerlink" title="如何开始"></a>如何开始</h1><p>Wireshark 导出的数据包格式是 .pcap，它是一种二进制格式，ChatGPT、Claude 和 DeepSeek 等大语言模型无法直接解析。但如果将 .pcap 转换为可读的结构化文本，它们就能进行分析并提供有价值的见解。</p>
 <p>以下是 ChatGPT 给出的一些思路</p>
