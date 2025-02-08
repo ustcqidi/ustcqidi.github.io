@@ -1,3 +1,5 @@
+https://ustcqidi.github.io/about/
+https://ustcqidi.github.io/2023/04/02/chatgpt/
 https://ustcqidi.github.io/2025/02/07/fi/
 https://ustcqidi.github.io/2025/02/06/llm-pcap/
 https://ustcqidi.github.io/2025/02/02/webservice-refactor/
@@ -12,7 +14,6 @@ https://ustcqidi.github.io/2023/01/02/summary-2022/
 https://ustcqidi.github.io/2021/12/27/summary-2021/
 https://ustcqidi.github.io/2025/01/04/websocket-bigframe/
 https://ustcqidi.github.io/tags/
-https://ustcqidi.github.io/about/
 https://ustcqidi.github.io/2018/06/14/wwdc-Advanced-Graphics-and-Animations-for-iOS-Apps/
 https://ustcqidi.github.io/2018/06/12/wwdc-2018-Understanding-Crashes-and-Crash-Logs/
 https://ustcqidi.github.io/2020/03/14/work-perf/
