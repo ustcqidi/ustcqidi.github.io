@@ -1,9 +1,10 @@
+https://ustcqidi.github.io/2025/04/04/uncertain/
+https://ustcqidi.github.io/about/
 https://ustcqidi.github.io/2025/01/25/vpn/
 https://ustcqidi.github.io/2025/03/14/net/
 https://ustcqidi.github.io/2025/03/02/flomo/
 https://ustcqidi.github.io/2025/02/22/net-log/
 https://ustcqidi.github.io/2025/02/20/future/
-https://ustcqidi.github.io/about/
 https://ustcqidi.github.io/2023/04/02/chatgpt/
 https://ustcqidi.github.io/2025/02/07/fi/
 https://ustcqidi.github.io/2025/02/06/llm-pcap/
@@ -133,3 +134,4 @@ https://ustcqidi.github.io/tags/%E6%9E%B6%E6%9E%84/
 https://ustcqidi.github.io/tags/%E6%80%A7%E8%83%BD/
 https://ustcqidi.github.io/tags/%E7%A8%B3%E5%AE%9A%E6%80%A7/
 https://ustcqidi.github.io/tags/%E4%BC%81%E4%B8%9A%E7%BA%A7%E7%BD%91%E7%BB%9C%E5%BA%93/
+https://ustcqidi.github.io/tags/%E5%BF%83%E7%90%86%E6%88%90%E9%95%BF/
